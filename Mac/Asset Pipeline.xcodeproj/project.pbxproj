@@ -7,17 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7A2484981D46D83C00C61397 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A2484971D46D83C00C61397 /* AppDelegate.swift */; };
-		7A24849A1D46D83C00C61397 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A2484991D46D83C00C61397 /* Assets.xcassets */; };
-		7A24849D1D46D83C00C61397 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A24849B1D46D83C00C61397 /* MainMenu.xib */; };
+		7A7538E81D4958970049C506 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7538E71D4958970049C506 /* AppDelegate.swift */; };
+		7A7538EB1D4958DF0049C506 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A7538E91D4958DF0049C506 /* MainMenu.xib */; };
+		7AD575401D4784300010AA4C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7AD5753C1D4784300010AA4C /* Assets.xcassets */; };
+		7AD575421D4784300010AA4C /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7AD5753F1D4784300010AA4C /* Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		7A2484941D46D83C00C61397 /* Asset Pipeline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Asset Pipeline.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		7A2484971D46D83C00C61397 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7A2484991D46D83C00C61397 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		7A24849C1D46D83C00C61397 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		7A24849E1D46D83C00C61397 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7A7538E71D4958970049C506 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		7A7538EA1D4958DF0049C506 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		7AD5753C1D4784300010AA4C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7AD5753F1D4784300010AA4C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,7 +35,8 @@
 		7A24848B1D46D83C00C61397 = {
 			isa = PBXGroup;
 			children = (
-				7A2484961D46D83C00C61397 /* Source */,
+				7AD575381D4784300010AA4C /* Mac */,
+				7A7538E51D4958970049C506 /* Source */,
 				7A2484951D46D83C00C61397 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -47,15 +49,31 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		7A2484961D46D83C00C61397 /* Source */ = {
+		7A7538E51D4958970049C506 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				7A2484971D46D83C00C61397 /* AppDelegate.swift */,
-				7A2484991D46D83C00C61397 /* Assets.xcassets */,
-				7A24849B1D46D83C00C61397 /* MainMenu.xib */,
-				7A24849E1D46D83C00C61397 /* Info.plist */,
+				7A7538E61D4958970049C506 /* Mac */,
 			);
-			path = Source;
+			name = Source;
+			path = ../Source;
+			sourceTree = "<group>";
+		};
+		7A7538E61D4958970049C506 /* Mac */ = {
+			isa = PBXGroup;
+			children = (
+				7A7538E71D4958970049C506 /* AppDelegate.swift */,
+			);
+			path = Mac;
+			sourceTree = "<group>";
+		};
+		7AD575381D4784300010AA4C /* Mac */ = {
+			isa = PBXGroup;
+			children = (
+				7AD5753C1D4784300010AA4C /* Assets.xcassets */,
+				7AD5753F1D4784300010AA4C /* Info.plist */,
+				7A7538E91D4958DF0049C506 /* MainMenu.xib */,
+			);
+			name = Mac;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -116,8 +134,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A24849A1D46D83C00C61397 /* Assets.xcassets in Resources */,
-				7A24849D1D46D83C00C61397 /* MainMenu.xib in Resources */,
+				7AD575401D4784300010AA4C /* Assets.xcassets in Resources */,
+				7AD575421D4784300010AA4C /* Info.plist in Resources */,
+				7A7538EB1D4958DF0049C506 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,17 +147,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A2484981D46D83C00C61397 /* AppDelegate.swift in Sources */,
+				7A7538E81D4958970049C506 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		7A24849B1D46D83C00C61397 /* MainMenu.xib */ = {
+		7A7538E91D4958DF0049C506 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				7A24849C1D46D83C00C61397 /* Base */,
+				7A7538EA1D4958DF0049C506 /* Base */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -233,7 +252,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = Source/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "mycompany.Asset-Pipeline";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -245,7 +264,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = Source/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "mycompany.Asset-Pipeline";
 				PRODUCT_NAME = "$(TARGET_NAME)";
