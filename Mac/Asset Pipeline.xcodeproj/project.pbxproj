@@ -445,11 +445,13 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../Source/lua/etc",
 					"$(SRCROOT)/../Source/lua/src",
+					"$(SRCROOT)/../Source",
 				);
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "mycompany.Asset-Pipeline";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/Source";
 			};
 			name = Debug;
 		};
@@ -461,11 +463,13 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../Source/lua/etc",
 					"$(SRCROOT)/../Source/lua/src",
+					"$(SRCROOT)/../Source",
 				);
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "mycompany.Asset-Pipeline";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/Source";
 			};
 			name = Release;
 		};
