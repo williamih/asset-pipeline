@@ -6,6 +6,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var window: NSWindow!
 
     let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(-2)
+    let assetPipeline = AssetPipelineWrapper()
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         if let button = statusItem.button {
