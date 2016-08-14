@@ -42,6 +42,7 @@
 		7AB6B5931D5496F40090ED33 /* AssetPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5911D5496F40090ED33 /* AssetPipeline.cpp */; };
 		7AB6B5961D5499470090ED33 /* AssetPipelineWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5951D5499470090ED33 /* AssetPipelineWrapper.mm */; };
 		7AD575401D4784300010AA4C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7AD5753C1D4784300010AA4C /* Assets.xcassets */; };
+		7AF92DFE1D60267E003D54D4 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AF92DFB1D60267E003D54D4 /* sqlite3.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -109,6 +110,9 @@
 		7AB6B5971D549A520090ED33 /* AssetPipeline-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AssetPipeline-Bridging-Header.h"; sourceTree = "<group>"; };
 		7AD5753C1D4784300010AA4C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7AD5753F1D4784300010AA4C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7AF92DFB1D60267E003D54D4 /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
+		7AF92DFC1D60267E003D54D4 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
+		7AF92DFD1D60267E003D54D4 /* sqlite3ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3ext.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +147,7 @@
 			isa = PBXGroup;
 			children = (
 				7AB6B5261D5496200090ED33 /* lua */,
+				7AF92DFA1D60267E003D54D4 /* sqlite3 */,
 				7AB6B5901D5496F40090ED33 /* Pipeline */,
 				7A7538E61D4958970049C506 /* Mac */,
 			);
@@ -257,6 +262,16 @@
 			name = Mac;
 			sourceTree = "<group>";
 		};
+		7AF92DFA1D60267E003D54D4 /* sqlite3 */ = {
+			isa = PBXGroup;
+			children = (
+				7AF92DFB1D60267E003D54D4 /* sqlite3.c */,
+				7AF92DFC1D60267E003D54D4 /* sqlite3.h */,
+				7AF92DFD1D60267E003D54D4 /* sqlite3ext.h */,
+			);
+			path = sqlite3;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -338,6 +353,7 @@
 				7A7538E81D4958970049C506 /* AppDelegate.swift in Sources */,
 				7AB6B5811D5496200090ED33 /* ltablib.c in Sources */,
 				7AB6B5861D5496200090ED33 /* lvm.c in Sources */,
+				7AF92DFE1D60267E003D54D4 /* sqlite3.c in Sources */,
 				7AB6B5751D5496200090ED33 /* llex.c in Sources */,
 				7AB6B5781D5496200090ED33 /* loadlib.c in Sources */,
 				7AB6B56B1D5496200090ED33 /* lbaselib.c in Sources */,
