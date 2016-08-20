@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7A3CBB6B1D6845590048CB9E /* ProjectsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A3CBB6A1D6845590048CB9E /* ProjectsWindowController.swift */; };
 		7A7538E81D4958970049C506 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7538E71D4958970049C506 /* AppDelegate.swift */; };
 		7A7538EB1D4958DF0049C506 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A7538E91D4958DF0049C506 /* MainMenu.xib */; };
 		7AB6B5691D5496200090ED33 /* lapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B52E1D5496200090ED33 /* lapi.c */; };
@@ -47,6 +48,7 @@
 
 /* Begin PBXFileReference section */
 		7A2484941D46D83C00C61397 /* Asset Pipeline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Asset Pipeline.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A3CBB6A1D6845590048CB9E /* ProjectsWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectsWindowController.swift; sourceTree = "<group>"; };
 		7A7538E71D4958970049C506 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7A7538EA1D4958DF0049C506 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		7AB6B5291D5496200090ED33 /* lua.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lua.hpp; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				7A7538E71D4958970049C506 /* AppDelegate.swift */,
+				7A3CBB6A1D6845590048CB9E /* ProjectsWindowController.swift */,
 				7AB6B5971D549A520090ED33 /* AssetPipeline-Bridging-Header.h */,
 				7AB6B5941D5499470090ED33 /* AssetPipelineWrapper.h */,
 				7AB6B5951D5499470090ED33 /* AssetPipelineWrapper.mm */,
@@ -368,6 +371,7 @@
 				7AB6B5871D5496200090ED33 /* lzio.c in Sources */,
 				7AB6B5761D5496200090ED33 /* lmathlib.c in Sources */,
 				7AB6B57C1D5496200090ED33 /* lparser.c in Sources */,
+				7A3CBB6B1D6845590048CB9E /* ProjectsWindowController.swift in Sources */,
 				7AB6B56F1D5496200090ED33 /* ldo.c in Sources */,
 				7AB6B57D1D5496200090ED33 /* lstate.c in Sources */,
 				7AB6B57A1D5496200090ED33 /* lopcodes.c in Sources */,

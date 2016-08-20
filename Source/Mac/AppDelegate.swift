@@ -16,6 +16,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         let menu = NSMenu()
 
+        menu.addItem(NSMenuItem(title: "Manage Projects",
+            action: #selector(manageProjects),
+            keyEquivalent: ""))
+        menu.addItem(NSMenuItem.separatorItem())
         menu.addItem(NSMenuItem(title: "Quit Asset Pipeline",
                                action: #selector(quit),
                         keyEquivalent: "q"))
@@ -33,6 +37,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func quit(sender: AnyObject) {
         NSApp.terminate(self);
+    }
+
+    func manageProjects(sender: AnyObject) {
+        NSApp.activateIgnoringOtherApps(true)
+        self.window.makeKeyAndOrderFront(nil)
+        self.window.center()
     }
 
 }
