@@ -26,13 +26,20 @@ class HelperAppDelegate: NSObject, NSApplicationDelegate, IPCConnectionDelegate 
         menuAppConn.connectAsClientToPort(determinePort())
     }
 
-    func applicationWillTerminate(aNotification: NSNotification) {
+    @IBAction
+    func quit(sender: AnyObject?) {
+        menuAppConn.sendByte(IPCHelperToAppAction.Quit.rawValue)
     }
 
     func receiveIPCByte(byte: UInt8) {
         let action = IPCAppToHelperAction(rawValue: byte)!
         switch action {
         case .Quit:
+            menuAppConn.sendByte(IPCHelperToAppAction.QuitReceived.rawValue,
+                                 onComplete: {
+                NSApp.terminate(nil)
+            })
+        case .QuitReceived:
             NSApp.terminate(nil)
         case .ShowProjectWindow:
             projectsWindowController.showWindow()

@@ -1,7 +1,7 @@
 import Cocoa
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, IPCConnectionDelegate {
 
     let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(-2)
     let assetPipeline = AssetPipelineWrapper()
@@ -34,8 +34,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         print("Hello world")
     }
 
-    func quit(sender: AnyObject) {
-        NSApp.terminate(self);
+    func quit(sender: AnyObject?) {
+        if let conn = helperConn {
+            conn.sendByte(IPCAppToHelperAction.Quit.rawValue)
+        } else {
+            NSApp.terminate(nil)
+        }
+    }
+
+    func receiveIPCByte(byte: UInt8) {
+        let action = IPCHelperToAppAction(rawValue: byte)!
+        switch action {
+        case .Quit:
+            helperConn!.sendByte(IPCAppToHelperAction.QuitReceived.rawValue,
+                                 onComplete: {
+                NSApp.terminate(nil)
+            })
+        case .QuitReceived:
+            NSApp.terminate(nil)
+        }
     }
 
     func launchHelperIfNeeded() {
@@ -44,6 +61,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         helperConn = IPCConnection()
+        helperConn!.delegate = self
         helperConn!.listenAsServerOnPort(0)
 
         let port = helperConn!.port()

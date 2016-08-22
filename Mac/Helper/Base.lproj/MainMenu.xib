@@ -65,7 +65,7 @@
                             <menuItem isSeparatorItem="YES" id="kCx-OE-vgT"/>
                             <menuItem title="Quit Asset Pipeline" keyEquivalent="q" id="4sb-4s-VLi">
                                 <connections>
-                                    <action selector="terminate:" target="-1" id="Te7-pn-YzF"/>
+                                    <action selector="quit:" target="Voe-Tx-rLC" id="s0J-6T-eSC"/>
                                 </connections>
                             </menuItem>
                         </items>

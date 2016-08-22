@@ -9,6 +9,7 @@
 - (uint16_t)port;
 
 - (void)sendByte:(uint8_t)byte;
+- (void)sendByte:(uint8_t)byte onComplete:(nonnull void (^)(void))block;
 
 @property (weak, nullable) id<IPCConnectionDelegate> delegate;
 

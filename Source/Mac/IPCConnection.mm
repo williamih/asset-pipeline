@@ -11,18 +11,21 @@
     NSOutputStream *_writeStream;
     CFSocketRef _serverSocket;
     std::vector<uint8_t> *_byteQueue;
+    std::vector<void (^)(void)> *_blockQueue;
 }
 
 - (instancetype)init {
     self = [super init];
     if (self) {
         _byteQueue = new std::vector<uint8_t>();
+        _blockQueue = new std::vector<void (^)(void)>();
     }
     return self;
 }
 
 - (void)dealloc {
     delete _byteQueue;
+    delete _blockQueue;
 }
 
 - (void)internalCreateWithInputStream:(NSInputStream *)inputStream
@@ -40,9 +43,9 @@
     [_readStream open];
     [_writeStream open];
 
-    [_readStream scheduleInRunLoop:[NSRunLoop currentRunLoop]
+    [_readStream scheduleInRunLoop:[NSRunLoop mainRunLoop]
                            forMode:NSDefaultRunLoopMode];
-    [_writeStream scheduleInRunLoop:[NSRunLoop currentRunLoop]
+    [_writeStream scheduleInRunLoop:[NSRunLoop mainRunLoop]
                             forMode:NSDefaultRunLoopMode];
 }
 
@@ -132,8 +135,36 @@ static void SocketCallback(CFSocketRef s, CFSocketCallBackType callbackType,
     [self internalCreateWithInputStream:nsReadStream outputStream:nsWriteStream];
 }
 
-- (void)sendByte:(uint8_t)byte {
+- (void)internalSendBufferedData {
+    if (_byteQueue->empty())
+        return;
+
+    const uint8_t *data = &(*_byteQueue)[0];
+    NSUInteger maxLength = (NSUInteger)_byteQueue->size();
+    NSInteger written = [_writeStream write:data maxLength:maxLength];
+    _byteQueue->erase(_byteQueue->begin(),
+                      _byteQueue->begin() + (size_t)written);
+    for (NSInteger i = 0; i < written; ++i) {
+        if ((*_blockQueue)[i] != NULL)
+            ((*_blockQueue)[i])();
+    }
+    _blockQueue->erase(_blockQueue->begin(),
+                       _blockQueue->begin() + (size_t)written);
+}
+
+- (void)internalSendByte:(uint8_t)byte onComplete:(void (^)(void))block {
     _byteQueue->push_back(byte);
+    _blockQueue->push_back(block);
+    if ([_writeStream hasSpaceAvailable])
+        [self internalSendBufferedData];
+}
+
+- (void)sendByte:(uint8_t)byte {
+    [self internalSendByte:byte onComplete:NULL];
+}
+
+- (void)sendByte:(uint8_t)byte onComplete:(nonnull void (^)(void))block {
+    [self internalSendByte:byte onComplete:block];
 }
 
 - (uint16_t)port {
@@ -148,12 +179,7 @@ static void SocketCallback(CFSocketRef s, CFSocketCallBackType callbackType,
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode {
     if (aStream == _writeStream && eventCode == NSStreamEventHasSpaceAvailable &&
         !_byteQueue->empty()) {
-        //
-        const uint8_t *data = &(*_byteQueue)[0];
-        NSUInteger maxLength = (NSUInteger)_byteQueue->size();
-        NSInteger written = [_writeStream write:data maxLength:maxLength];
-        _byteQueue->erase(_byteQueue->begin(),
-                          _byteQueue->begin() + (size_t)written);
+        [self internalSendBufferedData];
     }
 
     if (aStream == _readStream && eventCode == NSStreamEventHasBytesAvailable
