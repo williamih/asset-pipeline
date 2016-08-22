@@ -26,6 +26,11 @@ class HelperAppDelegate: NSObject, NSApplicationDelegate, IPCConnectionDelegate 
         menuAppConn.connectAsClientToPort(determinePort())
     }
 
+    func applicationShouldTerminateAfterLastWindowClosed(sender: NSApplication)
+        -> Bool {
+        return true
+    }
+
     @IBAction
     func quit(sender: AnyObject?) {
         menuAppConn.sendByte(IPCHelperToAppAction.Quit.rawValue)
