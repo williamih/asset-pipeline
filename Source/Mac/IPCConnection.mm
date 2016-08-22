@@ -84,7 +84,7 @@ static void SocketCallback(CFSocketRef s, CFSocketCallBackType callbackType,
 {
     if (callbackType == kCFSocketAcceptCallBack) {
         CFSocketNativeHandle clientSocket = *(CFSocketNativeHandle *)data;
-        IPCConnection *conn = (__bridge IPCConnection *)info;
+        IPCConnection *conn = CFBridgingRelease(info);
         [conn internalConnectToClientSocket:clientSocket];
     }
 }
@@ -95,7 +95,7 @@ static void SocketCallback(CFSocketRef s, CFSocketCallBackType callbackType,
 
     CFSocketContext context;
     context.version = 0;
-    context.info = (__bridge void *)self;
+    context.info = (void *)CFBridgingRetain(self);
     context.retain = NULL;
     context.release = NULL;
 
