@@ -3,10 +3,9 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    @IBOutlet weak var window: NSWindow!
-
     let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(-2)
     let assetPipeline = AssetPipelineWrapper()
+    var helperConn : IPCConnection?
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         if let button = statusItem.button {
@@ -39,10 +38,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.terminate(self);
     }
 
+    func launchHelperIfNeeded() {
+        if helperConn != nil {
+            return;
+        }
+
+        helperConn = IPCConnection()
+        helperConn!.listenAsServerOnPort(0)
+
+        let port = helperConn!.port()
+
+        let URL = NSBundle.mainBundle().URLForResource("Asset Pipeline Helper",
+                                                       withExtension: ".app")
+        let config = [
+            NSWorkspaceLaunchConfigurationArguments : [ String(port) ]
+        ]
+
+        try! NSWorkspace.sharedWorkspace().launchApplicationAtURL(
+            URL!,
+            options: NSWorkspaceLaunchOptions(),
+            configuration: config
+        )
+    }
+
     func manageProjects(sender: AnyObject) {
-        NSApp.activateIgnoringOtherApps(true)
-        self.window.makeKeyAndOrderFront(nil)
-        self.window.center()
+        launchHelperIfNeeded()
+        helperConn!.sendByte(IPCAppToHelperAction.ShowProjectWindow.rawValue)
     }
 
 }

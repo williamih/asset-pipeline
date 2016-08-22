@@ -7,9 +7,51 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7A3CBB6B1D6845590048CB9E /* ProjectsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A3CBB6A1D6845590048CB9E /* ProjectsWindowController.swift */; };
-		7A7538E81D4958970049C506 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7538E71D4958970049C506 /* AppDelegate.swift */; };
-		7A7538EB1D4958DF0049C506 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A7538E91D4958DF0049C506 /* MainMenu.xib */; };
+		7A4DFE961D6BE44700E858FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A4DFE921D6BE44700E858FE /* Assets.xcassets */; };
+		7A4DFE971D6BE44700E858FE /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A4DFE931D6BE44700E858FE /* MainMenu.xib */; };
+		7A4DFE9E1D6BE44E00E858FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A4DFE9A1D6BE44E00E858FE /* Assets.xcassets */; };
+		7A4DFE9F1D6BE44E00E858FE /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A4DFE9B1D6BE44E00E858FE /* MainMenu.xib */; };
+		7A4DFEA41D6BE46800E858FE /* HelperAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4DFEA21D6BE46800E858FE /* HelperAppDelegate.swift */; };
+		7A4DFEA51D6BE46800E858FE /* ProjectsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4DFEA31D6BE46800E858FE /* ProjectsWindowController.swift */; };
+		7A4DFEA81D6BE46F00E858FE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4DFEA71D6BE46F00E858FE /* AppDelegate.swift */; };
+		7A4DFEAD1D6BE48000E858FE /* IPCActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4DFEA91D6BE48000E858FE /* IPCActions.swift */; };
+		7A4DFEAE1D6BE48000E858FE /* IPCActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4DFEA91D6BE48000E858FE /* IPCActions.swift */; };
+		7A4DFEAF1D6BE48000E858FE /* IPCConnection.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A4DFEAB1D6BE48000E858FE /* IPCConnection.mm */; };
+		7A4DFEB01D6BE48000E858FE /* IPCConnection.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A4DFEAB1D6BE48000E858FE /* IPCConnection.mm */; };
+		7A4DFEB11D6BE51900E858FE /* Asset Pipeline Helper.app in Resources */ = {isa = PBXBuildFile; fileRef = 7A4DFE801D6BE40A00E858FE /* Asset Pipeline Helper.app */; };
+		7A4DFEB41D6BE53E00E858FE /* AssetPipelineWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5951D5499470090ED33 /* AssetPipelineWrapper.mm */; };
+		7A4DFEB51D6BE54C00E858FE /* lapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B52E1D5496200090ED33 /* lapi.c */; };
+		7A4DFEB61D6BE54E00E858FE /* lauxlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5301D5496200090ED33 /* lauxlib.c */; };
+		7A4DFEB71D6BE55200E858FE /* lbaselib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5321D5496200090ED33 /* lbaselib.c */; };
+		7A4DFEB81D6BE55500E858FE /* lcode.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5331D5496200090ED33 /* lcode.c */; };
+		7A4DFEB91D6BE55900E858FE /* ldblib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5351D5496200090ED33 /* ldblib.c */; };
+		7A4DFEBA1D6BE55B00E858FE /* ldebug.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5361D5496200090ED33 /* ldebug.c */; };
+		7A4DFEBB1D6BE55E00E858FE /* ldo.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5381D5496200090ED33 /* ldo.c */; };
+		7A4DFEBC1D6BE56100E858FE /* ldump.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B53A1D5496200090ED33 /* ldump.c */; };
+		7A4DFEBD1D6BE56300E858FE /* lfunc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B53B1D5496200090ED33 /* lfunc.c */; };
+		7A4DFEBE1D6BE56500E858FE /* lgc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B53D1D5496200090ED33 /* lgc.c */; };
+		7A4DFEBF1D6BE56800E858FE /* linit.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B53F1D5496200090ED33 /* linit.c */; };
+		7A4DFEC01D6BE56B00E858FE /* liolib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5401D5496200090ED33 /* liolib.c */; };
+		7A4DFEC11D6BE56F00E858FE /* llex.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5411D5496200090ED33 /* llex.c */; };
+		7A4DFEC21D6BE57200E858FE /* lmathlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5441D5496200090ED33 /* lmathlib.c */; };
+		7A4DFEC31D6BE57400E858FE /* lmem.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5451D5496200090ED33 /* lmem.c */; };
+		7A4DFEC41D6BE57700E858FE /* loadlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5471D5496200090ED33 /* loadlib.c */; };
+		7A4DFEC51D6BE57A00E858FE /* lobject.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5481D5496200090ED33 /* lobject.c */; };
+		7A4DFEC61D6BE57D00E858FE /* lopcodes.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B54A1D5496200090ED33 /* lopcodes.c */; };
+		7A4DFEC71D6BE58000E858FE /* loslib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B54C1D5496200090ED33 /* loslib.c */; };
+		7A4DFEC81D6BE58800E858FE /* lparser.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B54D1D5496200090ED33 /* lparser.c */; };
+		7A4DFEC91D6BE58B00E858FE /* lstate.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B54F1D5496200090ED33 /* lstate.c */; };
+		7A4DFECA1D6BE58D00E858FE /* lstring.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5511D5496200090ED33 /* lstring.c */; };
+		7A4DFECB1D6BE58F00E858FE /* lstrlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5531D5496200090ED33 /* lstrlib.c */; };
+		7A4DFECC1D6BE59200E858FE /* ltable.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5541D5496200090ED33 /* ltable.c */; };
+		7A4DFECD1D6BE59500E858FE /* ltablib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5561D5496200090ED33 /* ltablib.c */; };
+		7A4DFECE1D6BE59700E858FE /* ltm.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5571D5496200090ED33 /* ltm.c */; };
+		7A4DFECF1D6BE59B00E858FE /* lvm.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5601D5496200090ED33 /* lvm.c */; };
+		7A4DFED01D6BE59D00E858FE /* lzio.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5621D5496200090ED33 /* lzio.c */; };
+		7A4DFED11D6BE59F00E858FE /* print.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5641D5496200090ED33 /* print.c */; };
+		7A4DFED21D6BE5AA00E858FE /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AF92DFB1D60267E003D54D4 /* sqlite3.c */; };
+		7A4DFED31D6BE5AD00E858FE /* AssetPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5911D5496F40090ED33 /* AssetPipeline.cpp */; };
+		7A4DFED41D6BE5CC00E858FE /* lundump.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B55E1D5496200090ED33 /* lundump.c */; };
 		7AB6B5691D5496200090ED33 /* lapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B52E1D5496200090ED33 /* lapi.c */; };
 		7AB6B56A1D5496200090ED33 /* lauxlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5301D5496200090ED33 /* lauxlib.c */; };
 		7AB6B56B1D5496200090ED33 /* lbaselib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5321D5496200090ED33 /* lbaselib.c */; };
@@ -42,15 +84,35 @@
 		7AB6B5881D5496200090ED33 /* print.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5641D5496200090ED33 /* print.c */; };
 		7AB6B5931D5496F40090ED33 /* AssetPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5911D5496F40090ED33 /* AssetPipeline.cpp */; };
 		7AB6B5961D5499470090ED33 /* AssetPipelineWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5951D5499470090ED33 /* AssetPipelineWrapper.mm */; };
-		7AD575401D4784300010AA4C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7AD5753C1D4784300010AA4C /* Assets.xcassets */; };
 		7AF92DFE1D60267E003D54D4 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AF92DFB1D60267E003D54D4 /* sqlite3.c */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		7A4DFEB21D6BE51D00E858FE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A24848C1D46D83C00C61397 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A4DFE7F1D6BE40A00E858FE;
+			remoteInfo = "Asset Pipeline Helper";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		7A2484941D46D83C00C61397 /* Asset Pipeline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Asset Pipeline.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		7A3CBB6A1D6845590048CB9E /* ProjectsWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectsWindowController.swift; sourceTree = "<group>"; };
-		7A7538E71D4958970049C506 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7A7538EA1D4958DF0049C506 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		7A4DFE801D6BE40A00E858FE /* Asset Pipeline Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Asset Pipeline Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A4DFE921D6BE44700E858FE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7A4DFE941D6BE44700E858FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		7A4DFE951D6BE44700E858FE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7A4DFE9A1D6BE44E00E858FE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7A4DFE9C1D6BE44E00E858FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		7A4DFE9D1D6BE44E00E858FE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7A4DFEA21D6BE46800E858FE /* HelperAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelperAppDelegate.swift; sourceTree = "<group>"; };
+		7A4DFEA31D6BE46800E858FE /* ProjectsWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectsWindowController.swift; sourceTree = "<group>"; };
+		7A4DFEA71D6BE46F00E858FE /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		7A4DFEA91D6BE48000E858FE /* IPCActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPCActions.swift; sourceTree = "<group>"; };
+		7A4DFEAA1D6BE48000E858FE /* IPCConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPCConnection.h; sourceTree = "<group>"; };
+		7A4DFEAB1D6BE48000E858FE /* IPCConnection.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IPCConnection.mm; sourceTree = "<group>"; };
+		7A4DFEAC1D6BE48000E858FE /* IPCConnectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPCConnectionDelegate.h; sourceTree = "<group>"; };
 		7AB6B5291D5496200090ED33 /* lua.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lua.hpp; sourceTree = "<group>"; };
 		7AB6B52E1D5496200090ED33 /* lapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lapi.c; sourceTree = "<group>"; };
 		7AB6B52F1D5496200090ED33 /* lapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lapi.h; sourceTree = "<group>"; };
@@ -110,8 +172,6 @@
 		7AB6B5941D5499470090ED33 /* AssetPipelineWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetPipelineWrapper.h; sourceTree = "<group>"; };
 		7AB6B5951D5499470090ED33 /* AssetPipelineWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AssetPipelineWrapper.mm; sourceTree = "<group>"; };
 		7AB6B5971D549A520090ED33 /* AssetPipeline-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AssetPipeline-Bridging-Header.h"; sourceTree = "<group>"; };
-		7AD5753C1D4784300010AA4C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		7AD5753F1D4784300010AA4C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7AF92DFB1D60267E003D54D4 /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
 		7AF92DFC1D60267E003D54D4 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
 		7AF92DFD1D60267E003D54D4 /* sqlite3ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3ext.h; sourceTree = "<group>"; };
@@ -119,6 +179,13 @@
 
 /* Begin PBXFrameworksBuildPhase section */
 		7A2484911D46D83C00C61397 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A4DFE7D1D6BE40A00E858FE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -141,8 +208,46 @@
 			isa = PBXGroup;
 			children = (
 				7A2484941D46D83C00C61397 /* Asset Pipeline.app */,
+				7A4DFE801D6BE40A00E858FE /* Asset Pipeline Helper.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		7A4DFE911D6BE44700E858FE /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				7A4DFE921D6BE44700E858FE /* Assets.xcassets */,
+				7A4DFE931D6BE44700E858FE /* MainMenu.xib */,
+				7A4DFE951D6BE44700E858FE /* Info.plist */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		7A4DFE991D6BE44E00E858FE /* MenuApp */ = {
+			isa = PBXGroup;
+			children = (
+				7A4DFE9A1D6BE44E00E858FE /* Assets.xcassets */,
+				7A4DFE9B1D6BE44E00E858FE /* MainMenu.xib */,
+				7A4DFE9D1D6BE44E00E858FE /* Info.plist */,
+			);
+			path = MenuApp;
+			sourceTree = "<group>";
+		};
+		7A4DFEA11D6BE46800E858FE /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				7A4DFEA21D6BE46800E858FE /* HelperAppDelegate.swift */,
+				7A4DFEA31D6BE46800E858FE /* ProjectsWindowController.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		7A4DFEA61D6BE46F00E858FE /* MenuApp */ = {
+			isa = PBXGroup;
+			children = (
+				7A4DFEA71D6BE46F00E858FE /* AppDelegate.swift */,
+			);
+			path = MenuApp;
 			sourceTree = "<group>";
 		};
 		7A7538E51D4958970049C506 /* Source */ = {
@@ -160,8 +265,12 @@
 		7A7538E61D4958970049C506 /* Mac */ = {
 			isa = PBXGroup;
 			children = (
-				7A7538E71D4958970049C506 /* AppDelegate.swift */,
-				7A3CBB6A1D6845590048CB9E /* ProjectsWindowController.swift */,
+				7A4DFEA11D6BE46800E858FE /* Helper */,
+				7A4DFEA61D6BE46F00E858FE /* MenuApp */,
+				7A4DFEA91D6BE48000E858FE /* IPCActions.swift */,
+				7A4DFEAC1D6BE48000E858FE /* IPCConnectionDelegate.h */,
+				7A4DFEAA1D6BE48000E858FE /* IPCConnection.h */,
+				7A4DFEAB1D6BE48000E858FE /* IPCConnection.mm */,
 				7AB6B5971D549A520090ED33 /* AssetPipeline-Bridging-Header.h */,
 				7AB6B5941D5499470090ED33 /* AssetPipelineWrapper.h */,
 				7AB6B5951D5499470090ED33 /* AssetPipelineWrapper.mm */,
@@ -258,9 +367,8 @@
 		7AD575381D4784300010AA4C /* Mac */ = {
 			isa = PBXGroup;
 			children = (
-				7AD5753C1D4784300010AA4C /* Assets.xcassets */,
-				7AD5753F1D4784300010AA4C /* Info.plist */,
-				7A7538E91D4958DF0049C506 /* MainMenu.xib */,
+				7A4DFE911D6BE44700E858FE /* Helper */,
+				7A4DFE991D6BE44E00E858FE /* MenuApp */,
 			);
 			name = Mac;
 			sourceTree = "<group>";
@@ -289,10 +397,28 @@
 			buildRules = (
 			);
 			dependencies = (
+				7A4DFEB31D6BE51D00E858FE /* PBXTargetDependency */,
 			);
 			name = "Asset Pipeline";
 			productName = "Asset Pipeline";
 			productReference = 7A2484941D46D83C00C61397 /* Asset Pipeline.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7A4DFE7F1D6BE40A00E858FE /* Asset Pipeline Helper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A4DFE901D6BE40A00E858FE /* Build configuration list for PBXNativeTarget "Asset Pipeline Helper" */;
+			buildPhases = (
+				7A4DFE7C1D6BE40A00E858FE /* Sources */,
+				7A4DFE7D1D6BE40A00E858FE /* Frameworks */,
+				7A4DFE7E1D6BE40A00E858FE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Asset Pipeline Helper";
+			productName = "Asset Pipeline Helper";
+			productReference = 7A4DFE801D6BE40A00E858FE /* Asset Pipeline Helper.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -306,6 +432,9 @@
 				ORGANIZATIONNAME = "William Irwin-Harris";
 				TargetAttributes = {
 					7A2484931D46D83C00C61397 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+					7A4DFE7F1D6BE40A00E858FE = {
 						CreatedOnToolsVersion = 7.3.1;
 					};
 				};
@@ -324,6 +453,7 @@
 			projectRoot = "";
 			targets = (
 				7A2484931D46D83C00C61397 /* Asset Pipeline */,
+				7A4DFE7F1D6BE40A00E858FE /* Asset Pipeline Helper */,
 			);
 		};
 /* End PBXProject section */
@@ -333,8 +463,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7AD575401D4784300010AA4C /* Assets.xcassets in Resources */,
-				7A7538EB1D4958DF0049C506 /* MainMenu.xib in Resources */,
+				7A4DFEB11D6BE51900E858FE /* Asset Pipeline Helper.app in Resources */,
+				7A4DFE9E1D6BE44E00E858FE /* Assets.xcassets in Resources */,
+				7A4DFE9F1D6BE44E00E858FE /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A4DFE7E1D6BE40A00E858FE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A4DFE961D6BE44700E858FE /* Assets.xcassets in Resources */,
+				7A4DFE971D6BE44700E858FE /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,7 +485,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A4DFEAF1D6BE48000E858FE /* IPCConnection.mm in Sources */,
 				7AB6B5931D5496F40090ED33 /* AssetPipeline.cpp in Sources */,
+				7A4DFEAD1D6BE48000E858FE /* IPCActions.swift in Sources */,
 				7AB6B5731D5496200090ED33 /* linit.c in Sources */,
 				7AB6B5721D5496200090ED33 /* lgc.c in Sources */,
 				7AB6B5771D5496200090ED33 /* lmem.c in Sources */,
@@ -353,7 +495,6 @@
 				7AB6B5711D5496200090ED33 /* lfunc.c in Sources */,
 				7AB6B57E1D5496200090ED33 /* lstring.c in Sources */,
 				7AB6B56D1D5496200090ED33 /* ldblib.c in Sources */,
-				7A7538E81D4958970049C506 /* AppDelegate.swift in Sources */,
 				7AB6B5811D5496200090ED33 /* ltablib.c in Sources */,
 				7AB6B5861D5496200090ED33 /* lvm.c in Sources */,
 				7AF92DFE1D60267E003D54D4 /* sqlite3.c in Sources */,
@@ -371,7 +512,6 @@
 				7AB6B5871D5496200090ED33 /* lzio.c in Sources */,
 				7AB6B5761D5496200090ED33 /* lmathlib.c in Sources */,
 				7AB6B57C1D5496200090ED33 /* lparser.c in Sources */,
-				7A3CBB6B1D6845590048CB9E /* ProjectsWindowController.swift in Sources */,
 				7AB6B56F1D5496200090ED33 /* ldo.c in Sources */,
 				7AB6B57D1D5496200090ED33 /* lstate.c in Sources */,
 				7AB6B57A1D5496200090ED33 /* lopcodes.c in Sources */,
@@ -379,17 +519,78 @@
 				7AB6B56A1D5496200090ED33 /* lauxlib.c in Sources */,
 				7AB6B5821D5496200090ED33 /* ltm.c in Sources */,
 				7AB6B57F1D5496200090ED33 /* lstrlib.c in Sources */,
+				7A4DFEA81D6BE46F00E858FE /* AppDelegate.swift in Sources */,
 				7AB6B56C1D5496200090ED33 /* lcode.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A4DFE7C1D6BE40A00E858FE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A4DFEB81D6BE55500E858FE /* lcode.c in Sources */,
+				7A4DFEB41D6BE53E00E858FE /* AssetPipelineWrapper.mm in Sources */,
+				7A4DFEBD1D6BE56300E858FE /* lfunc.c in Sources */,
+				7A4DFEB71D6BE55200E858FE /* lbaselib.c in Sources */,
+				7A4DFEBA1D6BE55B00E858FE /* ldebug.c in Sources */,
+				7A4DFECF1D6BE59B00E858FE /* lvm.c in Sources */,
+				7A4DFEC01D6BE56B00E858FE /* liolib.c in Sources */,
+				7A4DFEC71D6BE58000E858FE /* loslib.c in Sources */,
+				7A4DFED31D6BE5AD00E858FE /* AssetPipeline.cpp in Sources */,
+				7A4DFED41D6BE5CC00E858FE /* lundump.c in Sources */,
+				7A4DFEB51D6BE54C00E858FE /* lapi.c in Sources */,
+				7A4DFECE1D6BE59700E858FE /* ltm.c in Sources */,
+				7A4DFEB91D6BE55900E858FE /* ldblib.c in Sources */,
+				7A4DFED11D6BE59F00E858FE /* print.c in Sources */,
+				7A4DFEB01D6BE48000E858FE /* IPCConnection.mm in Sources */,
+				7A4DFEBF1D6BE56800E858FE /* linit.c in Sources */,
+				7A4DFEC31D6BE57400E858FE /* lmem.c in Sources */,
+				7A4DFEBC1D6BE56100E858FE /* ldump.c in Sources */,
+				7A4DFECA1D6BE58D00E858FE /* lstring.c in Sources */,
+				7A4DFEA41D6BE46800E858FE /* HelperAppDelegate.swift in Sources */,
+				7A4DFED01D6BE59D00E858FE /* lzio.c in Sources */,
+				7A4DFED21D6BE5AA00E858FE /* sqlite3.c in Sources */,
+				7A4DFEC91D6BE58B00E858FE /* lstate.c in Sources */,
+				7A4DFEC61D6BE57D00E858FE /* lopcodes.c in Sources */,
+				7A4DFEC11D6BE56F00E858FE /* llex.c in Sources */,
+				7A4DFEA51D6BE46800E858FE /* ProjectsWindowController.swift in Sources */,
+				7A4DFEBB1D6BE55E00E858FE /* ldo.c in Sources */,
+				7A4DFEC41D6BE57700E858FE /* loadlib.c in Sources */,
+				7A4DFEC51D6BE57A00E858FE /* lobject.c in Sources */,
+				7A4DFECD1D6BE59500E858FE /* ltablib.c in Sources */,
+				7A4DFECB1D6BE58F00E858FE /* lstrlib.c in Sources */,
+				7A4DFEC21D6BE57200E858FE /* lmathlib.c in Sources */,
+				7A4DFEBE1D6BE56500E858FE /* lgc.c in Sources */,
+				7A4DFEB61D6BE54E00E858FE /* lauxlib.c in Sources */,
+				7A4DFEAE1D6BE48000E858FE /* IPCActions.swift in Sources */,
+				7A4DFEC81D6BE58800E858FE /* lparser.c in Sources */,
+				7A4DFECC1D6BE59200E858FE /* ltable.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		7A4DFEB31D6BE51D00E858FE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A4DFE7F1D6BE40A00E858FE /* Asset Pipeline Helper */;
+			targetProxy = 7A4DFEB21D6BE51D00E858FE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
-		7A7538E91D4958DF0049C506 /* MainMenu.xib */ = {
+		7A4DFE931D6BE44700E858FE /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				7A7538EA1D4958DF0049C506 /* Base */,
+				7A4DFE941D6BE44700E858FE /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		7A4DFE9B1D6BE44E00E858FE /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7A4DFE9C1D6BE44E00E858FE /* Base */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -434,11 +635,18 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../Source/lua/etc",
+					"$(SRCROOT)/../Source/lua/src",
+					"$(SRCROOT)/../Source",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/../Source/Mac/AssetPipeline-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/Source";
 			};
 			name = Debug;
 		};
@@ -473,9 +681,16 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../Source/lua/etc",
+					"$(SRCROOT)/../Source/lua/src",
+					"$(SRCROOT)/../Source",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/../Source/Mac/AssetPipeline-Bridging-Header.h";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/Source";
 			};
 			name = Release;
 		};
@@ -484,17 +699,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/../Source/lua/etc",
-					"$(SRCROOT)/../Source/lua/src",
-					"$(SRCROOT)/../Source",
-				);
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = MenuApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "mycompany.Asset-Pipeline";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/../Source/Mac/AssetPipeline-Bridging-Header.h";
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/Source";
 			};
 			name = Debug;
 		};
@@ -503,17 +711,37 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/../Source/lua/etc",
-					"$(SRCROOT)/../Source/lua/src",
-					"$(SRCROOT)/../Source",
-				);
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = MenuApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "mycompany.Asset-Pipeline";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/../Source/Mac/AssetPipeline-Bridging-Header.h";
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/Source";
+			};
+			name = Release;
+		};
+		7A4DFE8E1D6BE40A00E858FE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Helper/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "mycompany.Asset-Pipeline-Helper";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		7A4DFE8F1D6BE40A00E858FE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Helper/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "mycompany.Asset-Pipeline-Helper";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -537,6 +765,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		7A4DFE901D6BE40A00E858FE /* Build configuration list for PBXNativeTarget "Asset Pipeline Helper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A4DFE8E1D6BE40A00E858FE /* Debug */,
+				7A4DFE8F1D6BE40A00E858FE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

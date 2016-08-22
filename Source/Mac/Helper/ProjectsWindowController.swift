@@ -6,8 +6,12 @@ class ProjectsWindowController: NSObject, NSWindowDelegate {
     @IBOutlet weak var tableView : NSTableView!
 
     func windowDidResignKey(notification: NSNotification) {
-        NSApp.hide(nil)
-        NSApp.unhideWithoutActivation()
+    }
+
+    func showWindow() {
+        NSApp.activateIgnoringOtherApps(true)
+        window.makeKeyAndOrderFront(nil)
+        window.center()
     }
 
     @IBAction
