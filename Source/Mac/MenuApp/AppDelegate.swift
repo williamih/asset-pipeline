@@ -55,6 +55,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, IPCConnectionDelegate {
         }
     }
 
+    func onIPCConnectionClosed() {
+        helperConn = nil
+    }
+
     func launchHelperIfNeeded() {
         if helperConn != nil {
             return;

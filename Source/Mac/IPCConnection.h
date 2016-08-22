@@ -6,6 +6,8 @@
 - (void)listenAsServerOnPort:(uint16_t)port;
 - (void)connectAsClientToPort:(uint16_t)port;
 
+- (BOOL)isConnected;
+- (BOOL)isSendAvailable;
 - (uint16_t)port;
 
 - (void)sendByte:(uint8_t)byte;

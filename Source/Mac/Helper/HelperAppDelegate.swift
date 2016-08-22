@@ -46,4 +46,8 @@ class HelperAppDelegate: NSObject, NSApplicationDelegate, IPCConnectionDelegate 
         }
     }
 
+    func onIPCConnectionClosed() {
+        NSApp.terminate(nil)
+    }
+
 }

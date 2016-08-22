@@ -23,7 +23,20 @@
     return self;
 }
 
+- (void)closeAllStreams {
+    [_readStream close];
+    [_writeStream close];
+    _readStream = nil;
+    _writeStream = nil;
+    if (_serverSocket != NULL) {
+        CFSocketInvalidate(_serverSocket);
+        CFRelease(_serverSocket);
+        _serverSocket = NULL;
+    }
+}
+
 - (void)dealloc {
+    [self closeAllStreams];
     delete _byteQueue;
     delete _blockQueue;
 }
@@ -77,6 +90,9 @@ static void SocketCallback(CFSocketRef s, CFSocketCallBackType callbackType,
 }
 
 - (void)listenAsServerOnPort:(uint16_t)port {
+    NSAssert(_readStream == nil && _writeStream == nil && _serverSocket == NULL,
+             @"IPCConnection already set up");
+
     CFSocketContext context;
     context.version = 0;
     context.info = (__bridge void *)self;
@@ -118,6 +134,9 @@ static void SocketCallback(CFSocketRef s, CFSocketCallBackType callbackType,
 }
 
 - (void)connectAsClientToPort:(uint16_t)port {
+    NSAssert(_readStream == nil && _writeStream == nil && _serverSocket == NULL,
+             @"IPCConnection already set up");
+
     CFReadStreamRef readStream;
     CFWriteStreamRef writeStream;
 
@@ -153,6 +172,8 @@ static void SocketCallback(CFSocketRef s, CFSocketCallBackType callbackType,
 }
 
 - (void)internalSendByte:(uint8_t)byte onComplete:(void (^)(void))block {
+    NSAssert([self isSendAvailable], @"IPCConnection is not available for sending");
+
     _byteQueue->push_back(byte);
     _blockQueue->push_back(block);
     if ([_writeStream hasSpaceAvailable])
@@ -167,7 +188,17 @@ static void SocketCallback(CFSocketRef s, CFSocketCallBackType callbackType,
     [self internalSendByte:byte onComplete:block];
 }
 
+- (BOOL)isConnected {
+    return _readStream != nil;
+}
+
+- (BOOL)isSendAvailable {
+    return (_writeStream != nil) || (_serverSocket != NULL);
+}
+
 - (uint16_t)port {
+    NSAssert(_serverSocket != NULL, @"Must be a server connection");
+
     int sockfd = (int)CFSocketGetNative(_serverSocket);
     struct sockaddr_in addr;
     socklen_t len = sizeof addr;
@@ -182,6 +213,9 @@ static void SocketCallback(CFSocketRef s, CFSocketCallBackType callbackType,
         [self internalSendBufferedData];
     }
 
+    bool connectionClosed = (eventCode == NSStreamEventErrorOccurred) ||
+                            (eventCode == NSStreamEventEndEncountered);
+
     if (aStream == _readStream && eventCode == NSStreamEventHasBytesAvailable
         && self.delegate != nil) {
         //
@@ -194,6 +228,14 @@ static void SocketCallback(CFSocketRef s, CFSocketCallBackType callbackType,
         for (NSInteger i = 0; i < bytesRead; ++i) {
             [self.delegate receiveIPCByte:bytes[i]];
         }
+        if (bytesRead == 0) {
+            connectionClosed = true;
+        }
+    }
+
+    if (connectionClosed) {
+        [self closeAllStreams];
+        [self.delegate onIPCConnectionClosed];
     }
 }
 
