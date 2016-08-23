@@ -8,4 +8,7 @@
 
 - (void)addProjectWithName:(nonnull NSString *)name directory:(nonnull NSString *)directory;
 
+- (NSInteger)activeProjectIndex;
+- (void)setActiveProjectIndex:(NSInteger)index;
+
 @end

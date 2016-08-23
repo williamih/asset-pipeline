@@ -16,6 +16,10 @@ public:
 
     void AddProject(const char* name, const char* directory);
 
+    // Returns -1 if the active project is null.
+    int GetActiveProjectIndex() const;
+    void SetActiveProjectIndex(int index);
+
 private:
     struct DBHandle {
         explicit DBHandle(const std::string& path);
@@ -50,11 +54,15 @@ private:
     ProjectDBConn& operator=(const ProjectDBConn&);
 
     DBHandle m_dbHandle;
-    mutable SQLiteStatement m_stmtProjectsTable;
+    SQLiteStatement m_stmtProjectsTable;
+    SQLiteStatement m_stmtConfigTable;
+    SQLiteStatement m_stmtSetupConfig;
     mutable SQLiteStatement m_stmtNumProjects;
     mutable SQLiteStatement m_stmtProjectName;
     mutable SQLiteStatement m_stmtProjectDirectory;
-    mutable SQLiteStatement m_stmtAddProject;
+    SQLiteStatement m_stmtAddProject;
+    mutable SQLiteStatement m_stmtGetActiveProj;
+    SQLiteStatement m_stmtSetActiveProj;
 };
 
 #endif // PIPELINE_PROJECTDBCONN_H

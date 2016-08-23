@@ -804,6 +804,9 @@ DQ
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="setAsActiveProject:" target="LMG-WG-EQn" id="AYy-Rd-uDN"/>
+                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QoA-4o-Qqe">
                         <rect key="frame" x="20" y="60" width="29" height="23"/>

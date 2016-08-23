@@ -24,6 +24,18 @@ class ProjectsWindowController: NSObject, NSWindowDelegate,
     }
 
     @IBAction
+    func setAsActiveProject(sender: AnyObject) {
+        let index = tableView.selectedRow
+        // N.B. >index< may be -1; this is okay and produces the desired
+        // behavior when passed to setActiveProjectIndex().
+        dbConn.setActiveProjectIndex(index)
+        tableView.reloadData()
+        // Need to re-select as the selection is lost when calling reloadData()
+        tableView.selectRowIndexes(NSIndexSet(index: index),
+                                   byExtendingSelection: false)
+    }
+
+    @IBAction
     func createProject(sender: AnyObject) {
         window.beginSheet(creationWindow,
                           completionHandler: { (returnCode) -> Void in
@@ -79,17 +91,44 @@ class ProjectsWindowController: NSObject, NSWindowDelegate,
 
     // MARK: NSTableViewDelegate methods
 
+    func checkBoxAction(sender: AnyObject?) {
+        if let checkBox = sender as? NSButton {
+            let row = Int(checkBox.identifier!)!
+            let selectedRow = tableView.selectedRow
+            if checkBox.state == NSOnState {
+                dbConn.setActiveProjectIndex(row)
+            } else {
+                dbConn.setActiveProjectIndex(-1)
+            }
+            tableView.reloadData()
+            // Have to re-select as reloadData() loses the selection
+            tableView.selectRowIndexes(NSIndexSet(index: selectedRow),
+                                       byExtendingSelection: false)
+        }
+    }
+
     func tableView(tableView: NSTableView,
                    viewForTableColumn tableColumn: NSTableColumn?,
                    row: Int) -> NSView? {
         if tableColumn == tableView.tableColumns[0] {
-            if let cell = tableView.makeViewWithIdentifier("ActiveStatusID", owner: nil)
+            if let cell = tableView.makeViewWithIdentifier("ActiveStatusID",
+                                                           owner: nil)
                 as? NSButton {
+
+                if row == dbConn.activeProjectIndex() {
+                    cell.state = NSOnState
+                } else {
+                    cell.state = NSOffState
+                }
+                cell.identifier = String(row)
+                cell.target = self
+                cell.action = #selector(checkBoxAction)
                 return cell
             }
         }
         if tableColumn == tableView.tableColumns[1] {
-            if let cell = tableView.makeViewWithIdentifier("ProjectNameID", owner: nil)
+            if let cell = tableView.makeViewWithIdentifier("ProjectNameID",
+                                                           owner: nil)
                 as? NSTableCellView {
                 cell.textField?.stringValue = dbConn.nameOfProjectAtIndex(row)
                 return cell

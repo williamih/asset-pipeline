@@ -38,4 +38,13 @@
     _cppDBConn->AddProject([name UTF8String], [directory UTF8String]);
 }
 
+- (NSInteger)activeProjectIndex {
+    return (NSInteger)_cppDBConn->GetActiveProjectIndex();
+}
+
+- (void)setActiveProjectIndex:(NSInteger)index {
+    NSAssert(index >= -1, @"Invalid index");
+    _cppDBConn->SetActiveProjectIndex((int)index);
+}
+
 @end
