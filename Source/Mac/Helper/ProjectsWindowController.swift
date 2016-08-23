@@ -1,6 +1,7 @@
 import Cocoa
 
-class ProjectsWindowController: NSObject, NSWindowDelegate {
+class ProjectsWindowController: NSObject, NSWindowDelegate,
+                                NSTableViewDataSource, NSTableViewDelegate {
 
     @IBOutlet weak var window : NSWindow!
     @IBOutlet weak var tableView : NSTableView!
@@ -9,8 +10,7 @@ class ProjectsWindowController: NSObject, NSWindowDelegate {
     @IBOutlet weak var projectNameField : NSTextField!
     @IBOutlet weak var projectDirectoryField : NSTextField!
 
-    func windowDidResignKey(notification: NSNotification) {
-    }
+    let dbConn = ProjectDBConnWrapper()
 
     func showWindow() {
         NSApp.activateIgnoringOtherApps(true)
@@ -35,17 +35,27 @@ class ProjectsWindowController: NSObject, NSWindowDelegate {
 
     @IBAction
     func createProjectCreateClicked(sender: AnyObject) {
+        let name = projectNameField.stringValue
+        let dir = projectDirectoryField.stringValue
         window.endSheet(creationWindow, returnCode: NSModalResponseOK)
+        projectNameField.stringValue = ""
+        projectDirectoryField.stringValue = ""
+
+        dbConn.addProjectWithName(name, directory: dir)
+
+        tableView.reloadData()
     }
 
     @IBAction
     func createProjectCancelClicked(sender: AnyObject) {
         window.endSheet(creationWindow, returnCode: NSModalResponseCancel)
+        projectNameField.stringValue = ""
+        projectDirectoryField.stringValue = ""
     }
 
     @IBAction
     func createProjectSelectProjectDirectory(sender: AnyObject) {
-        let panel = NSOpenPanel();
+        let panel = NSOpenPanel()
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = true
         panel.canCreateDirectories = false
@@ -59,6 +69,33 @@ class ProjectsWindowController: NSObject, NSWindowDelegate {
                 }
             }
         })
+    }
+
+    // MARK: NSTableViewDataSource methods
+
+    func numberOfRowsInTableView(tableView: NSTableView) -> Int {
+        return dbConn.numProjects()
+    }
+
+    // MARK: NSTableViewDelegate methods
+
+    func tableView(tableView: NSTableView,
+                   viewForTableColumn tableColumn: NSTableColumn?,
+                   row: Int) -> NSView? {
+        if tableColumn == tableView.tableColumns[0] {
+            if let cell = tableView.makeViewWithIdentifier("ActiveStatusID", owner: nil)
+                as? NSButton {
+                return cell
+            }
+        }
+        if tableColumn == tableView.tableColumns[1] {
+            if let cell = tableView.makeViewWithIdentifier("ProjectNameID", owner: nil)
+                as? NSTableCellView {
+                cell.textField?.stringValue = dbConn.nameOfProjectAtIndex(row)
+                return cell
+            }
+        }
+        return nil
     }
 
 }
