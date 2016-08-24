@@ -10,7 +10,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, IPCConnectionDelegate {
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         if let button = statusItem.button {
             button.image = NSImage(named: "StatusBarButtonImage")
-            button.action = #selector(statusBarButtonClicked)
         }
 
         let menu = NSMenu()
@@ -24,14 +23,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, IPCConnectionDelegate {
                         keyEquivalent: "q"))
 
         statusItem.menu = menu
-    }
-
-    func applicationWillTerminate(aNotification: NSNotification) {
-        // Insert code here to tear down your application
-    }
-
-    func statusBarButtonClicked(sender: AnyObject) {
-        print("Hello world")
     }
 
     func quit(sender: AnyObject?) {
