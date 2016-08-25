@@ -60,6 +60,8 @@
 		7A65F52A1D6C35D400A680CA /* ProjectDBConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A65F5251D6C35D400A680CA /* ProjectDBConn.cpp */; };
 		7A65F52D1D6C35E800A680CA /* ProjectDBConnWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A65F52C1D6C35E800A680CA /* ProjectDBConnWrapper.mm */; };
 		7A65F52E1D6C35E800A680CA /* ProjectDBConnWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A65F52C1D6C35E800A680CA /* ProjectDBConnWrapper.mm */; };
+		7A8D8A651D6D154A00886730 /* buildsystem.lua in Resources */ = {isa = PBXBuildFile; fileRef = 7A8D8A631D6D153800886730 /* buildsystem.lua */; };
+		7A8D8A661D6D154A00886730 /* list.lua in Resources */ = {isa = PBXBuildFile; fileRef = 7A8D8A641D6D153800886730 /* list.lua */; };
 		7AB6B5691D5496200090ED33 /* lapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B52E1D5496200090ED33 /* lapi.c */; };
 		7AB6B56A1D5496200090ED33 /* lauxlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5301D5496200090ED33 /* lauxlib.c */; };
 		7AB6B56B1D5496200090ED33 /* lbaselib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5321D5496200090ED33 /* lbaselib.c */; };
@@ -130,6 +132,8 @@
 		7A65F5261D6C35D400A680CA /* ProjectDBConn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectDBConn.h; sourceTree = "<group>"; };
 		7A65F52B1D6C35E800A680CA /* ProjectDBConnWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectDBConnWrapper.h; sourceTree = "<group>"; };
 		7A65F52C1D6C35E800A680CA /* ProjectDBConnWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ProjectDBConnWrapper.mm; sourceTree = "<group>"; };
+		7A8D8A631D6D153800886730 /* buildsystem.lua */ = {isa = PBXFileReference; lastKnownFileType = text; path = buildsystem.lua; sourceTree = "<group>"; };
+		7A8D8A641D6D153800886730 /* list.lua */ = {isa = PBXFileReference; lastKnownFileType = text; path = list.lua; sourceTree = "<group>"; };
 		7AB6B5291D5496200090ED33 /* lua.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lua.hpp; sourceTree = "<group>"; };
 		7AB6B52E1D5496200090ED33 /* lapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lapi.c; sourceTree = "<group>"; };
 		7AB6B52F1D5496200090ED33 /* lapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lapi.h; sourceTree = "<group>"; };
@@ -216,6 +220,7 @@
 			isa = PBXGroup;
 			children = (
 				7AD575381D4784300010AA4C /* Mac */,
+				7A8D8A621D6D153800886730 /* Scripts */,
 				7A7538E51D4958970049C506 /* Source */,
 				7A2484951D46D83C00C61397 /* Products */,
 			);
@@ -306,6 +311,16 @@
 				7A65F52C1D6C35E800A680CA /* ProjectDBConnWrapper.mm */,
 			);
 			path = Mac;
+			sourceTree = "<group>";
+		};
+		7A8D8A621D6D153800886730 /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				7A8D8A631D6D153800886730 /* buildsystem.lua */,
+				7A8D8A641D6D153800886730 /* list.lua */,
+			);
+			name = Scripts;
+			path = ../Scripts;
 			sourceTree = "<group>";
 		};
 		7AB6B5261D5496200090ED33 /* lua */ = {
@@ -497,6 +512,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A8D8A651D6D154A00886730 /* buildsystem.lua in Resources */,
+				7A8D8A661D6D154A00886730 /* list.lua in Resources */,
 				7A4DFEB11D6BE51900E858FE /* Asset Pipeline Helper.app in Resources */,
 				7A4DFE9E1D6BE44E00E858FE /* Assets.xcassets in Resources */,
 				7A4DFE9F1D6BE44E00E858FE /* MainMenu.xib in Resources */,

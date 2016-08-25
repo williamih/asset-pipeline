@@ -2,4 +2,7 @@
 
 @interface AssetPipelineWrapper : NSObject
 
+- (void)setProjectWithDirectory:(nonnull NSString *)path;
+- (void)compile;
+
 @end

@@ -18,4 +18,12 @@
     delete _cppAssetPipeline;
 }
 
+- (void)setProjectWithDirectory:(nonnull NSString *)path {
+    _cppAssetPipeline->SetProjectWithDirectory([path UTF8String]);
+}
+
+- (void)compile {
+    _cppAssetPipeline->Compile();
+}
+
 @end

@@ -5,6 +5,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, IPCConnectionDelegate {
 
     let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(-2)
     let assetPipeline = AssetPipelineWrapper()
+    let dbConn = ProjectDBConnWrapper()
     var helperConn : IPCConnection?
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
@@ -16,6 +17,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, IPCConnectionDelegate {
 
         menu.addItem(NSMenuItem(title: "Manage Projects",
             action: #selector(manageProjects),
+            keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Compile",
+            action: #selector(compile),
             keyEquivalent: ""))
         menu.addItem(NSMenuItem.separatorItem())
         menu.addItem(NSMenuItem(title: "Quit Asset Pipeline",
@@ -79,4 +83,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, IPCConnectionDelegate {
         helperConn!.sendByte(IPCAppToHelperAction.ShowProjectWindow.rawValue)
     }
 
+    func compile(sender: AnyObject) {
+        let projIndex = dbConn.activeProjectIndex()
+        let dir = dbConn.directoryOfProjectAtIndex(projIndex)
+        assetPipeline.setProjectWithDirectory(dir)
+        assetPipeline.compile()
+    }
 }
