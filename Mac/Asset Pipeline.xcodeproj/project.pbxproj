@@ -94,6 +94,8 @@
 		7AB6B5881D5496200090ED33 /* print.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5641D5496200090ED33 /* print.c */; };
 		7AB6B5931D5496F40090ED33 /* AssetPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5911D5496F40090ED33 /* AssetPipeline.cpp */; };
 		7AB6B5961D5499470090ED33 /* AssetPipelineWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5951D5499470090ED33 /* AssetPipelineWrapper.mm */; };
+		7ADB2ED81D6EB52500F79550 /* bit.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ADB2ED71D6EB52500F79550 /* bit.c */; };
+		7ADB2ED91D6EB52500F79550 /* bit.c in Sources */ = {isa = PBXBuildFile; fileRef = 7ADB2ED71D6EB52500F79550 /* bit.c */; };
 		7AF92DFE1D60267E003D54D4 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AF92DFB1D60267E003D54D4 /* sqlite3.c */; };
 /* End PBXBuildFile section */
 
@@ -193,6 +195,7 @@
 		7AB6B5941D5499470090ED33 /* AssetPipelineWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetPipelineWrapper.h; sourceTree = "<group>"; };
 		7AB6B5951D5499470090ED33 /* AssetPipelineWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AssetPipelineWrapper.mm; sourceTree = "<group>"; };
 		7AB6B5971D549A520090ED33 /* AssetPipeline-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AssetPipeline-Bridging-Header.h"; sourceTree = "<group>"; };
+		7ADB2ED71D6EB52500F79550 /* bit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bit.c; sourceTree = "<group>"; };
 		7AF92DFB1D60267E003D54D4 /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
 		7AF92DFC1D60267E003D54D4 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
 		7AF92DFD1D60267E003D54D4 /* sqlite3ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3ext.h; sourceTree = "<group>"; };
@@ -343,6 +346,7 @@
 		7AB6B52D1D5496200090ED33 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				7ADB2ED71D6EB52500F79550 /* bit.c */,
 				7AB6B52E1D5496200090ED33 /* lapi.c */,
 				7AB6B52F1D5496200090ED33 /* lapi.h */,
 				7AB6B5301D5496200090ED33 /* lauxlib.c */,
@@ -561,6 +565,7 @@
 				7AB6B5691D5496200090ED33 /* lapi.c in Sources */,
 				7AB6B5881D5496200090ED33 /* print.c in Sources */,
 				7AB6B5791D5496200090ED33 /* lobject.c in Sources */,
+				7ADB2ED81D6EB52500F79550 /* bit.c in Sources */,
 				7AB6B57B1D5496200090ED33 /* loslib.c in Sources */,
 				7AB6B5801D5496200090ED33 /* ltable.c in Sources */,
 				7AB6B5871D5496200090ED33 /* lzio.c in Sources */,
@@ -616,6 +621,7 @@
 				7A4DFEC41D6BE57700E858FE /* loadlib.c in Sources */,
 				7A4DFEC51D6BE57A00E858FE /* lobject.c in Sources */,
 				7A4DFECD1D6BE59500E858FE /* ltablib.c in Sources */,
+				7ADB2ED91D6EB52500F79550 /* bit.c in Sources */,
 				7A4DFECB1D6BE58F00E858FE /* lstrlib.c in Sources */,
 				7A4DFEC21D6BE57200E858FE /* lmathlib.c in Sources */,
 				7A65F5281D6C35D400A680CA /* AssetPipelineOsFuncs_Mac.mm in Sources */,
