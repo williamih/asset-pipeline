@@ -102,6 +102,20 @@ static int lua_ContentDirIterator_Closure(lua_State* L)
     return 1;
 }
 
+static int lua_ContentDirIterator_OnGC(lua_State* L)
+{
+    using AssetPipelineOsFuncs::DirectoryIterator;
+
+    if (lua_gettop(L) != 1)
+        return luaL_error(L, "Expected 1 argument, got %d", lua_gettop(L));
+
+    DirectoryIterator** ptr = (DirectoryIterator**)lua_touserdata(L, 1);
+    DirectoryIterator::Destroy(*ptr);
+    *ptr = NULL;
+
+    return 0;
+}
+
 static int lua_GetContentDirIterator(lua_State* L)
 {
     using AssetPipelineOsFuncs::DirectoryIterator;
@@ -118,6 +132,13 @@ static int lua_GetContentDirIterator(lua_State* L)
         L, sizeof(DirectoryIterator**)
     );
     *ptr = iter;
+
+    // Set metatable so we can clean up the DirectoryIterator using Lua's GC
+    lua_newtable(L);
+    lua_pushstring(L, "__gc");
+    lua_pushcfunction(L, lua_ContentDirIterator_OnGC);
+    lua_settable(L, -3);
+    lua_setmetatable(L, -2);
 
     lua_pushcclosure(L, lua_ContentDirIterator_Closure, 1);
 
