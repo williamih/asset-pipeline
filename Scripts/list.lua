@@ -11,6 +11,14 @@ function List:IsEmpty()
     return self.first > self.last
 end
 
+function List:PeekHead()
+    return list[self.first]
+end
+
+function List:PeekTail()
+    return list[self.last]
+end
+
 function List:InsertHead(value)
     local first = self.first - 1
     self.first = first

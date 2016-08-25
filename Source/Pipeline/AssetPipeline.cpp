@@ -31,30 +31,18 @@ void AssetPipeline::SetProjectWithDirectory(const char* path)
 }
 
 static const char KEY_RULES = 0;
-static const char KEY_TASKS = 0;
 static const char KEY_CONTENTDIR = 0;
+static const char KEY_MANIFEST = 0;
 
 static int lua_Rule(lua_State* L)
 {
-    if (lua_gettop(L) != 2 || !lua_isstring(L, 1) || !lua_isfunction(L, 2))
-        return luaL_error(L, "Usage: Rule(pattern, func)");
+    if (lua_gettop(L) != 2 ||
+        (!lua_isstring(L, 1) && !lua_istable(L, 1)) ||
+         !lua_istable(L, 2))
+        return luaL_error(L, "Usage: Rule(name or { names }, "
+                             "{ Parse = func, Execute = func })");
 
     lua_pushlightuserdata(L, (void*)&KEY_RULES);
-    lua_gettable(L, LUA_REGISTRYINDEX);
-
-    lua_pushvalue(L, 1);
-    lua_pushvalue(L, 2);
-    lua_settable(L, -3);
-
-    return 0;
-}
-
-static int lua_Task(lua_State* L)
-{
-    if (lua_gettop(L) != 2 || !lua_isstring(L, 1) || !lua_istable(L, 2))
-        return luaL_error(L, "Usage: Task(name, { Parse = func, Execute = func })");
-
-    lua_pushlightuserdata(L, (void*)&KEY_TASKS);
     lua_gettable(L, LUA_REGISTRYINDEX);
 
     lua_pushvalue(L, 1);
@@ -76,71 +64,25 @@ static int lua_ContentDir(lua_State* L)
     return 0;
 }
 
-static int lua_ContentDirIterator_Closure(lua_State* L)
+static int lua_Manifest(lua_State* L)
 {
-    using AssetPipelineOsFuncs::DirectoryIterator;
+    if (lua_gettop(L) != 1 || !lua_isstring(L, 1))
+        return luaL_error(L, "Usage: Manifest(path)");
 
-    if (lua_gettop(L) != 0)
-        return luaL_error(L, "Expected 0 arguments, got %d", lua_gettop(L));
-
-    DirectoryIterator** ptr = (DirectoryIterator**)lua_touserdata(
-        L, lua_upvalueindex(1)
-    );
-    DirectoryIterator* iter = *ptr;
-
-    std::pair<std::string, bool> result = iter->Next();
-    if (result.second) {
-        lua_pushlightuserdata(L, (void*)&KEY_CONTENTDIR);
-        lua_gettable(L, LUA_REGISTRYINDEX);
-        std::string path(lua_tostring(L, -1));
-        lua_pop(L, 1);
-        path = path + "/" + result.first;
-        lua_pushstring(L, path.c_str());
-    } else {
-        lua_pushnil(L);
-    }
-    return 1;
-}
-
-static int lua_ContentDirIterator_OnGC(lua_State* L)
-{
-    using AssetPipelineOsFuncs::DirectoryIterator;
-
-    if (lua_gettop(L) != 1)
-        return luaL_error(L, "Expected 1 argument, got %d", lua_gettop(L));
-
-    DirectoryIterator** ptr = (DirectoryIterator**)lua_touserdata(L, 1);
-    DirectoryIterator::Destroy(*ptr);
-    *ptr = NULL;
+    lua_pushlightuserdata(L, (void*)&KEY_MANIFEST);
+    lua_pushvalue(L, 1);
+    lua_settable(L, LUA_REGISTRYINDEX);
 
     return 0;
 }
 
-static int lua_GetContentDirIterator(lua_State* L)
+static int lua_GetManifestPath(lua_State* L)
 {
-    using AssetPipelineOsFuncs::DirectoryIterator;
-
     if (lua_gettop(L) != 0)
-        return luaL_error(L, "Usage: GetContentDirIterator()");
+        return luaL_error(L, "Usage: GetManifestPath()");
 
-    lua_pushlightuserdata(L, (void*)&KEY_CONTENTDIR);
+    lua_pushlightuserdata(L, (void*)&KEY_MANIFEST);
     lua_gettable(L, LUA_REGISTRYINDEX);
-    DirectoryIterator* iter = DirectoryIterator::Create(lua_tostring(L, -1));
-    lua_pop(L, 1);
-
-    DirectoryIterator** ptr = (DirectoryIterator**)lua_newuserdata(
-        L, sizeof(DirectoryIterator**)
-    );
-    *ptr = iter;
-
-    // Set metatable so we can clean up the DirectoryIterator using Lua's GC
-    lua_newtable(L);
-    lua_pushstring(L, "__gc");
-    lua_pushcfunction(L, lua_ContentDirIterator_OnGC);
-    lua_settable(L, -3);
-    lua_setmetatable(L, -2);
-
-    lua_pushcclosure(L, lua_ContentDirIterator_Closure, 1);
 
     return 1;
 }
@@ -149,23 +91,16 @@ static lua_State* SetupLuaState(const char* projectPath)
 {
     lua_State* L = luaL_newstate();
 
-    luaopen_base(L);
-    luaopen_table(L);
-    luaopen_string(L);
-    luaopen_math(L);
+    luaL_openlibs(L);
 
     lua_pushlightuserdata(L, (void*)&KEY_RULES);
     lua_newtable(L);
     lua_settable(L, LUA_REGISTRYINDEX);
 
-    lua_pushlightuserdata(L, (void*)&KEY_TASKS);
-    lua_newtable(L);
-    lua_settable(L, LUA_REGISTRYINDEX);
-
     lua_register(L, "Rule", lua_Rule);
-    lua_register(L, "Task", lua_Task);
     lua_register(L, "ContentDir", lua_ContentDir);
-    lua_register(L, "GetContentDirIterator", lua_GetContentDirIterator);
+    lua_register(L, "Manifest", lua_Manifest);
+    lua_register(L, "GetManifestPath", lua_GetManifestPath);
 
     int ret = luaL_dofile(L, BUILD_SCRIPT_RELATIVE_PATH);
     if (ret != 0) {
@@ -213,10 +148,8 @@ static bool CompileOneFile(lua_State* L)
     lua_getglobal(L, "BuildSystem");
     lua_pushlightuserdata(L, (void*)&KEY_RULES);
     lua_gettable(L, LUA_REGISTRYINDEX);
-    lua_pushlightuserdata(L, (void*)&KEY_TASKS);
-    lua_gettable(L, LUA_REGISTRYINDEX);
 
-    if (lua_pcall(L, 3, 1, 0) != 0) {
+    if (lua_pcall(L, 2, 1, 0) != 0) {
         DebugPrint("Error in Lua script.");
         DebugPrint("Error: %s", lua_tostring(L, -1));
         lua_pop(L, 1);
