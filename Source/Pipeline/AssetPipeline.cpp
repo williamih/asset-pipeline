@@ -87,6 +87,40 @@ static int lua_GetManifestPath(lua_State* L)
     return 1;
 }
 
+static int lua_RunProcess(lua_State* L)
+{
+    int nArgs = lua_gettop(L);
+    bool error = (nArgs == 0);
+    for (int i = 1; i <= nArgs; ++i) {
+        if (!lua_isstring(L, 1)) {
+            error = true;
+            break;
+        }
+    }
+    if (error)
+        return luaL_error(L, "Usage: RunProcess(command, arg1, arg2, arg3, ...)");
+
+    const char* command = lua_tostring(L, 1);
+    std::vector<const char*> args;
+    for (int i = 1; i <= nArgs; ++i) {
+        args.push_back(lua_tostring(L, i));
+    }
+    args.push_back(NULL);
+
+    AssetPipelineOsFuncs::Process process(command, args);
+    if (process.result == AssetPipelineOsFuncs::PROCESS_SUCCESS) {
+        lua_pushinteger(L, process.status);
+        lua_pushstring(L, process.stdoutStr.c_str());
+        lua_pushstring(L, process.stderrStr.c_str());
+    } else {
+        lua_pushnil(L);
+        lua_pushnil(L);
+        lua_pushnil(L);
+    }
+
+    return 3;
+}
+
 static lua_State* SetupLuaState(const char* projectPath)
 {
     lua_State* L = luaL_newstate();
@@ -101,6 +135,7 @@ static lua_State* SetupLuaState(const char* projectPath)
     lua_register(L, "ContentDir", lua_ContentDir);
     lua_register(L, "Manifest", lua_Manifest);
     lua_register(L, "GetManifestPath", lua_GetManifestPath);
+    lua_register(L, "RunProcess", lua_RunProcess);
 
     int ret = luaL_dofile(L, BUILD_SCRIPT_RELATIVE_PATH);
     if (ret != 0) {
