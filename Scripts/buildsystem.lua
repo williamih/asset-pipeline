@@ -99,5 +99,5 @@ function BuildSystem:CompileNext(mapRules)
         end
     end
 
-    return self.stack:IsEmpty() or self.nextPath == nil
+    return self.stack:IsEmpty() and self.nextPath == nil
 end
