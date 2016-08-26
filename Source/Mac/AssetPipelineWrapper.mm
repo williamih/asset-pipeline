@@ -26,4 +26,20 @@
     _cppAssetPipeline->Compile();
 }
 
+- (void)pollMessages {
+    if (self.delegate == nil)
+        return;
+
+    AssetPipelineMessage msg;
+    while (_cppAssetPipeline->PollMessage(&msg)) {
+        switch (msg.type) {
+            case ASSET_PIPELINE_COMPILE_FINISHED:
+                [self.delegate assetCompileFinishedWithFileCount:msg.intValue];
+                break;
+            default:
+                break;
+        }
+    }
+}
+
 @end

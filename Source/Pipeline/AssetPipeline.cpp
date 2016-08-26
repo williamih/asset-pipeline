@@ -18,6 +18,9 @@ AssetPipeline::AssetPipeline()
     , m_mutex()
     , m_compileInProgress(false)
     , m_condVar()
+
+    , m_messageQueue()
+    , m_messageQueueMutex()
 {}
 
 AssetPipeline::~AssetPipeline()
@@ -29,6 +32,22 @@ void AssetPipeline::SetProjectWithDirectory(const char* path)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     m_nextDir = path;
+}
+
+bool AssetPipeline::PollMessage(AssetPipelineMessage* message)
+{
+    std::lock_guard<std::mutex> lock(m_messageQueueMutex);
+    if (m_messageQueue.empty())
+        return false;
+    *message = m_messageQueue.front();
+    m_messageQueue.pop();
+    return true;
+}
+
+void AssetPipeline::PushMessage(const AssetPipelineMessage& message)
+{
+    std::lock_guard<std::mutex> lock(m_messageQueueMutex);
+    m_messageQueue.push(message);
 }
 
 static const char KEY_RULES = 0;
@@ -223,6 +242,8 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
             ResetBuildSystem(L);
         }
 
+        int compiledCount = 0;
+
         for (;;) {
             bool compiling;
             {
@@ -234,11 +255,16 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
 
             // Compile one file
             bool done = CompileOneFile(L);
+            ++compiledCount;
             if (done) {
                 {
                     std::lock_guard<std::mutex> lock(this_->m_mutex);
                     this_->m_compileInProgress = false;
                 }
+                AssetPipelineMessage msg;
+                msg.type = ASSET_PIPELINE_COMPILE_FINISHED;
+                msg.intValue = compiledCount;
+                this_->PushMessage(msg);
                 break;
             }
         }

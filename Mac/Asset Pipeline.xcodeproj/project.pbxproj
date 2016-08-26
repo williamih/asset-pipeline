@@ -113,6 +113,7 @@
 
 /* Begin PBXFileReference section */
 		7A2484941D46D83C00C61397 /* Asset Pipeline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Asset Pipeline.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A30C48A1D70480C0004B3BA /* AssetPipelineDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetPipelineDelegate.h; sourceTree = "<group>"; };
 		7A4DFE801D6BE40A00E858FE /* Asset Pipeline Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Asset Pipeline Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A4DFE921D6BE44700E858FE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7A4DFE941D6BE44700E858FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -312,6 +313,7 @@
 				7A4DFEAA1D6BE48000E858FE /* IPCConnection.h */,
 				7A4DFEAB1D6BE48000E858FE /* IPCConnection.mm */,
 				7AB6B5971D549A520090ED33 /* AssetPipeline-Bridging-Header.h */,
+				7A30C48A1D70480C0004B3BA /* AssetPipelineDelegate.h */,
 				7AB6B5941D5499470090ED33 /* AssetPipelineWrapper.h */,
 				7AB6B5951D5499470090ED33 /* AssetPipelineWrapper.mm */,
 				7A65F52B1D6C35E800A680CA /* ProjectDBConnWrapper.h */,

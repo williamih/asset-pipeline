@@ -1,14 +1,30 @@
 import Cocoa
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate, IPCConnectionDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate,
+                   IPCConnectionDelegate, AssetPipelineDelegate {
 
     let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(-2)
     let assetPipeline = AssetPipelineWrapper()
     let dbConn = ProjectDBConnWrapper()
     var helperConn : IPCConnection?
 
+    func pollAssetPipelineMessages(timer: NSTimer) {
+        assetPipeline.pollMessages()
+    }
+
+    // MARK: NSApplicationDelegate methods
+
     func applicationDidFinishLaunching(aNotification: NSNotification) {
+        let POLL_TIME_INTERVAL = 0.25 // seconds
+        NSTimer.scheduledTimerWithTimeInterval(
+            POLL_TIME_INTERVAL,
+            target: self,
+            selector: #selector(pollAssetPipelineMessages),
+            userInfo: nil,
+            repeats: true
+        )
+
         if let button = statusItem.button {
             button.image = NSImage(named: "StatusBarButtonImage")
         }
@@ -27,15 +43,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, IPCConnectionDelegate {
                         keyEquivalent: "q"))
 
         statusItem.menu = menu
+
+        NSUserNotificationCenter.defaultUserNotificationCenter().delegate = self
+        assetPipeline.delegate = self
     }
 
-    func quit(sender: AnyObject?) {
-        if let conn = helperConn {
-            conn.sendByte(IPCAppToHelperAction.Quit.rawValue)
-        } else {
-            NSApp.terminate(nil)
-        }
-    }
+    // MARK: IPCConnectionDelegate methods
 
     func receiveIPCByte(byte: UInt8) {
         let action = IPCHelperToAppAction(rawValue: byte)!
@@ -52,6 +65,33 @@ class AppDelegate: NSObject, NSApplicationDelegate, IPCConnectionDelegate {
 
     func onIPCConnectionClosed() {
         helperConn = nil
+    }
+
+    // MARK: AssetPipelineDelegate methods
+
+    func assetCompileFinishedWithFileCount(count: Int) {
+        let notification = NSUserNotification()
+        notification.title = "Asset Build Completed"
+        notification.subtitle = String(format: "Compiled %d assets", count)
+        let center = NSUserNotificationCenter.defaultUserNotificationCenter()
+        center.deliverNotification(notification)
+    }
+
+    // MARK: NSUserNotificationCenterDelegate methods
+
+    func userNotificationCenter(center: NSUserNotificationCenter,
+                                shouldPresentNotification notification: NSUserNotification) -> Bool {
+        return true
+    }
+
+    // MARK: Other methods
+
+    func quit(sender: AnyObject?) {
+        if let conn = helperConn {
+            conn.sendByte(IPCAppToHelperAction.Quit.rawValue)
+        } else {
+            NSApp.terminate(nil)
+        }
     }
 
     func launchHelperIfNeeded() {
