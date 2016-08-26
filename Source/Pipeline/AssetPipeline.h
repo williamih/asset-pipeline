@@ -1,19 +1,18 @@
 #ifndef PIPELINE_ASSETPIPELINE_H
 #define PIPELINE_ASSETPIPELINE_H
 
+#include <functional>
 #include <thread>
 #include <string>
 #include <queue>
 
 struct lua_State;
 
-enum AssetPipelineMessageType {
-    ASSET_PIPELINE_COMPILE_FINISHED,
-};
+class AssetPipelineDelegate {
+public:
+    virtual ~AssetPipelineDelegate() {}
 
-struct AssetPipelineMessage {
-    AssetPipelineMessageType type;
-    int intValue;
+    virtual void OnAssetBuildFinished(int nCompiledSuccessfully) {}
 };
 
 class AssetPipeline {
@@ -24,13 +23,18 @@ public:
     void SetProjectWithDirectory(const char* path);
     void Compile();
 
-    bool PollMessage(AssetPipelineMessage* message);
+    AssetPipelineDelegate* GetDelegate() const;
+    void SetDelegate(AssetPipelineDelegate* delegate);
+
+    void CallDelegateFunctions();
 
 private:
+    typedef std::function<void(AssetPipelineDelegate*)> MsgFunc;
+
     AssetPipeline(const AssetPipeline&);
     AssetPipeline& operator=(const AssetPipeline&);
 
-    void PushMessage(const AssetPipelineMessage& message);
+    void PushMessage(const MsgFunc& message);
     static void CompileProc(AssetPipeline* this_);
 
     std::thread m_thread;
@@ -39,7 +43,9 @@ private:
     bool m_compileInProgress;
     std::condition_variable m_condVar;
 
-    std::queue<AssetPipelineMessage> m_messageQueue;
+    AssetPipelineDelegate* m_delegate;
+
+    std::queue<MsgFunc> m_messageQueue;
     std::mutex m_messageQueueMutex;
 };
 

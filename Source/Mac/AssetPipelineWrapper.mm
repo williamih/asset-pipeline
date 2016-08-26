@@ -1,21 +1,39 @@
 #import "AssetPipelineWrapper.h"
 
+#include <Core/Macros.h>
 #include <Pipeline/AssetPipeline.h>
+
+class AssetPipelineCppDelegateMac : public AssetPipelineDelegate {
+public:
+    virtual void OnAssetBuildFinished(int nCompiledSuccessfully)
+    {
+        ASSERT(objCDelegate);
+        NSInteger count = (NSInteger)nCompiledSuccessfully;
+        [objCDelegate assetCompileFinishedWithFileCount:count];
+    }
+
+    id<AssetPipelineMacDelegate> objCDelegate;
+};
 
 @implementation AssetPipelineWrapper {
     AssetPipeline* _cppAssetPipeline;
+    AssetPipelineCppDelegateMac* _cppDelegate;
 }
 
 - (instancetype)init {
     self = [super init];
     if (self) {
         _cppAssetPipeline = new AssetPipeline;
+        _cppDelegate = new AssetPipelineCppDelegateMac;
+        _cppAssetPipeline->SetDelegate(_cppDelegate);
     }
     return self;
 }
 
 - (void)dealloc {
+    ASSERT(_cppAssetPipeline->GetDelegate() == _cppDelegate);
     delete _cppAssetPipeline;
+    delete _cppDelegate;
 }
 
 - (void)setProjectWithDirectory:(nonnull NSString *)path {
@@ -30,16 +48,8 @@
     if (self.delegate == nil)
         return;
 
-    AssetPipelineMessage msg;
-    while (_cppAssetPipeline->PollMessage(&msg)) {
-        switch (msg.type) {
-            case ASSET_PIPELINE_COMPILE_FINISHED:
-                [self.delegate assetCompileFinishedWithFileCount:msg.intValue];
-                break;
-            default:
-                break;
-        }
-    }
+    _cppDelegate->objCDelegate = self.delegate;
+    _cppAssetPipeline->CallDelegateFunctions();
 }
 
 @end

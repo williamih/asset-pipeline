@@ -2,7 +2,7 @@ import Cocoa
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate,
-                   IPCConnectionDelegate, AssetPipelineDelegate {
+                   IPCConnectionDelegate, AssetPipelineMacDelegate {
 
     let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(-2)
     let assetPipeline = AssetPipelineWrapper()
@@ -67,7 +67,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         helperConn = nil
     }
 
-    // MARK: AssetPipelineDelegate methods
+    // MARK: AssetPipelineMacDelegate methods
 
     func assetCompileFinishedWithFileCount(count: Int) {
         let notification = NSUserNotification()

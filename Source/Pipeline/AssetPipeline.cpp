@@ -19,6 +19,8 @@ AssetPipeline::AssetPipeline()
     , m_compileInProgress(false)
     , m_condVar()
 
+    , m_delegate(NULL)
+
     , m_messageQueue()
     , m_messageQueueMutex()
 {}
@@ -34,17 +36,24 @@ void AssetPipeline::SetProjectWithDirectory(const char* path)
     m_nextDir = path;
 }
 
-bool AssetPipeline::PollMessage(AssetPipelineMessage* message)
+void AssetPipeline::CallDelegateFunctions()
 {
-    std::lock_guard<std::mutex> lock(m_messageQueueMutex);
-    if (m_messageQueue.empty())
-        return false;
-    *message = m_messageQueue.front();
-    m_messageQueue.pop();
-    return true;
+    if (!m_delegate)
+        return;
+    MsgFunc func;
+    for (;;) {
+        {
+            std::lock_guard<std::mutex> lock(m_messageQueueMutex);
+            if (m_messageQueue.empty())
+                break;
+            func = m_messageQueue.front();
+            m_messageQueue.pop();
+        }
+        func(m_delegate);
+    }
 }
 
-void AssetPipeline::PushMessage(const AssetPipelineMessage& message)
+void AssetPipeline::PushMessage(const MsgFunc& message)
 {
     std::lock_guard<std::mutex> lock(m_messageQueueMutex);
     m_messageQueue.push(message);
@@ -261,10 +270,11 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
                     std::lock_guard<std::mutex> lock(this_->m_mutex);
                     this_->m_compileInProgress = false;
                 }
-                AssetPipelineMessage msg;
-                msg.type = ASSET_PIPELINE_COMPILE_FINISHED;
-                msg.intValue = compiledCount;
-                this_->PushMessage(msg);
+                this_->PushMessage(std::bind(
+                    &AssetPipelineDelegate::OnAssetBuildFinished,
+                    std::placeholders::_1,
+                    compiledCount
+                ));
                 break;
             }
         }
@@ -281,4 +291,14 @@ void AssetPipeline::Compile()
         m_compileInProgress = true;
     }
     m_condVar.notify_all();
+}
+
+AssetPipelineDelegate* AssetPipeline::GetDelegate() const
+{
+    return m_delegate;
+}
+
+void AssetPipeline::SetDelegate(AssetPipelineDelegate* delegate)
+{
+    m_delegate = delegate;
 }

@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import "AssetPipelineDelegate.h"
+#import "AssetPipelineMacDelegate.h"
 
 @interface AssetPipelineWrapper : NSObject
 
@@ -7,6 +7,6 @@
 - (void)compile;
 - (void)pollMessages;
 
-@property (weak, nullable) id<AssetPipelineDelegate> delegate;
+@property (weak, nullable) id<AssetPipelineMacDelegate> delegate;
 
 @end

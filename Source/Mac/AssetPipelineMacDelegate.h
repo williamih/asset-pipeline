@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@protocol AssetPipelineDelegate <NSObject>
+@protocol AssetPipelineMacDelegate <NSObject>
 
 @required
 
