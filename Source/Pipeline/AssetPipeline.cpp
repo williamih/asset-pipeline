@@ -3,6 +3,7 @@
 #include <lua.hpp>
 #include <Core/Macros.h>
 #include "AssetPipelineOsFuncs.h"
+#include "Process.h"
 
 const char* const BUILD_SCRIPT_RELATIVE_PATH = "assetpipeline.lua";
 
@@ -107,8 +108,8 @@ static int lua_RunProcess(lua_State* L)
     }
     args.push_back(NULL);
 
-    AssetPipelineOsFuncs::Process process(command, args);
-    if (process.result == AssetPipelineOsFuncs::PROCESS_SUCCESS) {
+    Process process(command, args);
+    if (process.result == PROCESS_SUCCESS) {
         lua_pushinteger(L, process.status);
         lua_pushstring(L, process.stdoutStr.c_str());
         lua_pushstring(L, process.stderrStr.c_str());

@@ -52,6 +52,8 @@
 		7A4DFED21D6BE5AA00E858FE /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AF92DFB1D60267E003D54D4 /* sqlite3.c */; };
 		7A4DFED31D6BE5AD00E858FE /* AssetPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5911D5496F40090ED33 /* AssetPipeline.cpp */; };
 		7A4DFED41D6BE5CC00E858FE /* lundump.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B55E1D5496200090ED33 /* lundump.c */; };
+		7A623C151D7005DC0053B7EA /* Process_posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A623C131D7005DC0053B7EA /* Process_posix.cpp */; };
+		7A623C161D7005DC0053B7EA /* Process_posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A623C131D7005DC0053B7EA /* Process_posix.cpp */; };
 		7A65F5211D6C35CA00A680CA /* Debug_Mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A65F51F1D6C35CA00A680CA /* Debug_Mac.mm */; };
 		7A65F5221D6C35CA00A680CA /* Debug_Mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A65F51F1D6C35CA00A680CA /* Debug_Mac.mm */; };
 		7A65F5271D6C35D400A680CA /* AssetPipelineOsFuncs_Mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A65F5231D6C35D400A680CA /* AssetPipelineOsFuncs_Mac.mm */; };
@@ -125,6 +127,8 @@
 		7A4DFEAA1D6BE48000E858FE /* IPCConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPCConnection.h; sourceTree = "<group>"; };
 		7A4DFEAB1D6BE48000E858FE /* IPCConnection.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IPCConnection.mm; sourceTree = "<group>"; };
 		7A4DFEAC1D6BE48000E858FE /* IPCConnectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPCConnectionDelegate.h; sourceTree = "<group>"; };
+		7A623C121D7005CA0053B7EA /* Process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Process.h; sourceTree = "<group>"; };
+		7A623C131D7005DC0053B7EA /* Process_posix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Process_posix.cpp; sourceTree = "<group>"; };
 		7A65F51E1D6C35CA00A680CA /* Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Debug.h; sourceTree = "<group>"; };
 		7A65F51F1D6C35CA00A680CA /* Debug_Mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Debug_Mac.mm; sourceTree = "<group>"; };
 		7A65F5201D6C35CA00A680CA /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
@@ -413,6 +417,8 @@
 				7A65F5251D6C35D400A680CA /* ProjectDBConn.cpp */,
 				7A65F5241D6C35D400A680CA /* AssetPipelineOsFuncs.h */,
 				7A65F5231D6C35D400A680CA /* AssetPipelineOsFuncs_Mac.mm */,
+				7A623C121D7005CA0053B7EA /* Process.h */,
+				7A623C131D7005DC0053B7EA /* Process_posix.cpp */,
 			);
 			path = Pipeline;
 			sourceTree = "<group>";
@@ -581,6 +587,7 @@
 				7AB6B57F1D5496200090ED33 /* lstrlib.c in Sources */,
 				7A4DFEA81D6BE46F00E858FE /* AppDelegate.swift in Sources */,
 				7AB6B56C1D5496200090ED33 /* lcode.c in Sources */,
+				7A623C151D7005DC0053B7EA /* Process_posix.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -588,6 +595,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A623C161D7005DC0053B7EA /* Process_posix.cpp in Sources */,
 				7A4DFEB81D6BE55500E858FE /* lcode.c in Sources */,
 				7A4DFEB41D6BE53E00E858FE /* AssetPipelineWrapper.mm in Sources */,
 				7A4DFEBD1D6BE56300E858FE /* lfunc.c in Sources */,
