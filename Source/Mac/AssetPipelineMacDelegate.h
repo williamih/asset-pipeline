@@ -4,6 +4,10 @@
 
 @required
 
-- (void)assetCompileFinishedWithFileCount:(NSInteger)count;
+- (void)assetCompileFinishedWithSuccessCount:(NSInteger)successCount
+                                failureCount:(NSInteger)failureCount;
+- (void)assetCompileFailedWithInputPaths:(nonnull NSArray<NSString *> *)inputPaths
+                             outputPaths:(nonnull NSArray<NSString *> *)outputPaths
+                            errorMessage:(nonnull NSString *)errorMessage;
 
 @end

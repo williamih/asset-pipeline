@@ -62,6 +62,7 @@ void AssetPipeline::PushMessage(const MsgFunc& message)
 static const char KEY_RULES = 0;
 static const char KEY_CONTENTDIR = 0;
 static const char KEY_MANIFEST = 0;
+static const char KEY_THIS = 0;
 
 static int lua_Rule(lua_State* L)
 {
@@ -116,6 +117,50 @@ static int lua_GetManifestPath(lua_State* L)
     return 1;
 }
 
+static void StringTableToVector(lua_State* L, int tableIndex,
+                                std::vector<std::string>* vec)
+{
+    ASSERT(vec);
+    // this method doesn't support negative stack indices
+    ASSERT(tableIndex >= 0);
+    int size = luaL_getn(L, tableIndex);
+    for (int i = 1; i <= size; ++i) {
+        lua_pushinteger(L, i);
+        lua_gettable(L, tableIndex);
+        if (!lua_isstring(L, -1))
+            luaL_error(L, "Expected string, got %s", luaL_typename(L, -1));
+        const char* str = lua_tostring(L, -1);
+        vec->push_back(str);
+    }
+}
+
+static int lua_RecordCompileError(lua_State* L)
+{
+    if (lua_gettop(L) != 3 || !lua_istable(L, 1) || !lua_istable(L, 2) ||
+        !lua_isstring(L, 3))
+        return luaL_error(
+            L, "Usage: RecordCompileError(inputsTable, outputsTable, errorMsg)"
+        );
+
+    AssetCompileFailureInfo info;
+    StringTableToVector(L, 1, &info.inputPaths);
+    StringTableToVector(L, 2, &info.outputPaths);
+    info.errorMessage = lua_tostring(L, 3);
+
+    lua_pushlightuserdata(L, (void*)&KEY_THIS);
+    lua_gettable(L, LUA_REGISTRYINDEX);
+    AssetPipeline* this_ = (AssetPipeline*)lua_touserdata(L, -1);
+    lua_pop(L, 1);
+
+    this_->PushMessage(std::bind(
+        &AssetPipelineDelegate::OnAssetFailedToCompile,
+        std::placeholders::_1,
+        info
+    ));
+
+    return 0;
+}
+
 static int lua_RunProcess(lua_State* L)
 {
     int nArgs = lua_gettop(L);
@@ -150,7 +195,7 @@ static int lua_RunProcess(lua_State* L)
     return 3;
 }
 
-static lua_State* SetupLuaState(const char* projectPath)
+static lua_State* SetupLuaState(const char* projectPath, AssetPipeline* pipeline)
 {
     lua_State* L = luaL_newstate();
 
@@ -160,10 +205,15 @@ static lua_State* SetupLuaState(const char* projectPath)
     lua_newtable(L);
     lua_settable(L, LUA_REGISTRYINDEX);
 
+    lua_pushlightuserdata(L, (void*)&KEY_THIS);
+    lua_pushlightuserdata(L, (void*)pipeline);
+    lua_settable(L, LUA_REGISTRYINDEX);
+
     lua_register(L, "Rule", lua_Rule);
     lua_register(L, "ContentDir", lua_ContentDir);
     lua_register(L, "Manifest", lua_Manifest);
     lua_register(L, "GetManifestPath", lua_GetManifestPath);
+    lua_register(L, "RecordCompileError", lua_RecordCompileError);
     lua_register(L, "RunProcess", lua_RunProcess);
 
     int ret = luaL_dofile(L, BUILD_SCRIPT_RELATIVE_PATH);
@@ -204,8 +254,13 @@ static void ResetBuildSystem(lua_State* L)
     }
 }
 
-static bool CompileOneFile(lua_State* L)
+static void CompileOneFile(lua_State* L,
+                           bool* hadRemainingAsset,
+                           bool* succeeded)
 {
+    ASSERT(hadRemainingAsset);
+    ASSERT(succeeded);
+
     lua_getglobal(L, "BuildSystem");
     lua_pushstring(L, "CompileNext");
     lua_gettable(L, -2);
@@ -213,15 +268,15 @@ static bool CompileOneFile(lua_State* L)
     lua_pushlightuserdata(L, (void*)&KEY_RULES);
     lua_gettable(L, LUA_REGISTRYINDEX);
 
-    if (lua_pcall(L, 2, 1, 0) != 0) {
+    if (lua_pcall(L, 2, 2, 0) != 0) {
         DebugPrint("Error in Lua script.");
         DebugPrint("Error: %s", lua_tostring(L, -1));
         lua_pop(L, 1);
         exit(1);
     }
 
-    bool result = (bool)lua_toboolean(L, -1);
-    return result;
+    *hadRemainingAsset = (bool)lua_toboolean(L, -2);
+    *succeeded = (bool)lua_toboolean(L, -1);
 }
 
 void AssetPipeline::CompileProc(AssetPipeline* this_)
@@ -246,12 +301,13 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
             AssetPipelineOsFuncs::SetWorkingDirectory(currentDir.c_str());
             if (L != NULL)
                 lua_close(L);
-            L = SetupLuaState(currentDir.c_str());
+            L = SetupLuaState(currentDir.c_str(), this_);
         } else {
             ResetBuildSystem(L);
         }
 
-        int compiledCount = 0;
+        int compileSucceededCount = 0;
+        int compileFailedCount = 0;
 
         for (;;) {
             bool compiling;
@@ -263,9 +319,12 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
                 break;
 
             // Compile one file
-            bool done = CompileOneFile(L);
-            ++compiledCount;
-            if (done) {
+            bool hadRemainingAsset;
+            bool succeeded;
+            CompileOneFile(L, &hadRemainingAsset, &succeeded);
+
+            if (!hadRemainingAsset) {
+                // Compilation process is done
                 {
                     std::lock_guard<std::mutex> lock(this_->m_mutex);
                     this_->m_compileInProgress = false;
@@ -273,9 +332,16 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
                 this_->PushMessage(std::bind(
                     &AssetPipelineDelegate::OnAssetBuildFinished,
                     std::placeholders::_1,
-                    compiledCount
+                    compileSucceededCount,
+                    compileFailedCount
                 ));
                 break;
+            }
+
+            if (succeeded) {
+                ++compileSucceededCount;
+            } else {
+                ++compileFailedCount;
             }
         }
     }

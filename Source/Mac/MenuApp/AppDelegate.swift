@@ -69,10 +69,32 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
 
     // MARK: AssetPipelineMacDelegate methods
 
-    func assetCompileFinishedWithFileCount(count: Int) {
+    func assetCompileFinishedWithSuccessCount(successCount: Int,
+                                              failureCount: Int) {
         let notification = NSUserNotification()
         notification.title = "Asset Build Completed"
-        notification.subtitle = String(format: "Compiled %d assets", count)
+        if (failureCount == 0) {
+            notification.subtitle = String(
+                format: "Successfully compiled all %d assets.",
+                successCount
+            )
+        } else {
+            notification.subtitle = String(
+                format: "%d assets compiled successfully, %d failed.",
+                successCount,
+                failureCount
+            )
+        }
+        let center = NSUserNotificationCenter.defaultUserNotificationCenter()
+        center.deliverNotification(notification)
+    }
+
+    func assetCompileFailedWithInputPaths(inputPaths: [String],
+                                          outputPaths: [String],
+                                          errorMessage: String) {
+        let notification = NSUserNotification()
+        notification.title = "Failed to Compile Asset"
+        notification.subtitle = String(format: "%@", inputPaths[0])
         let center = NSUserNotificationCenter.defaultUserNotificationCenter()
         center.deliverNotification(notification)
     }

@@ -64,6 +64,8 @@ function BuildSystem:CompileNext(mapRules)
     end
 
     local done = false
+    local success = false
+
     while (not done) and (not (self.stack:IsEmpty() and self.nextPath == nil)) do
         if self.stack:IsEmpty() then
             self.stack:InsertTail(self.nextPath)
@@ -87,11 +89,9 @@ function BuildSystem:CompileNext(mapRules)
             if not mustCompileInputs then
                 self.stack:RemoveTail()
                 if AreInputsNewer(inputs, outputs) then
-                    local result = funcTable.Execute(inputs, outputs)
-                    if result then
-                        print("Success")
-                    else
-                        print("Error")
+                    success, errorMessage = funcTable.Execute(inputs, outputs)
+                    if not success then
+                        RecordCompileError(inputs, outputs, errorMessage)
                     end
                     done = true
                 end
@@ -99,5 +99,5 @@ function BuildSystem:CompileNext(mapRules)
         end
     end
 
-    return self.stack:IsEmpty() and self.nextPath == nil
+    return done, success
 end

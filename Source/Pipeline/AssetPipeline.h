@@ -4,15 +4,23 @@
 #include <functional>
 #include <thread>
 #include <string>
+#include <vector>
 #include <queue>
 
 struct lua_State;
+
+struct AssetCompileFailureInfo {
+    std::vector<std::string> inputPaths;
+    std::vector<std::string> outputPaths;
+    std::string errorMessage;
+};
 
 class AssetPipelineDelegate {
 public:
     virtual ~AssetPipelineDelegate() {}
 
-    virtual void OnAssetBuildFinished(int nCompiledSuccessfully) {}
+    virtual void OnAssetBuildFinished(int nSucceeded, int nFailed) {}
+    virtual void OnAssetFailedToCompile(const AssetCompileFailureInfo& info) {}
 };
 
 class AssetPipeline {
@@ -30,11 +38,14 @@ public:
 
 private:
     typedef std::function<void(AssetPipelineDelegate*)> MsgFunc;
+public: // NOT for use by user code
+    void PushMessage(const MsgFunc& message);
+private:
 
     AssetPipeline(const AssetPipeline&);
     AssetPipeline& operator=(const AssetPipeline&);
 
-    void PushMessage(const MsgFunc& message);
+    static void lua_RecordCompileError(lua_State* L);
     static void CompileProc(AssetPipeline* this_);
 
     std::thread m_thread;
