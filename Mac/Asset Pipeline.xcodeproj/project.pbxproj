@@ -141,6 +141,8 @@
 		7A65F52C1D6C35E800A680CA /* ProjectDBConnWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ProjectDBConnWrapper.mm; sourceTree = "<group>"; };
 		7A8D8A631D6D153800886730 /* buildsystem.lua */ = {isa = PBXFileReference; lastKnownFileType = text; path = buildsystem.lua; sourceTree = "<group>"; };
 		7A8D8A641D6D153800886730 /* list.lua */ = {isa = PBXFileReference; lastKnownFileType = text; path = list.lua; sourceTree = "<group>"; };
+		7AB4DB841D794E52007769C9 /* Endian.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Endian.h; sourceTree = "<group>"; };
+		7AB4DB851D794E7B007769C9 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
 		7AB6B5291D5496200090ED33 /* lua.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lua.hpp; sourceTree = "<group>"; };
 		7AB6B52E1D5496200090ED33 /* lapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lapi.c; sourceTree = "<group>"; };
 		7AB6B52F1D5496200090ED33 /* lapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lapi.h; sourceTree = "<group>"; };
@@ -285,6 +287,8 @@
 			children = (
 				7A65F51E1D6C35CA00A680CA /* Debug.h */,
 				7A65F51F1D6C35CA00A680CA /* Debug_Mac.mm */,
+				7AB4DB851D794E7B007769C9 /* Types.h */,
+				7AB4DB841D794E52007769C9 /* Endian.h */,
 				7A65F5201D6C35CA00A680CA /* Macros.h */,
 			);
 			path = Core;
