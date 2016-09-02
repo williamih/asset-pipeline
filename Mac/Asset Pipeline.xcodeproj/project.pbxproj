@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7A4627541D77A86800F39AB9 /* TcpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A4627521D77A86800F39AB9 /* TcpSocket.cpp */; };
+		7A4627551D77A86800F39AB9 /* TcpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A4627521D77A86800F39AB9 /* TcpSocket.cpp */; };
 		7A4DFE961D6BE44700E858FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A4DFE921D6BE44700E858FE /* Assets.xcassets */; };
 		7A4DFE971D6BE44700E858FE /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A4DFE931D6BE44700E858FE /* MainMenu.xib */; };
 		7A4DFE9E1D6BE44E00E858FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A4DFE9A1D6BE44E00E858FE /* Assets.xcassets */; };
@@ -114,6 +116,9 @@
 /* Begin PBXFileReference section */
 		7A2484941D46D83C00C61397 /* Asset Pipeline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Asset Pipeline.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A30C48A1D70480C0004B3BA /* AssetPipelineMacDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetPipelineMacDelegate.h; sourceTree = "<group>"; };
+		7A4627521D77A86800F39AB9 /* TcpSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TcpSocket.cpp; sourceTree = "<group>"; };
+		7A4627531D77A86800F39AB9 /* TcpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TcpSocket.h; sourceTree = "<group>"; };
+		7A4627561D77A88F00F39AB9 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
 		7A4DFE801D6BE40A00E858FE /* Asset Pipeline Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Asset Pipeline Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A4DFE921D6BE44700E858FE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7A4DFE941D6BE44700E858FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -245,6 +250,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		7A4627511D77A86800F39AB9 /* Os */ = {
+			isa = PBXGroup;
+			children = (
+				7A4627531D77A86800F39AB9 /* TcpSocket.h */,
+				7A4627521D77A86800F39AB9 /* TcpSocket.cpp */,
+			);
+			path = Os;
+			sourceTree = "<group>";
+		};
 		7A4DFE911D6BE44700E858FE /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -290,6 +304,7 @@
 				7AB4DB851D794E7B007769C9 /* Types.h */,
 				7AB4DB841D794E52007769C9 /* Endian.h */,
 				7A65F5201D6C35CA00A680CA /* Macros.h */,
+				7A4627561D77A88F00F39AB9 /* Types.h */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -300,6 +315,7 @@
 				7AB6B5261D5496200090ED33 /* lua */,
 				7AF92DFA1D60267E003D54D4 /* sqlite3 */,
 				7A65F51D1D6C35CA00A680CA /* Core */,
+				7A4627511D77A86800F39AB9 /* Os */,
 				7AB6B5901D5496F40090ED33 /* Pipeline */,
 				7A7538E61D4958970049C506 /* Mac */,
 			);
@@ -556,6 +572,7 @@
 				7AB6B5931D5496F40090ED33 /* AssetPipeline.cpp in Sources */,
 				7A4DFEAD1D6BE48000E858FE /* IPCActions.swift in Sources */,
 				7AB6B5731D5496200090ED33 /* linit.c in Sources */,
+				7A4627541D77A86800F39AB9 /* TcpSocket.cpp in Sources */,
 				7AB6B5721D5496200090ED33 /* lgc.c in Sources */,
 				7A65F5291D6C35D400A680CA /* ProjectDBConn.cpp in Sources */,
 				7AB6B5771D5496200090ED33 /* lmem.c in Sources */,
@@ -603,6 +620,7 @@
 			files = (
 				7A623C161D7005DC0053B7EA /* Process_posix.cpp in Sources */,
 				7A4DFEB81D6BE55500E858FE /* lcode.c in Sources */,
+				7A4627551D77A86800F39AB9 /* TcpSocket.cpp in Sources */,
 				7A4DFEB41D6BE53E00E858FE /* AssetPipelineWrapper.mm in Sources */,
 				7A4DFEBD1D6BE56300E858FE /* lfunc.c in Sources */,
 				7A4DFEB71D6BE55200E858FE /* lbaselib.c in Sources */,
