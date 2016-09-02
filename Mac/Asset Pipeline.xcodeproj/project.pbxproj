@@ -66,6 +66,8 @@
 		7A65F52E1D6C35E800A680CA /* ProjectDBConnWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A65F52C1D6C35E800A680CA /* ProjectDBConnWrapper.mm */; };
 		7A8D8A651D6D154A00886730 /* buildsystem.lua in Resources */ = {isa = PBXBuildFile; fileRef = 7A8D8A631D6D153800886730 /* buildsystem.lua */; };
 		7A8D8A661D6D154A00886730 /* list.lua in Resources */ = {isa = PBXBuildFile; fileRef = 7A8D8A641D6D153800886730 /* list.lua */; };
+		7AB4DB881D794FC6007769C9 /* AssetEventService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4DB861D794FC6007769C9 /* AssetEventService.cpp */; };
+		7AB4DB891D794FC6007769C9 /* AssetEventService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AB4DB861D794FC6007769C9 /* AssetEventService.cpp */; };
 		7AB6B5691D5496200090ED33 /* lapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B52E1D5496200090ED33 /* lapi.c */; };
 		7AB6B56A1D5496200090ED33 /* lauxlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5301D5496200090ED33 /* lauxlib.c */; };
 		7AB6B56B1D5496200090ED33 /* lbaselib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AB6B5321D5496200090ED33 /* lbaselib.c */; };
@@ -148,6 +150,8 @@
 		7A8D8A641D6D153800886730 /* list.lua */ = {isa = PBXFileReference; lastKnownFileType = text; path = list.lua; sourceTree = "<group>"; };
 		7AB4DB841D794E52007769C9 /* Endian.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Endian.h; sourceTree = "<group>"; };
 		7AB4DB851D794E7B007769C9 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
+		7AB4DB861D794FC6007769C9 /* AssetEventService.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetEventService.cpp; sourceTree = "<group>"; };
+		7AB4DB871D794FC6007769C9 /* AssetEventService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetEventService.h; sourceTree = "<group>"; };
 		7AB6B5291D5496200090ED33 /* lua.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lua.hpp; sourceTree = "<group>"; };
 		7AB6B52E1D5496200090ED33 /* lapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lapi.c; sourceTree = "<group>"; };
 		7AB6B52F1D5496200090ED33 /* lapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lapi.h; sourceTree = "<group>"; };
@@ -435,6 +439,8 @@
 			children = (
 				7AB6B5921D5496F40090ED33 /* AssetPipeline.h */,
 				7AB6B5911D5496F40090ED33 /* AssetPipeline.cpp */,
+				7AB4DB871D794FC6007769C9 /* AssetEventService.h */,
+				7AB4DB861D794FC6007769C9 /* AssetEventService.cpp */,
 				7A65F5261D6C35D400A680CA /* ProjectDBConn.h */,
 				7A65F5251D6C35D400A680CA /* ProjectDBConn.cpp */,
 				7A65F5241D6C35D400A680CA /* AssetPipelineOsFuncs.h */,
@@ -577,6 +583,7 @@
 				7A65F5291D6C35D400A680CA /* ProjectDBConn.cpp in Sources */,
 				7AB6B5771D5496200090ED33 /* lmem.c in Sources */,
 				7AB6B5741D5496200090ED33 /* liolib.c in Sources */,
+				7AB4DB881D794FC6007769C9 /* AssetEventService.cpp in Sources */,
 				7AB6B5711D5496200090ED33 /* lfunc.c in Sources */,
 				7AB6B57E1D5496200090ED33 /* lstring.c in Sources */,
 				7AB6B56D1D5496200090ED33 /* ldblib.c in Sources */,
@@ -619,6 +626,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A623C161D7005DC0053B7EA /* Process_posix.cpp in Sources */,
+				7AB4DB891D794FC6007769C9 /* AssetEventService.cpp in Sources */,
 				7A4DFEB81D6BE55500E858FE /* lcode.c in Sources */,
 				7A4627551D77A86800F39AB9 /* TcpSocket.cpp in Sources */,
 				7A4DFEB41D6BE53E00E858FE /* AssetPipelineWrapper.mm in Sources */,

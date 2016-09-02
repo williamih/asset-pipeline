@@ -90,7 +90,11 @@ function BuildSystem:CompileNext(mapRules)
                 self.stack:RemoveTail()
                 if AreInputsNewer(inputs, outputs) then
                     success, errorMessage = funcTable.Execute(inputs, outputs)
-                    if not success then
+                    if success then
+                        for _, output in ipairs(outputs) do
+                            NotifyAssetCompile(output)
+                        end
+                    else
                         RecordCompileError(inputs, outputs, errorMessage)
                     end
                     done = true

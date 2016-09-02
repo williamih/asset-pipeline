@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <queue>
+#include "AssetEventService.h"
 
 struct lua_State;
 
@@ -58,6 +59,8 @@ private:
 
     std::queue<MsgFunc> m_messageQueue;
     std::mutex m_messageQueueMutex;
+
+    AssetEventService m_assetEventService;
 };
 
 #endif // PIPELINE_ASSETPIPELINE_H

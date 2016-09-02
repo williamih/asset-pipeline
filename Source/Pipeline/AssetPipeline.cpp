@@ -23,6 +23,8 @@ AssetPipeline::AssetPipeline()
 
     , m_messageQueue()
     , m_messageQueueMutex()
+
+    , m_assetEventService()
 {}
 
 AssetPipeline::~AssetPipeline()
@@ -63,6 +65,7 @@ static const char KEY_RULES = 0;
 static const char KEY_CONTENTDIR = 0;
 static const char KEY_MANIFEST = 0;
 static const char KEY_THIS = 0;
+static const char KEY_ASSETEVENTSERVICE = 0;
 
 static int lua_Rule(lua_State* L)
 {
@@ -161,6 +164,23 @@ static int lua_RecordCompileError(lua_State* L)
     return 0;
 }
 
+static int lua_NotifyAssetCompile(lua_State* L)
+{
+    if (lua_gettop(L) != 1 || !lua_isstring(L, 1))
+        return luaL_error(L, "Usage: NotifyAssetCompile(\"path/to/asset\"");
+
+    const char* path = lua_tostring(L, 1);
+
+    lua_pushlightuserdata(L, (void*)&KEY_ASSETEVENTSERVICE);
+    lua_gettable(L, LUA_REGISTRYINDEX);
+    AssetEventService* service = (AssetEventService*)lua_touserdata(L, -1);
+    lua_pop(L, 1);
+
+    service->NotifyAssetCompiled(path);
+
+    return 0;
+}
+
 static int lua_RunProcess(lua_State* L)
 {
     int nArgs = lua_gettop(L);
@@ -195,8 +215,13 @@ static int lua_RunProcess(lua_State* L)
     return 3;
 }
 
-static lua_State* SetupLuaState(const char* projectPath, AssetPipeline* pipeline)
+static lua_State* SetupLuaState(const char* projectPath, AssetPipeline* pipeline,
+                                AssetEventService* assetEventService)
 {
+    ASSERT(projectPath);
+    ASSERT(pipeline);
+    ASSERT(assetEventService);
+
     lua_State* L = luaL_newstate();
 
     luaL_openlibs(L);
@@ -209,12 +234,17 @@ static lua_State* SetupLuaState(const char* projectPath, AssetPipeline* pipeline
     lua_pushlightuserdata(L, (void*)pipeline);
     lua_settable(L, LUA_REGISTRYINDEX);
 
+    lua_pushlightuserdata(L, (void*)&KEY_ASSETEVENTSERVICE);
+    lua_pushlightuserdata(L, (void*)assetEventService);
+    lua_settable(L, LUA_REGISTRYINDEX);
+
     lua_register(L, "Rule", lua_Rule);
     lua_register(L, "ContentDir", lua_ContentDir);
     lua_register(L, "Manifest", lua_Manifest);
     lua_register(L, "GetManifestPath", lua_GetManifestPath);
     lua_register(L, "RecordCompileError", lua_RecordCompileError);
     lua_register(L, "RunProcess", lua_RunProcess);
+    lua_register(L, "NotifyAssetCompile", lua_NotifyAssetCompile);
 
     int ret = luaL_dofile(L, BUILD_SCRIPT_RELATIVE_PATH);
     if (ret != 0) {
@@ -301,7 +331,7 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
             AssetPipelineOsFuncs::SetWorkingDirectory(currentDir.c_str());
             if (L != NULL)
                 lua_close(L);
-            L = SetupLuaState(currentDir.c_str(), this_);
+            L = SetupLuaState(currentDir.c_str(), this_, &this_->m_assetEventService);
         } else {
             ResetBuildSystem(L);
         }
