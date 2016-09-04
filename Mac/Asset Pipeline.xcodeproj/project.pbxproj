@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		7A0052AE1D7BA4C100FBFB8B /* StrUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A0052AC1D7BA4C100FBFB8B /* StrUtils.cpp */; };
 		7A0052AF1D7BA4C100FBFB8B /* StrUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A0052AC1D7BA4C100FBFB8B /* StrUtils.cpp */; };
+		7A3D445E1D7C1FC900638687 /* FileSystemWatcher_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3D445B1D7C1FC900638687 /* FileSystemWatcher_Mac.cpp */; };
+		7A3D445F1D7C1FC900638687 /* FileSystemWatcher_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A3D445B1D7C1FC900638687 /* FileSystemWatcher_Mac.cpp */; };
 		7A4627541D77A86800F39AB9 /* TcpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A4627521D77A86800F39AB9 /* TcpSocket.cpp */; };
 		7A4627551D77A86800F39AB9 /* TcpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A4627521D77A86800F39AB9 /* TcpSocket.cpp */; };
 		7A4DFE961D6BE44700E858FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A4DFE921D6BE44700E858FE /* Assets.xcassets */; };
@@ -122,6 +124,8 @@
 		7A0052AD1D7BA4C100FBFB8B /* StrUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrUtils.h; sourceTree = "<group>"; };
 		7A2484941D46D83C00C61397 /* Asset Pipeline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Asset Pipeline.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A30C48A1D70480C0004B3BA /* AssetPipelineMacDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetPipelineMacDelegate.h; sourceTree = "<group>"; };
+		7A3D445A1D7C1FC900638687 /* FileSystemWatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSystemWatcher.h; sourceTree = "<group>"; };
+		7A3D445B1D7C1FC900638687 /* FileSystemWatcher_Mac.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileSystemWatcher_Mac.cpp; sourceTree = "<group>"; };
 		7A4627521D77A86800F39AB9 /* TcpSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TcpSocket.cpp; sourceTree = "<group>"; };
 		7A4627531D77A86800F39AB9 /* TcpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TcpSocket.h; sourceTree = "<group>"; };
 		7A4627561D77A88F00F39AB9 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
@@ -263,6 +267,8 @@
 			children = (
 				7A4627531D77A86800F39AB9 /* TcpSocket.h */,
 				7A4627521D77A86800F39AB9 /* TcpSocket.cpp */,
+				7A3D445A1D7C1FC900638687 /* FileSystemWatcher.h */,
+				7A3D445B1D7C1FC900638687 /* FileSystemWatcher_Mac.cpp */,
 			);
 			path = Os;
 			sourceTree = "<group>";
@@ -606,6 +612,7 @@
 				7AB6B5701D5496200090ED33 /* ldump.c in Sources */,
 				7AB6B56E1D5496200090ED33 /* ldebug.c in Sources */,
 				7AB6B5691D5496200090ED33 /* lapi.c in Sources */,
+				7A3D445E1D7C1FC900638687 /* FileSystemWatcher_Mac.cpp in Sources */,
 				7AB6B5881D5496200090ED33 /* print.c in Sources */,
 				7AB6B5791D5496200090ED33 /* lobject.c in Sources */,
 				7ADB2ED81D6EB52500F79550 /* bit.c in Sources */,
@@ -660,6 +667,7 @@
 				7A4DFECA1D6BE58D00E858FE /* lstring.c in Sources */,
 				7A4DFEA41D6BE46800E858FE /* HelperAppDelegate.swift in Sources */,
 				7A4DFED01D6BE59D00E858FE /* lzio.c in Sources */,
+				7A3D445F1D7C1FC900638687 /* FileSystemWatcher_Mac.cpp in Sources */,
 				7A4DFED21D6BE5AA00E858FE /* sqlite3.c in Sources */,
 				7A4DFEC91D6BE58B00E858FE /* lstate.c in Sources */,
 				7A4DFEC61D6BE57D00E858FE /* lopcodes.c in Sources */,
