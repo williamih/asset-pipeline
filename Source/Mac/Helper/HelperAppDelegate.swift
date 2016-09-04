@@ -6,7 +6,6 @@ class HelperAppDelegate: NSObject, NSApplicationDelegate, IPCConnectionDelegate 
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var projectsWindowController : ProjectsWindowController!
 
-    let assetPipeline = AssetPipelineWrapper()
     let menuAppConn = IPCConnection()
 
     func determinePort() -> UInt16 {
