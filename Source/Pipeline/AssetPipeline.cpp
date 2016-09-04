@@ -199,6 +199,11 @@ static int lua_NotifyAssetCompile(lua_State* L)
 
     if (dataDirectory != NULL) {
         std::string relativePath = StrUtilsMakeRelativePath(dataDirectory, path);
+        // Convert slashes to backslashes
+        for (size_t i = 0; i < relativePath.size(); ++i) {
+            if (relativePath[i] == '/')
+                relativePath[i] = '\\';
+        }
 
         if (!relativePath.empty())
             service->NotifyAssetCompiled(relativePath.c_str());
