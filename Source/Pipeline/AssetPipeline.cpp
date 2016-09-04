@@ -4,6 +4,7 @@
 #include <Core/Macros.h>
 #include "AssetPipelineOsFuncs.h"
 #include "Process.h"
+#include "StrUtils.h"
 
 const char* const BUILD_SCRIPT_RELATIVE_PATH = "assetpipeline.lua";
 
@@ -63,6 +64,7 @@ void AssetPipeline::PushMessage(const MsgFunc& message)
 
 static const char KEY_RULES = 0;
 static const char KEY_CONTENTDIR = 0;
+static const char KEY_DATADIR = 0;
 static const char KEY_MANIFEST = 0;
 static const char KEY_THIS = 0;
 static const char KEY_ASSETEVENTSERVICE = 0;
@@ -91,6 +93,18 @@ static int lua_ContentDir(lua_State* L)
         return luaL_error(L, "Usage: ContentDir(path)");
 
     lua_pushlightuserdata(L, (void*)&KEY_CONTENTDIR);
+    lua_pushvalue(L, 1);
+    lua_settable(L, LUA_REGISTRYINDEX);
+
+    return 0;
+}
+
+static int lua_DataDir(lua_State* L)
+{
+    if (lua_gettop(L) != 1 || !lua_isstring(L, 1))
+        return luaL_error(L, "Usage: DataDir(path)");
+
+    lua_pushlightuserdata(L, (void*)&KEY_DATADIR);
     lua_pushvalue(L, 1);
     lua_settable(L, LUA_REGISTRYINDEX);
 
@@ -176,7 +190,19 @@ static int lua_NotifyAssetCompile(lua_State* L)
     AssetEventService* service = (AssetEventService*)lua_touserdata(L, -1);
     lua_pop(L, 1);
 
-    service->NotifyAssetCompiled(path);
+    lua_pushlightuserdata(L, (void*)&KEY_DATADIR);
+    lua_gettable(L, LUA_REGISTRYINDEX);
+    const char* dataDirectory = NULL;
+    if (!lua_isnil(L, -1))
+        dataDirectory = lua_tostring(L, -1);
+    lua_pop(L, 1);
+
+    if (dataDirectory != NULL) {
+        std::string relativePath = StrUtilsMakeRelativePath(dataDirectory, path);
+
+        if (!relativePath.empty())
+            service->NotifyAssetCompiled(relativePath.c_str());
+    }
 
     return 0;
 }
@@ -240,6 +266,7 @@ static lua_State* SetupLuaState(const char* projectPath, AssetPipeline* pipeline
 
     lua_register(L, "Rule", lua_Rule);
     lua_register(L, "ContentDir", lua_ContentDir);
+    lua_register(L, "DataDir", lua_DataDir);
     lua_register(L, "Manifest", lua_Manifest);
     lua_register(L, "GetManifestPath", lua_GetManifestPath);
     lua_register(L, "RecordCompileError", lua_RecordCompileError);

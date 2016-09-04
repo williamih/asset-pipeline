@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7A0052AE1D7BA4C100FBFB8B /* StrUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A0052AC1D7BA4C100FBFB8B /* StrUtils.cpp */; };
+		7A0052AF1D7BA4C100FBFB8B /* StrUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A0052AC1D7BA4C100FBFB8B /* StrUtils.cpp */; };
 		7A4627541D77A86800F39AB9 /* TcpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A4627521D77A86800F39AB9 /* TcpSocket.cpp */; };
 		7A4627551D77A86800F39AB9 /* TcpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A4627521D77A86800F39AB9 /* TcpSocket.cpp */; };
 		7A4DFE961D6BE44700E858FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A4DFE921D6BE44700E858FE /* Assets.xcassets */; };
@@ -116,6 +118,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7A0052AC1D7BA4C100FBFB8B /* StrUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StrUtils.cpp; sourceTree = "<group>"; };
+		7A0052AD1D7BA4C100FBFB8B /* StrUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrUtils.h; sourceTree = "<group>"; };
 		7A2484941D46D83C00C61397 /* Asset Pipeline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Asset Pipeline.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A30C48A1D70480C0004B3BA /* AssetPipelineMacDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetPipelineMacDelegate.h; sourceTree = "<group>"; };
 		7A4627521D77A86800F39AB9 /* TcpSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TcpSocket.cpp; sourceTree = "<group>"; };
@@ -437,6 +441,8 @@
 		7AB6B5901D5496F40090ED33 /* Pipeline */ = {
 			isa = PBXGroup;
 			children = (
+				7A0052AD1D7BA4C100FBFB8B /* StrUtils.h */,
+				7A0052AC1D7BA4C100FBFB8B /* StrUtils.cpp */,
 				7AB6B5921D5496F40090ED33 /* AssetPipeline.h */,
 				7AB6B5911D5496F40090ED33 /* AssetPipeline.cpp */,
 				7AB4DB871D794FC6007769C9 /* AssetEventService.h */,
@@ -576,6 +582,7 @@
 			files = (
 				7A4DFEAF1D6BE48000E858FE /* IPCConnection.mm in Sources */,
 				7AB6B5931D5496F40090ED33 /* AssetPipeline.cpp in Sources */,
+				7A0052AE1D7BA4C100FBFB8B /* StrUtils.cpp in Sources */,
 				7A4DFEAD1D6BE48000E858FE /* IPCActions.swift in Sources */,
 				7AB6B5731D5496200090ED33 /* linit.c in Sources */,
 				7A4627541D77A86800F39AB9 /* TcpSocket.cpp in Sources */,
@@ -626,6 +633,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A623C161D7005DC0053B7EA /* Process_posix.cpp in Sources */,
+				7A0052AF1D7BA4C100FBFB8B /* StrUtils.cpp in Sources */,
 				7AB4DB891D794FC6007769C9 /* AssetEventService.cpp in Sources */,
 				7A4DFEB81D6BE55500E858FE /* lcode.c in Sources */,
 				7A4627551D77A86800F39AB9 /* TcpSocket.cpp in Sources */,
