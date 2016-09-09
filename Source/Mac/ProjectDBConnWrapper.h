@@ -11,6 +11,4 @@
 - (NSInteger)activeProjectIndex;
 - (void)setActiveProjectIndex:(NSInteger)index;
 
-- (nonnull void *)CPlusPlusDBConn;
-
 @end
