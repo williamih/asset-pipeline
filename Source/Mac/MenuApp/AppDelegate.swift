@@ -5,9 +5,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
                    IPCConnectionDelegate, AssetPipelineMacDelegate {
 
     let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(-2)
-    let assetPipeline = AssetPipelineWrapper()
     let dbConn = ProjectDBConnWrapper()
+    let assetPipeline : AssetPipelineWrapper
     var helperConn : IPCConnection?
+
+    override init() {
+        assetPipeline = AssetPipelineWrapper(DBConn: dbConn)
+        super.init()
+    }
 
     func pollAssetPipelineMessages(timer: NSTimer) {
         assetPipeline.pollMessages()

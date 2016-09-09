@@ -67,6 +67,14 @@ static const char STMT_CONFIGTABLE[] =
     "    FOREIGN KEY(ActiveProject) REFERENCES Projects(ProjectID)"
     ")";
 
+static const char STMT_DEPSTABLE[] =
+    "CREATE TABLE IF NOT EXISTS Dependencies ("
+    "    ProjectID INTEGER NOT NULL,"
+    "    InputPath TEXT NOT NULL,"
+    "    OutputPath TEXT NOT NULL,"
+    "    FOREIGN KEY(ProjectID) REFERENCES Projects(ProjectID)"
+    ")";
+
 static const char STMT_SETUPCONFIG[] =
     "INSERT INTO Config (ActiveProject) "
     "SELECT null "
@@ -87,6 +95,15 @@ static const char STMT_GETACTIVEPROJ[] = "SELECT ActiveProject FROM Config";
 
 static const char STMT_SETACTIVEPROJ[] = "UPDATE Config SET ActiveProject = ?";
 
+static const char STMT_CLEARDEPS[] = "DELETE FROM Dependencies"
+                                     " WHERE ProjectID = ? AND OutputPath = ?";
+
+static const char STMT_RECORDDEP[] = "INSERT INTO Dependencies (ProjectID, InputPath, OutputPath)"
+                                     " VALUES (?, ?, ?)";
+
+static const char STMT_GETDEPS[] = "SELECT OutputPath FROM Dependencies"
+                                   " WHERE ProjectID = ? AND InputPath = ?";
+
 ProjectDBConn::ProjectDBConn()
     : m_dbHandle(AssetPipelineOsFuncs::GetPathToProjectDB())
     , m_stmtProjectsTable(m_dbHandle, STMT_PROJECTSTABLE, sizeof STMT_PROJECTSTABLE,
@@ -95,16 +112,21 @@ ProjectDBConn::ProjectDBConn()
                         true)
     , m_stmtSetupConfig(m_dbHandle, STMT_SETUPCONFIG, sizeof STMT_SETUPCONFIG,
                         true)
+    , m_stmtDepsTable(m_dbHandle, STMT_DEPSTABLE, sizeof STMT_DEPSTABLE, true)
     , m_stmtNumProjects(m_dbHandle, STMT_NUMPROJECTS, sizeof STMT_NUMPROJECTS)
     , m_stmtProjectName(m_dbHandle, STMT_PROJECTNAME, sizeof STMT_PROJECTNAME)
     , m_stmtProjectDirectory(m_dbHandle, STMT_PROJECTDIR, sizeof STMT_PROJECTDIR)
     , m_stmtAddProject(m_dbHandle, STMT_ADDPROJECT, sizeof STMT_ADDPROJECT)
     , m_stmtGetActiveProj(m_dbHandle, STMT_GETACTIVEPROJ, sizeof STMT_GETACTIVEPROJ)
     , m_stmtSetActiveProj(m_dbHandle, STMT_SETACTIVEPROJ, sizeof STMT_SETACTIVEPROJ)
+    , m_stmtClearDeps(m_dbHandle, STMT_CLEARDEPS, sizeof STMT_CLEARDEPS)
+    , m_stmtRecordDep(m_dbHandle, STMT_RECORDDEP, sizeof STMT_RECORDDEP)
+    , m_stmtGetDeps(m_dbHandle, STMT_GETDEPS, sizeof STMT_GETDEPS)
 {
     m_stmtProjectsTable.Reset(m_dbHandle);
     m_stmtConfigTable.Reset(m_dbHandle);
     m_stmtSetupConfig.Reset(m_dbHandle);
+    m_stmtDepsTable.Reset(m_dbHandle);
 }
 
 unsigned ProjectDBConn::NumProjects() const
@@ -203,4 +225,72 @@ void ProjectDBConn::SetActiveProjectIndex(int index)
         FATAL("sqlite3_step: %s", sqlite3_errmsg(m_dbHandle));
 
     m_stmtSetActiveProj.Reset(m_dbHandle);
+}
+
+void ProjectDBConn::ClearDependencies(unsigned projIdx, const char* outputFile)
+{
+    ASSERT(projIdx >= 0);
+    ASSERT(outputFile);
+
+    int projectID = (int)projIdx + 1;
+    if (sqlite3_bind_int(m_stmtClearDeps, 1, projectID) != SQLITE_OK)
+        FATAL("sqlite3_bind_int");
+
+    if (sqlite3_bind_text(m_stmtClearDeps, 2, strdup(outputFile), -1, free) != SQLITE_OK)
+        FATAL("sqlite3_bind_text");
+
+    if (m_stmtClearDeps.Step(m_dbHandle) != SQLITE_DONE)
+        FATAL("sqlite3_step: %s", sqlite3_errmsg(m_dbHandle));
+
+    m_stmtClearDeps.Reset(m_dbHandle);
+}
+
+void ProjectDBConn::RecordDependency(unsigned projIdx, const char* outputFile,
+                                     const char* inputFile)
+{
+    ASSERT(projIdx >= 0);
+    ASSERT(outputFile);
+    ASSERT(inputFile);
+
+    int projectID = (int)projIdx + 1;
+    if (sqlite3_bind_int(m_stmtRecordDep, 1, projectID) != SQLITE_OK)
+        FATAL("sqlite3_bind_int");
+
+    if (sqlite3_bind_text(m_stmtRecordDep, 2, strdup(inputFile), -1, free) != SQLITE_OK)
+        FATAL("sqlite3_bind_text");
+
+    if (sqlite3_bind_text(m_stmtRecordDep, 3, strdup(outputFile), -1, free) != SQLITE_OK)
+        FATAL("sqlite3_bind_text");
+
+    if (m_stmtRecordDep.Step(m_dbHandle) != SQLITE_DONE)
+        FATAL("sqlite3_step: %s", sqlite3_errmsg(m_dbHandle));
+
+    m_stmtRecordDep.Reset(m_dbHandle);
+}
+
+void ProjectDBConn::GetDependents(unsigned projIdx, const char* inputFile,
+                                  std::vector<std::string>* outputFiles)
+{
+    ASSERT(projIdx >= 0);
+    ASSERT(inputFile);
+    ASSERT(outputFiles);
+
+    outputFiles->clear();
+
+    int projectID = (int)projIdx + 1;
+    if (sqlite3_bind_int(m_stmtGetDeps, 1, projectID) != SQLITE_OK)
+        FATAL("sqlite3_bind_int");
+
+    if (sqlite3_bind_text(m_stmtGetDeps, 2, strdup(inputFile), -1, free) != SQLITE_OK)
+        FATAL("sqlite3_bind_text");
+
+    int ret;
+    while ((ret = m_stmtGetDeps.Step(m_dbHandle)) == SQLITE_ROW) {
+        const char* str = (const char*)sqlite3_column_text(m_stmtGetDeps, 0);
+        outputFiles->push_back(str);
+    }
+    if (ret != SQLITE_DONE)
+        FATAL("sqlite3_step: %s", sqlite3_errmsg(m_dbHandle));
+
+    m_stmtGetDeps.Reset(m_dbHandle);
 }

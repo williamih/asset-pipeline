@@ -45,6 +45,16 @@ local function GetManifestIterator()
     return io.lines(GetManifestPath())
 end
 
+local function OnSuccess(inputs, outputs)
+    for _, output in ipairs(outputs) do
+        NotifyAssetCompile(output)
+        ClearDependencies(output)
+        for _, input in ipairs(inputs) do
+            RecordDependency(output, input)
+        end
+    end
+end
+
 BuildSystem = {}
 
 BuildSystem.fileIter = nil
@@ -91,9 +101,7 @@ function BuildSystem:CompileNext(mapRules)
                 if AreInputsNewer(inputs, outputs) then
                     success, errorMessage = funcTable.Execute(inputs, outputs)
                     if success then
-                        for _, output in ipairs(outputs) do
-                            NotifyAssetCompile(output)
-                        end
+                        OnSuccess(inputs, outputs)
                     else
                         RecordCompileError(inputs, outputs, errorMessage)
                     end

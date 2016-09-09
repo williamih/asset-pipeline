@@ -5,6 +5,7 @@
 #include "AssetPipelineOsFuncs.h"
 #include "Process.h"
 #include "StrUtils.h"
+#include "ProjectDBConn.h"
 
 const char* const BUILD_SCRIPT_RELATIVE_PATH = "assetpipeline.lua";
 
@@ -13,8 +14,10 @@ static const char* const BUILD_SYSTEM_SCRIPTS[] = {
     "buildsystem.lua",
 };
 
-AssetPipeline::AssetPipeline()
-    : m_thread(&AssetPipeline::CompileProc, this)
+AssetPipeline::AssetPipeline(ProjectDBConn& dbConn)
+    : m_dbConn(dbConn)
+
+    , m_thread(&AssetPipeline::CompileProc, this)
     , m_nextDir()
     , m_mutex()
     , m_compileInProgress(false)
@@ -62,12 +65,16 @@ void AssetPipeline::PushMessage(const MsgFunc& message)
     m_messageQueue.push(message);
 }
 
+// TODO: Refactor code e.g. by creating a function to add/retrieve values from
+// the Lua registry.
+
 static const char KEY_RULES = 0;
 static const char KEY_CONTENTDIR = 0;
 static const char KEY_DATADIR = 0;
 static const char KEY_MANIFEST = 0;
 static const char KEY_THIS = 0;
 static const char KEY_ASSETEVENTSERVICE = 0;
+static const char KEY_PROJECTDBCONN = 0;
 
 static int lua_Rule(lua_State* L)
 {
@@ -212,6 +219,45 @@ static int lua_NotifyAssetCompile(lua_State* L)
     return 0;
 }
 
+static int lua_ClearDependencies(lua_State* L)
+{
+    if (lua_gettop(L) != 1 || !lua_isstring(L, 1))
+        return luaL_error(L, "Usage: ClearDependencies(\"path/to/asset\"");
+
+    const char* outputPath = lua_tostring(L, 1);
+
+    lua_pushlightuserdata(L, (void*)&KEY_PROJECTDBCONN);
+    lua_gettable(L, LUA_REGISTRYINDEX);
+    ProjectDBConn* conn = (ProjectDBConn*)lua_touserdata(L, -1);
+    lua_pop(L, 1);
+
+    int projIdx = conn->GetActiveProjectIndex();
+    if (projIdx < 0) FATAL("No project active");
+    conn->ClearDependencies((unsigned)projIdx, outputPath);
+
+    return 0;
+}
+
+static int lua_RecordDependency(lua_State* L)
+{
+    if (lua_gettop(L) != 2 || !lua_isstring(L, 1) || !lua_isstring(L, 2))
+        return luaL_error(L, "Usage: RecordDependency(\"outputPath\", \"inputPath\"");
+
+    const char* outputPath = lua_tostring(L, 1);
+    const char* inputPath = lua_tostring(L, 2);
+
+    lua_pushlightuserdata(L, (void*)&KEY_PROJECTDBCONN);
+    lua_gettable(L, LUA_REGISTRYINDEX);
+    ProjectDBConn* conn = (ProjectDBConn*)lua_touserdata(L, -1);
+    lua_pop(L, 1);
+
+    int projIdx = conn->GetActiveProjectIndex();
+    if (projIdx < 0) FATAL("No project active");
+    conn->RecordDependency((unsigned)projIdx, outputPath, inputPath);
+
+    return 0;
+}
+
 static int lua_RunProcess(lua_State* L)
 {
     int nArgs = lua_gettop(L);
@@ -246,8 +292,10 @@ static int lua_RunProcess(lua_State* L)
     return 3;
 }
 
-static lua_State* SetupLuaState(const char* projectPath, AssetPipeline* pipeline,
-                                AssetEventService* assetEventService)
+static lua_State* SetupLuaState(const char* projectPath,
+                                AssetPipeline* pipeline,
+                                AssetEventService* assetEventService,
+                                ProjectDBConn* projectDBConn)
 {
     ASSERT(projectPath);
     ASSERT(pipeline);
@@ -269,6 +317,10 @@ static lua_State* SetupLuaState(const char* projectPath, AssetPipeline* pipeline
     lua_pushlightuserdata(L, (void*)assetEventService);
     lua_settable(L, LUA_REGISTRYINDEX);
 
+    lua_pushlightuserdata(L, (void*)&KEY_PROJECTDBCONN);
+    lua_pushlightuserdata(L, (void*)projectDBConn);
+    lua_settable(L, LUA_REGISTRYINDEX);
+
     lua_register(L, "Rule", lua_Rule);
     lua_register(L, "ContentDir", lua_ContentDir);
     lua_register(L, "DataDir", lua_DataDir);
@@ -277,6 +329,8 @@ static lua_State* SetupLuaState(const char* projectPath, AssetPipeline* pipeline
     lua_register(L, "RecordCompileError", lua_RecordCompileError);
     lua_register(L, "RunProcess", lua_RunProcess);
     lua_register(L, "NotifyAssetCompile", lua_NotifyAssetCompile);
+    lua_register(L, "ClearDependencies", lua_ClearDependencies);
+    lua_register(L, "RecordDependency", lua_RecordDependency);
 
     int ret = luaL_dofile(L, BUILD_SCRIPT_RELATIVE_PATH);
     if (ret != 0) {
@@ -363,7 +417,8 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
             AssetPipelineOsFuncs::SetWorkingDirectory(currentDir.c_str());
             if (L != NULL)
                 lua_close(L);
-            L = SetupLuaState(currentDir.c_str(), this_, &this_->m_assetEventService);
+            L = SetupLuaState(currentDir.c_str(), this_,
+                              &this_->m_assetEventService, &this_->m_dbConn);
         } else {
             ResetBuildSystem(L);
         }

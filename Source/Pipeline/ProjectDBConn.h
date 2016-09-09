@@ -2,6 +2,7 @@
 #define PIPELINE_PROJECTDBCONN_H
 
 #include <string>
+#include <vector>
 
 struct sqlite3;
 struct sqlite3_stmt;
@@ -19,6 +20,12 @@ public:
     // Returns -1 if the active project is null.
     int GetActiveProjectIndex() const;
     void SetActiveProjectIndex(int index);
+
+    void ClearDependencies(unsigned projIdx, const char* outputFile);
+    void RecordDependency(unsigned projIdx, const char* outputFile,
+                          const char* inputFile);
+    void GetDependents(unsigned projIdx, const char* inputFile,
+                       std::vector<std::string>* outputFiles);
 
 private:
     struct DBHandle {
@@ -57,12 +64,16 @@ private:
     SQLiteStatement m_stmtProjectsTable;
     SQLiteStatement m_stmtConfigTable;
     SQLiteStatement m_stmtSetupConfig;
+    SQLiteStatement m_stmtDepsTable;
     mutable SQLiteStatement m_stmtNumProjects;
     mutable SQLiteStatement m_stmtProjectName;
     mutable SQLiteStatement m_stmtProjectDirectory;
     SQLiteStatement m_stmtAddProject;
     mutable SQLiteStatement m_stmtGetActiveProj;
     SQLiteStatement m_stmtSetActiveProj;
+    SQLiteStatement m_stmtClearDeps;
+    SQLiteStatement m_stmtRecordDep;
+    SQLiteStatement m_stmtGetDeps;
 };
 
 #endif // PIPELINE_PROJECTDBCONN_H

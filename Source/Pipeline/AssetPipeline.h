@@ -8,7 +8,7 @@
 #include <queue>
 #include "AssetEventService.h"
 
-struct lua_State;
+class ProjectDBConn;
 
 struct AssetCompileFailureInfo {
     std::vector<std::string> inputPaths;
@@ -26,7 +26,7 @@ public:
 
 class AssetPipeline {
 public:
-    AssetPipeline();
+    explicit AssetPipeline(ProjectDBConn& dbConn);
     ~AssetPipeline();
 
     void SetProjectWithDirectory(const char* path);
@@ -46,8 +46,11 @@ private:
     AssetPipeline(const AssetPipeline&);
     AssetPipeline& operator=(const AssetPipeline&);
 
-    static void lua_RecordCompileError(lua_State* L);
     static void CompileProc(AssetPipeline* this_);
+
+    // N.B. This should only be accessed by the compilation thread!!
+    // The ProjectDBConn class is >not< thread-safe.
+    ProjectDBConn& m_dbConn;
 
     std::thread m_thread;
     std::string m_nextDir;

@@ -3,6 +3,8 @@
 #include <Core/Macros.h>
 #include <Pipeline/AssetPipeline.h>
 
+#import "ProjectDBConnWrapper.h"
+
 class AssetPipelineCppDelegateMac : public AssetPipelineDelegate {
 public:
     virtual void OnAssetBuildFinished(int nSucceeded, int nFailed)
@@ -41,10 +43,12 @@ public:
     AssetPipelineCppDelegateMac* _cppDelegate;
 }
 
-- (instancetype)init {
+- (nonnull instancetype)initWithDBConn:(nonnull ProjectDBConnWrapper *)dbConn {
     self = [super init];
     if (self) {
-        _cppAssetPipeline = new AssetPipeline;
+        ProjectDBConn *cppDBConn = (ProjectDBConn *)[dbConn CPlusPlusDBConn];
+        ASSERT(cppDBConn);
+        _cppAssetPipeline = new AssetPipeline(*cppDBConn);
         _cppDelegate = new AssetPipelineCppDelegateMac;
         _cppAssetPipeline->SetDelegate(_cppDelegate);
     }

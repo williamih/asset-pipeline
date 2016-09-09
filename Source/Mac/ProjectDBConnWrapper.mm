@@ -47,4 +47,8 @@
     _cppDBConn->SetActiveProjectIndex((int)index);
 }
 
+- (nonnull void *)CPlusPlusDBConn {
+    return (void *)_cppDBConn;
+}
+
 @end
