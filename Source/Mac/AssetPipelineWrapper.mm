@@ -43,12 +43,10 @@ public:
     AssetPipelineCppDelegateMac* _cppDelegate;
 }
 
-- (nonnull instancetype)initWithDBConn:(nonnull ProjectDBConnWrapper *)dbConn {
+- (instancetype)init {
     self = [super init];
     if (self) {
-        ProjectDBConn *cppDBConn = (ProjectDBConn *)[dbConn CPlusPlusDBConn];
-        ASSERT(cppDBConn);
-        _cppAssetPipeline = new AssetPipeline(*cppDBConn);
+        _cppAssetPipeline = new AssetPipeline;
         _cppDelegate = new AssetPipelineCppDelegateMac;
         _cppAssetPipeline->SetDelegate(_cppDelegate);
     }

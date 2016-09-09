@@ -26,7 +26,7 @@ public:
 
 class AssetPipeline {
 public:
-    explicit AssetPipeline(ProjectDBConn& dbConn);
+    explicit AssetPipeline();
     ~AssetPipeline();
 
     void SetProjectWithDirectory(const char* path);
@@ -47,10 +47,6 @@ private:
     AssetPipeline& operator=(const AssetPipeline&);
 
     static void CompileProc(AssetPipeline* this_);
-
-    // N.B. This should only be accessed by the compilation thread!!
-    // The ProjectDBConn class is >not< thread-safe.
-    ProjectDBConn& m_dbConn;
 
     std::thread m_thread;
     std::string m_nextDir;

@@ -5,8 +5,6 @@
 
 @interface AssetPipelineWrapper : NSObject
 
-- (nonnull instancetype )init __attribute__((unavailable("Use -initWithDBConn:")));
-- (nonnull instancetype)initWithDBConn:(nonnull ProjectDBConnWrapper *)dbConn NS_DESIGNATED_INITIALIZER;
 - (void)setProjectWithDirectory:(nonnull NSString *)path;
 - (void)compile;
 - (void)pollMessages;

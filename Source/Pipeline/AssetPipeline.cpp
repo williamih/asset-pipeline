@@ -14,10 +14,8 @@ static const char* const BUILD_SYSTEM_SCRIPTS[] = {
     "buildsystem.lua",
 };
 
-AssetPipeline::AssetPipeline(ProjectDBConn& dbConn)
-    : m_dbConn(dbConn)
-
-    , m_thread(&AssetPipeline::CompileProc, this)
+AssetPipeline::AssetPipeline()
+    : m_thread(&AssetPipeline::CompileProc, this)
     , m_nextDir()
     , m_mutex()
     , m_compileInProgress(false)
@@ -399,6 +397,8 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
 {
     lua_State* L = NULL;
 
+    ProjectDBConn dbConn;
+
     std::string currentDir;
     std::string nextDir;
 
@@ -418,7 +418,7 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
             if (L != NULL)
                 lua_close(L);
             L = SetupLuaState(currentDir.c_str(), this_,
-                              &this_->m_assetEventService, &this_->m_dbConn);
+                              &this_->m_assetEventService, &dbConn);
         } else {
             ResetBuildSystem(L);
         }
