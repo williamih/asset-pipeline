@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <queue>
+#include <Os/FileSystemWatcher.h>
 #include "AssetEventService.h"
 
 class ProjectDBConn;
@@ -29,8 +30,7 @@ public:
     explicit AssetPipeline();
     ~AssetPipeline();
 
-    void SetProjectWithDirectory(const char* path);
-    void Compile();
+    void CompileProject(unsigned projectIndex);
 
     AssetPipelineDelegate* GetDelegate() const;
     void SetDelegate(AssetPipelineDelegate* delegate);
@@ -43,13 +43,24 @@ public: // NOT for use by user code
     void PushMessage(const MsgFunc& message);
 private:
 
+    struct CompileQueueItem {
+        // If projectIndex is negative, this item represents a single modified
+        // file, specified by modifiedFilePath.
+        // Otherwise, this represents compilation of a project, and
+        // modifiedFilePath is ignored.
+        int projectIndex;
+        std::string modifiedFilePath;
+    };
+
     AssetPipeline(const AssetPipeline&);
     AssetPipeline& operator=(const AssetPipeline&);
 
+    void PushCompileQueueItem(const CompileQueueItem& item);
+    void FileSystemWatcherCallback(FileSystemWatcher::EventType event, const char* path);
     static void CompileProc(AssetPipeline* this_);
 
     std::thread m_thread;
-    std::string m_nextDir;
+    std::queue<CompileQueueItem> m_compileQueue;
     std::mutex m_mutex;
     bool m_compileInProgress;
     std::condition_variable m_condVar;

@@ -45,6 +45,19 @@ local function GetManifestIterator()
     return io.lines(GetManifestPath())
 end
 
+local function GetArrayIterator(paths)
+    local max = #paths
+    local index = 1
+    return function()
+        if index <= max then
+            local value = paths[index]
+            index = index + 1
+            return value
+        end
+        return nil
+    end
+end
+
 local function OnSuccess(inputs, outputs)
     for _, output in ipairs(outputs) do
         NotifyAssetCompile(output)
@@ -61,18 +74,17 @@ BuildSystem.fileIter = nil
 BuildSystem.nextPath = nil
 BuildSystem.stack = List:New()
 
-function BuildSystem:Reset()
-    self.fileIter = nil
-    self.nextPath = nil
+function BuildSystem:Setup(paths)
+    if paths == nil then
+        self.fileIter = GetManifestIterator()
+    else
+        self.fileIter = GetArrayIterator(paths)
+    end
+    self.nextPath = self.fileIter()
     self.stack = List:New()
 end
 
 function BuildSystem:CompileNext(mapRules)
-    if self.fileIter == nil then
-        self.fileIter = GetManifestIterator()
-        self.nextPath = self.fileIter()
-    end
-
     local done = false
     local success = false
 

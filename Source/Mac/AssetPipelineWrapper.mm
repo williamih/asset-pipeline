@@ -59,12 +59,8 @@ public:
     delete _cppDelegate;
 }
 
-- (void)setProjectWithDirectory:(nonnull NSString *)path {
-    _cppAssetPipeline->SetProjectWithDirectory([path UTF8String]);
-}
-
-- (void)compile {
-    _cppAssetPipeline->Compile();
+- (void)compileProjectWithIndex:(NSUInteger)index {
+    _cppAssetPipeline->CompileProject((unsigned)index);
 }
 
 - (void)pollMessages {

@@ -147,8 +147,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
 
     func compile(sender: AnyObject) {
         let projIndex = dbConn.activeProjectIndex()
-        let dir = dbConn.directoryOfProjectAtIndex(projIndex)
-        assetPipeline.setProjectWithDirectory(dir)
-        assetPipeline.compile()
+        if projIndex >= 0 {
+            assetPipeline.compileProjectWithIndex(UInt(projIndex))
+        }
     }
 }

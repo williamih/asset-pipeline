@@ -1,7 +1,13 @@
 #include "AssetPipeline.h"
+
 #include <string>
+#include <memory>
+#include <limits.h>
 #include <lua.hpp>
+
 #include <Core/Macros.h>
+#include <Os/FileSystemWatcher.h>
+
 #include "AssetPipelineOsFuncs.h"
 #include "Process.h"
 #include "StrUtils.h"
@@ -16,7 +22,7 @@ static const char* const BUILD_SYSTEM_SCRIPTS[] = {
 
 AssetPipeline::AssetPipeline()
     : m_thread(&AssetPipeline::CompileProc, this)
-    , m_nextDir()
+    , m_compileQueue()
     , m_mutex()
     , m_compileInProgress(false)
     , m_condVar()
@@ -34,10 +40,13 @@ AssetPipeline::~AssetPipeline()
     m_thread.join();
 }
 
-void AssetPipeline::SetProjectWithDirectory(const char* path)
+void AssetPipeline::CompileProject(unsigned projectIndex)
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
-    m_nextDir = path;
+    ASSERT(projectIndex <= INT_MAX);
+    CompileQueueItem item;
+    item.projectIndex = (int)projectIndex;
+
+    PushCompileQueueItem(item);
 }
 
 void AssetPipeline::CallDelegateFunctions()
@@ -63,6 +72,16 @@ void AssetPipeline::PushMessage(const MsgFunc& message)
     m_messageQueue.push(message);
 }
 
+void AssetPipeline::PushCompileQueueItem(const CompileQueueItem& item)
+{
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        m_compileQueue.push(item);
+        m_compileInProgress = true;
+    }
+    m_condVar.notify_all();
+}
+
 // TODO: Refactor code e.g. by creating a function to add/retrieve values from
 // the Lua registry.
 
@@ -73,6 +92,7 @@ static const char KEY_MANIFEST = 0;
 static const char KEY_THIS = 0;
 static const char KEY_ASSETEVENTSERVICE = 0;
 static const char KEY_PROJECTDBCONN = 0;
+static const char KEY_PROJECTINDEX = 0;
 
 static int lua_Rule(lua_State* L)
 {
@@ -229,9 +249,12 @@ static int lua_ClearDependencies(lua_State* L)
     ProjectDBConn* conn = (ProjectDBConn*)lua_touserdata(L, -1);
     lua_pop(L, 1);
 
-    int projIdx = conn->GetActiveProjectIndex();
-    if (projIdx < 0) FATAL("No project active");
-    conn->ClearDependencies((unsigned)projIdx, outputPath);
+    lua_pushlightuserdata(L, (void*)&KEY_PROJECTINDEX);
+    lua_gettable(L, LUA_REGISTRYINDEX);
+    unsigned projIdx = (unsigned)lua_tointeger(L, -1);
+    lua_pop(L, 1);
+
+    conn->ClearDependencies(projIdx, outputPath);
 
     return 0;
 }
@@ -249,9 +272,12 @@ static int lua_RecordDependency(lua_State* L)
     ProjectDBConn* conn = (ProjectDBConn*)lua_touserdata(L, -1);
     lua_pop(L, 1);
 
-    int projIdx = conn->GetActiveProjectIndex();
-    if (projIdx < 0) FATAL("No project active");
-    conn->RecordDependency((unsigned)projIdx, outputPath, inputPath);
+    lua_pushlightuserdata(L, (void*)&KEY_PROJECTINDEX);
+    lua_gettable(L, LUA_REGISTRYINDEX);
+    unsigned projIdx = (unsigned)lua_tointeger(L, -1);
+    lua_pop(L, 1);
+
+    conn->RecordDependency(projIdx, outputPath, inputPath);
 
     return 0;
 }
@@ -290,7 +316,8 @@ static int lua_RunProcess(lua_State* L)
     return 3;
 }
 
-static lua_State* SetupLuaState(const char* projectPath,
+static lua_State* SetupLuaState(unsigned projectIndex,
+                                const char* projectPath,
                                 AssetPipeline* pipeline,
                                 AssetEventService* assetEventService,
                                 ProjectDBConn* projectDBConn)
@@ -317,6 +344,10 @@ static lua_State* SetupLuaState(const char* projectPath,
 
     lua_pushlightuserdata(L, (void*)&KEY_PROJECTDBCONN);
     lua_pushlightuserdata(L, (void*)projectDBConn);
+    lua_settable(L, LUA_REGISTRYINDEX);
+
+    lua_pushlightuserdata(L, (void*)&KEY_PROJECTINDEX);
+    lua_pushinteger(L, (lua_Integer)projectIndex);
     lua_settable(L, LUA_REGISTRYINDEX);
 
     lua_register(L, "Rule", lua_Rule);
@@ -353,14 +384,27 @@ static lua_State* SetupLuaState(const char* projectPath,
     return L;
 }
 
-static void ResetBuildSystem(lua_State* L)
+// N.B. paths may be NULL
+static void SetupBuildSystem(lua_State* L, std::vector<std::string>* paths)
 {
     lua_getglobal(L, "BuildSystem");
-    lua_pushstring(L, "Reset");
+    lua_pushstring(L, "Setup");
     lua_gettable(L, -2);
+
     lua_getglobal(L, "BuildSystem");
 
-    if (lua_pcall(L, 1, 0, 0) != 0) {
+    if (paths) {
+        lua_newtable(L);
+        for (size_t i = 0; i < paths->size(); ++i) {
+            lua_pushstring(L, (*paths)[i].c_str());
+            int key = (int)i + 1;
+            lua_rawseti(L, -2, key);
+        }
+    } else {
+        lua_pushnil(L);
+    }
+
+    if (lua_pcall(L, 2, 0, 0) != 0) {
         DebugPrint("Error in Lua script.");
         DebugPrint("Error: %s", lua_tostring(L, -1));
         lua_pop(L, 1);
@@ -393,34 +437,113 @@ static void CompileOneFile(lua_State* L,
     *succeeded = (bool)lua_toboolean(L, -1);
 }
 
+// Returns an empty string if not found
+static std::string GetContentDir(lua_State* L)
+{
+    lua_pushlightuserdata(L, (void*)&KEY_CONTENTDIR);
+    lua_gettable(L, LUA_REGISTRYINDEX);
+    std::string str;
+    if (lua_isstring(L, -1))
+        str = lua_tostring(L, -1);
+    lua_pop(L, 1);
+    return str;
+}
+
+static std::string JoinPaths(const std::string& a, const std::string& b)
+{
+    std::string ret;
+    ret.reserve(a.length() + b.length() + 1);
+    ret.append(a);
+    if (a.back() != '/' && a.back() != '\\')
+        ret.push_back('/');
+    ret.append(b);
+    return ret;
+}
+
+void AssetPipeline::FileSystemWatcherCallback(FileSystemWatcher::EventType event,
+                                              const char* path)
+{
+    CompileQueueItem item;
+    item.projectIndex = -1;
+    item.modifiedFilePath = path;
+    PushCompileQueueItem(item);
+}
+
 void AssetPipeline::CompileProc(AssetPipeline* this_)
 {
     lua_State* L = NULL;
 
     ProjectDBConn dbConn;
 
-    std::string currentDir;
-    std::string nextDir;
+    typedef std::unique_ptr<FileSystemWatcher, void (*)(FileSystemWatcher*)> FSWatcherPtr;
+    FSWatcherPtr fsWatcher(FileSystemWatcher::Create(), &FileSystemWatcher::Destroy);
+    fsWatcher->SetOnFileChanged([=] (FileSystemWatcher::EventType event,
+                                     const char* path) {
+        // WARNING: This is called on the main thread!!
+        this_->FileSystemWatcherCallback(event, path);
+    });
+
+    std::string currDir;
+    int currProjIdx = -1;
 
     for (;;) {
+        CompileQueueItem nextItem;
         {
             std::unique_lock<std::mutex> lock(this_->m_mutex);
             this_->m_condVar.wait(lock, [=] { return this_->m_compileInProgress; });
-            nextDir = this_->m_nextDir;
+            if (this_->m_compileQueue.empty()) {
+                // Signals quit
+                break;
+            } else {
+                nextItem = this_->m_compileQueue.front();
+                this_->m_compileQueue.pop();
+            }
         }
 
-        if (nextDir.empty())
-            break; // signals quit
+        if (nextItem.projectIndex < 0) {
+            // We are recompiling a modified file.
+            ASSERT(currProjIdx >= 0);
+            ASSERT(!currDir.empty());
 
-        if (nextDir != currentDir) {
-            currentDir = nextDir;
-            AssetPipelineOsFuncs::SetWorkingDirectory(currentDir.c_str());
-            if (L != NULL)
-                lua_close(L);
-            L = SetupLuaState(currentDir.c_str(), this_,
-                              &this_->m_assetEventService, &dbConn);
+            std::string input = StrUtilsMakeRelativePath(
+                currDir.c_str(), nextItem.modifiedFilePath.c_str()
+            );
+            std::vector<std::string> outputs;
+            dbConn.GetDependents(currProjIdx, input.c_str(), &outputs);
+
+            SetupBuildSystem(L, &outputs);
         } else {
-            ResetBuildSystem(L);
+            // We are compiling a whole project.
+            std::string projectDir = dbConn.GetProjectDirectory(nextItem.projectIndex);
+
+            // If we're moving to a new project at a different directory, we
+            // need to recreate the Lua state using a different configuration
+            // script.
+            if (nextItem.projectIndex != currProjIdx || projectDir != currDir) {
+
+                currDir = projectDir;
+                currProjIdx = nextItem.projectIndex;
+
+                AssetPipelineOsFuncs::SetWorkingDirectory(projectDir.c_str());
+
+                if (L != NULL)
+                    lua_close(L);
+                L = SetupLuaState(
+                    (int)nextItem.projectIndex,
+                    projectDir.c_str(),
+                    this_,
+                    &this_->m_assetEventService,
+                    &dbConn
+                );
+
+                std::string contentDir = GetContentDir(L);
+                if (!contentDir.empty()) {
+                    std::string fullPath = JoinPaths(projectDir, contentDir);
+                    fsWatcher->WatchDirectory(fullPath.c_str());
+                }
+            }
+
+            SetupBuildSystem(L, NULL);
         }
 
         int compileSucceededCount = 0;
@@ -465,15 +588,6 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
 
     if (L != NULL)
         lua_close(L);
-}
-
-void AssetPipeline::Compile()
-{
-    {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        m_compileInProgress = true;
-    }
-    m_condVar.notify_all();
 }
 
 AssetPipelineDelegate* AssetPipeline::GetDelegate() const

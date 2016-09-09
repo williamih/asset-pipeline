@@ -5,8 +5,7 @@
 
 @interface AssetPipelineWrapper : NSObject
 
-- (void)setProjectWithDirectory:(nonnull NSString *)path;
-- (void)compile;
+- (void)compileProjectWithIndex:(NSUInteger)index;
 - (void)pollMessages;
 
 @property (weak, nullable) id<AssetPipelineMacDelegate> delegate;
