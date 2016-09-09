@@ -103,7 +103,7 @@ void FileSystemWatcherMac::WatchDirectory(const char* path)
         kFSEventStreamCreateFlagFileEvents
     );
 
-    FSEventStreamScheduleWithRunLoop(eventStream, CFRunLoopGetCurrent(),
+    FSEventStreamScheduleWithRunLoop(eventStream, CFRunLoopGetMain(),
                                      kCFRunLoopDefaultMode);
     FSEventStreamStart(eventStream);
 

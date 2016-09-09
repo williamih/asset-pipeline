@@ -17,7 +17,9 @@ public:
     static FileSystemWatcher* Create();
     static void Destroy(FileSystemWatcher* watcher);
 
+    // N.B. The callback specified will always be called on the main thread!
     void SetOnFileChanged(const OnFileChangedFunc& func);
+
     void WatchDirectory(const char* path);
 
 private:
