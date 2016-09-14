@@ -9,43 +9,40 @@ class HelperAppDelegate: NSObject, NSApplicationDelegate, IPCConnectionDelegate 
     let menuAppConn = IPCConnection()
 
     func determinePort() -> UInt16 {
-        let arguments = NSProcessInfo.processInfo().arguments;
-        let value = Int(arguments[1]);
-        if value != nil {
-            if value < Int(UInt16.max) {
-                return UInt16(value!)
-            }
+        let arguments = ProcessInfo.processInfo.arguments;
+        if let value = UInt16(arguments[1]) {
+            return value
         }
         print("Invalid argument");
         abort();
     }
 
-    func applicationDidFinishLaunching(aNotification: NSNotification) {
+    func applicationDidFinishLaunching(_ aNotification: Notification) {
         menuAppConn.delegate = self
-        menuAppConn.connectAsClientToPort(determinePort())
+        menuAppConn.connectAsClient(toPort: determinePort())
     }
 
-    func applicationShouldTerminateAfterLastWindowClosed(sender: NSApplication)
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication)
         -> Bool {
         return true
     }
 
     @IBAction
-    func quit(sender: AnyObject?) {
-        menuAppConn.sendByte(IPCHelperToAppAction.Quit.rawValue)
+    func quit(_ sender: AnyObject?) {
+        menuAppConn.sendByte(IPCHelperToAppAction.quit.rawValue)
     }
 
-    func receiveIPCByte(byte: UInt8) {
+    func receiveIPCByte(_ byte: UInt8) {
         let action = IPCAppToHelperAction(rawValue: byte)!
         switch action {
-        case .Quit:
-            menuAppConn.sendByte(IPCHelperToAppAction.QuitReceived.rawValue,
+        case .quit:
+            menuAppConn.sendByte(IPCHelperToAppAction.quitReceived.rawValue,
                                  onComplete: {
                 NSApp.terminate(nil)
             })
-        case .QuitReceived:
+        case .quitReceived:
             NSApp.terminate(nil)
-        case .ShowProjectWindow:
+        case .showProjectWindow:
             projectsWindowController.showWindow()
         }
     }

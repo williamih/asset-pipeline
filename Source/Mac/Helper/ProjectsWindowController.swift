@@ -13,70 +13,70 @@ class ProjectsWindowController: NSObject, NSWindowDelegate,
     let dbConn = ProjectDBConnWrapper()
 
     func showWindow() {
-        NSApp.activateIgnoringOtherApps(true)
+        NSApp.activate(ignoringOtherApps: true)
         window.makeKeyAndOrderFront(nil)
         window.center()
     }
 
     @IBAction
-    func closeWindow(sender: AnyObject) {
+    func closeWindow(_ sender: AnyObject) {
         window.orderOut(nil)
     }
 
     @IBAction
-    func setAsActiveProject(sender: AnyObject) {
+    func setAsActiveProject(_ sender: AnyObject) {
         let index = tableView.selectedRow
         // N.B. >index< may be -1; this is okay and produces the desired
         // behavior when passed to setActiveProjectIndex().
         dbConn.setActiveProjectIndex(index)
         tableView.reloadData()
         // Need to re-select as the selection is lost when calling reloadData()
-        tableView.selectRowIndexes(NSIndexSet(index: index),
+        tableView.selectRowIndexes(IndexSet(integer: index),
                                    byExtendingSelection: false)
     }
 
     @IBAction
-    func createProject(sender: AnyObject) {
+    func createProject(_ sender: AnyObject) {
         window.beginSheet(creationWindow,
                           completionHandler: { (returnCode) -> Void in
 
         })
-        NSApp.activateIgnoringOtherApps(true)
+        NSApp.activate(ignoringOtherApps: true)
         window.makeKeyAndOrderFront(nil)
     }
 
     @IBAction
-    func createProjectCreateClicked(sender: AnyObject) {
+    func createProjectCreateClicked(_ sender: AnyObject) {
         let name = projectNameField.stringValue
         let dir = projectDirectoryField.stringValue
         window.endSheet(creationWindow, returnCode: NSModalResponseOK)
         projectNameField.stringValue = ""
         projectDirectoryField.stringValue = ""
 
-        dbConn.addProjectWithName(name, directory: dir)
+        dbConn.addProject(withName: name, directory: dir)
 
         tableView.reloadData()
     }
 
     @IBAction
-    func createProjectCancelClicked(sender: AnyObject) {
+    func createProjectCancelClicked(_ sender: AnyObject) {
         window.endSheet(creationWindow, returnCode: NSModalResponseCancel)
         projectNameField.stringValue = ""
         projectDirectoryField.stringValue = ""
     }
 
     @IBAction
-    func createProjectSelectProjectDirectory(sender: AnyObject) {
+    func createProjectSelectProjectDirectory(_ sender: AnyObject) {
         let panel = NSOpenPanel()
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = true
         panel.canCreateDirectories = false
         panel.canChooseFiles = false
-        panel.beginSheetModalForWindow(creationWindow,
-                                       completionHandler: { (returnCode) -> Void in
+        panel.beginSheetModal(for: creationWindow,
+                completionHandler: { (returnCode) -> Void in
             if returnCode == NSFileHandlingPanelOKButton {
-                if let URL = panel.URL {
-                    let str = URL.path!
+                if let URL = panel.url {
+                    let str = URL.path
                     self.projectDirectoryField.stringValue = str
                 }
             }
@@ -85,13 +85,13 @@ class ProjectsWindowController: NSObject, NSWindowDelegate,
 
     // MARK: NSTableViewDataSource methods
 
-    func numberOfRowsInTableView(tableView: NSTableView) -> Int {
+    func numberOfRows(in tableView: NSTableView) -> Int {
         return dbConn.numProjects()
     }
 
     // MARK: NSTableViewDelegate methods
 
-    func checkBoxAction(sender: AnyObject?) {
+    func checkBoxAction(_ sender: AnyObject?) {
         if let checkBox = sender as? NSButton {
             let row = Int(checkBox.identifier!)!
             let selectedRow = tableView.selectedRow
@@ -102,16 +102,16 @@ class ProjectsWindowController: NSObject, NSWindowDelegate,
             }
             tableView.reloadData()
             // Have to re-select as reloadData() loses the selection
-            tableView.selectRowIndexes(NSIndexSet(index: selectedRow),
+            tableView.selectRowIndexes(IndexSet(integer: selectedRow),
                                        byExtendingSelection: false)
         }
     }
 
-    func tableView(tableView: NSTableView,
-                   viewForTableColumn tableColumn: NSTableColumn?,
-                   row: Int) -> NSView? {
+    func tableView(_ tableView: NSTableView,
+           viewFor tableColumn: NSTableColumn?,
+                           row: Int) -> NSView? {
         if tableColumn == tableView.tableColumns[0] {
-            if let cell = tableView.makeViewWithIdentifier("ActiveStatusID",
+            if let cell = tableView.make(withIdentifier: "ActiveStatusID",
                                                            owner: nil)
                 as? NSButton {
 
@@ -127,10 +127,10 @@ class ProjectsWindowController: NSObject, NSWindowDelegate,
             }
         }
         if tableColumn == tableView.tableColumns[1] {
-            if let cell = tableView.makeViewWithIdentifier("ProjectNameID",
+            if let cell = tableView.make(withIdentifier: "ProjectNameID",
                                                            owner: nil)
                 as? NSTableCellView {
-                cell.textField?.stringValue = dbConn.nameOfProjectAtIndex(row)
+                cell.textField?.stringValue = dbConn.nameOfProject(at: row)
                 return cell
             }
         }

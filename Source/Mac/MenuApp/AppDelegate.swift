@@ -4,25 +4,25 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate,
                    IPCConnectionDelegate, AssetPipelineMacDelegate {
 
-    let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(-2)
+    let statusItem = NSStatusBar.system().statusItem(withLength: -2)
     let dbConn = ProjectDBConnWrapper()
     let assetPipeline = AssetPipelineWrapper()
     var helperConn : IPCConnection?
 
-    func pollAssetPipelineMessages(timer: NSTimer) {
+    func pollAssetPipelineMessages(_ timer: Timer) {
         assetPipeline.pollMessages()
     }
 
     // MARK: NSApplicationDelegate methods
 
-    func applicationDidFinishLaunching(aNotification: NSNotification) {
+    func applicationDidFinishLaunching(_ aNotification: Notification) {
         let POLL_TIME_INTERVAL = 0.25 // seconds
-        NSTimer.scheduledTimerWithTimeInterval(
-            POLL_TIME_INTERVAL,
-            target: self,
-            selector: #selector(pollAssetPipelineMessages),
-            userInfo: nil,
-            repeats: true
+        Timer.scheduledTimer(
+            timeInterval: POLL_TIME_INTERVAL,
+                  target: self,
+                selector: #selector(pollAssetPipelineMessages),
+                userInfo: nil,
+                 repeats: true
         )
 
         if let button = statusItem.button {
@@ -37,28 +37,28 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         menu.addItem(NSMenuItem(title: "Compile",
             action: #selector(compile),
             keyEquivalent: ""))
-        menu.addItem(NSMenuItem.separatorItem())
+        menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Quit Asset Pipeline",
                                action: #selector(quit),
                         keyEquivalent: "q"))
 
         statusItem.menu = menu
 
-        NSUserNotificationCenter.defaultUserNotificationCenter().delegate = self
+        NSUserNotificationCenter.default.delegate = self
         assetPipeline.delegate = self
     }
 
     // MARK: IPCConnectionDelegate methods
 
-    func receiveIPCByte(byte: UInt8) {
+    func receiveIPCByte(_ byte: UInt8) {
         let action = IPCHelperToAppAction(rawValue: byte)!
         switch action {
-        case .Quit:
-            helperConn!.sendByte(IPCAppToHelperAction.QuitReceived.rawValue,
+        case .quit:
+            helperConn!.sendByte(IPCAppToHelperAction.quitReceived.rawValue,
                                  onComplete: {
                 NSApp.terminate(nil)
             })
-        case .QuitReceived:
+        case .quitReceived:
             NSApp.terminate(nil)
         }
     }
@@ -69,8 +69,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
 
     // MARK: AssetPipelineMacDelegate methods
 
-    func assetCompileFinishedWithSuccessCount(successCount: Int,
-                                              failureCount: Int) {
+    func assetCompileFinished(withSuccessCount successCount: Int,
+                                               failureCount: Int) {
         let notification = NSUserNotification()
         notification.title = "Asset Build Completed"
         if (failureCount == 0) {
@@ -85,32 +85,32 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
                 failureCount
             )
         }
-        let center = NSUserNotificationCenter.defaultUserNotificationCenter()
-        center.deliverNotification(notification)
+        let center = NSUserNotificationCenter.default
+        center.deliver(notification)
     }
 
-    func assetCompileFailedWithInputPaths(inputPaths: [String],
+    func assetCompileFailed(withInputPaths inputPaths: [String],
                                           outputPaths: [String],
-                                          errorMessage: String) {
+                                         errorMessage: String) {
         let notification = NSUserNotification()
         notification.title = "Failed to Compile Asset"
         notification.subtitle = String(format: "%@", inputPaths[0])
-        let center = NSUserNotificationCenter.defaultUserNotificationCenter()
-        center.deliverNotification(notification)
+        let center = NSUserNotificationCenter.default
+        center.deliver(notification)
     }
 
     // MARK: NSUserNotificationCenterDelegate methods
 
-    func userNotificationCenter(center: NSUserNotificationCenter,
-                                shouldPresentNotification notification: NSUserNotification) -> Bool {
+    func userNotificationCenter(_ center: NSUserNotificationCenter,
+              shouldPresent notification: NSUserNotification) -> Bool {
         return true
     }
 
     // MARK: Other methods
 
-    func quit(sender: AnyObject?) {
+    func quit(_ sender: AnyObject?) {
         if let conn = helperConn {
-            conn.sendByte(IPCAppToHelperAction.Quit.rawValue)
+            conn.sendByte(IPCAppToHelperAction.quit.rawValue)
         } else {
             NSApp.terminate(nil)
         }
@@ -123,32 +123,32 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
 
         helperConn = IPCConnection()
         helperConn!.delegate = self
-        helperConn!.listenAsServerOnPort(0)
+        helperConn!.listenAsServer(onPort: 0)
 
         let port = helperConn!.port()
 
-        let URL = NSBundle.mainBundle().URLForResource("Asset Pipeline Helper",
+        let URL = Bundle.main.url(forResource: "Asset Pipeline Helper",
                                                        withExtension: ".app")
         let config = [
             NSWorkspaceLaunchConfigurationArguments : [ String(port) ]
         ]
 
-        try! NSWorkspace.sharedWorkspace().launchApplicationAtURL(
-            URL!,
+        try! NSWorkspace.shared().launchApplication(
+            at: URL!,
             options: NSWorkspaceLaunchOptions(),
             configuration: config
         )
     }
 
-    func manageProjects(sender: AnyObject) {
+    func manageProjects(_ sender: AnyObject) {
         launchHelperIfNeeded()
-        helperConn!.sendByte(IPCAppToHelperAction.ShowProjectWindow.rawValue)
+        helperConn!.sendByte(IPCAppToHelperAction.showProjectWindow.rawValue)
     }
 
-    func compile(sender: AnyObject) {
+    func compile(_ sender: AnyObject) {
         let projIndex = dbConn.activeProjectIndex()
         if projIndex >= 0 {
-            assetPipeline.compileProjectWithIndex(UInt(projIndex))
+            assetPipeline.compileProject(with: UInt(projIndex))
         }
     }
 }
