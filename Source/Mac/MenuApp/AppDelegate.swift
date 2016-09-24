@@ -73,10 +73,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
                                                failureCount: Int) {
         let notification = NSUserNotification()
         notification.title = "Asset Build Completed"
-        if (failureCount == 0) {
+        if (failureCount == 0 && successCount > 0) {
             notification.subtitle = String(
                 format: "Successfully compiled all %d assets.",
                 successCount
+            )
+        } else if (successCount == 0) {
+            notification.subtitle = String(
+                format: "All assets were already up to date."
             )
         } else {
             notification.subtitle = String(

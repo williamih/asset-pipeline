@@ -18,18 +18,17 @@ local function Map(path, mapRules)
 end
 
 local function AreInputsNewer(inputs, outputs)
---    local latestOutputTimestamp = 0;
---    for _, output in ipairs(outputs)
---        latestOutputTimestamp = math.max(latestOutputTimestamp,
---                                         GetFileTimestamp(output));
---    end
---    for _, input in ipairs(inputs)
---        if GetFileTimestamp(input) > latestOutputTimestamp then
---            return true;
---        end
---    end
---    return false;
-    return true;
+   local latestOutputTimestamp = 0;
+   for _, output in ipairs(outputs) do
+       latestOutputTimestamp = math.max(latestOutputTimestamp,
+                                        GetFileTimestamp(output))
+   end
+   for _, input in ipairs(inputs) do
+       if GetFileTimestamp(input) > latestOutputTimestamp then
+           return true
+       end
+   end
+   return false
 end
 
 local function InputNeedsCompile(inputPath, mapRules)

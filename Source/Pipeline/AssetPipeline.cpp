@@ -316,6 +316,15 @@ static int lua_RunProcess(lua_State* L)
     return 3;
 }
 
+static int lua_GetFileTimestamp(lua_State* L)
+{
+    if (lua_gettop(L) != 1 || !lua_isstring(L, 1))
+        return luaL_error(L, "Usage: GetFileTimestamp(\"path/to/file\"");
+    const char* path = lua_tostring(L, -1);
+    lua_pushnumber(L, (lua_Number)AssetPipelineOsFuncs::GetTimeStamp(path));
+    return 1;
+}
+
 static lua_State* SetupLuaState(unsigned projectIndex,
                                 const char* projectPath,
                                 AssetPipeline* pipeline,
@@ -357,6 +366,7 @@ static lua_State* SetupLuaState(unsigned projectIndex,
     lua_register(L, "GetManifestPath", lua_GetManifestPath);
     lua_register(L, "RecordCompileError", lua_RecordCompileError);
     lua_register(L, "RunProcess", lua_RunProcess);
+    lua_register(L, "GetFileTimestamp", lua_GetFileTimestamp);
     lua_register(L, "NotifyAssetCompile", lua_NotifyAssetCompile);
     lua_register(L, "ClearDependencies", lua_ClearDependencies);
     lua_register(L, "RecordDependency", lua_RecordDependency);
