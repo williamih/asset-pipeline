@@ -7,13 +7,15 @@
 
 class AssetPipelineCppDelegateMac : public AssetPipelineDelegate {
 public:
-    virtual void OnAssetBuildFinished(int nSucceeded, int nFailed)
+    virtual void OnAssetBuildFinished(unsigned projectIndex, int nSucceeded, int nFailed)
     {
         ASSERT(objCDelegate);
+        NSUInteger projIndex = (NSUInteger)projectIndex;
         NSInteger successCount = (NSInteger)nSucceeded;
         NSInteger failureCount = (NSInteger)nFailed;
-        [objCDelegate assetCompileFinishedWithSuccessCount:successCount
-                                              failureCount:failureCount];
+        [objCDelegate assetBuildFinishedWithProjectIndex:projIndex
+                                            successCount:successCount
+                                            failureCount:failureCount];
     }
 
     virtual void OnAssetFailedToCompile(const AssetCompileFailureInfo& info)

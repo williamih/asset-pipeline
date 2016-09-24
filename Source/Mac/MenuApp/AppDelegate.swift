@@ -75,10 +75,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
 
     // MARK: AssetPipelineMacDelegate methods
 
-    func assetCompileFinished(withSuccessCount successCount: Int,
-                                               failureCount: Int) {
+    func assetBuildFinished(withProjectIndex projIndex: UInt,
+                            successCount: Int,
+                            failureCount: Int) {
+        let projName = dbConn.nameOfProject(at: Int(projIndex))
         let notification = NSUserNotification()
-        notification.title = "Asset Build Completed"
+        notification.title = "Asset Build Completed (" + projName + ")"
         if (failureCount == 0 && successCount > 0) {
             notification.subtitle = String(
                 format: "Successfully compiled all %d assets.",

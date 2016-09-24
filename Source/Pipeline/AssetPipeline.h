@@ -21,7 +21,8 @@ class AssetPipelineDelegate {
 public:
     virtual ~AssetPipelineDelegate() {}
 
-    virtual void OnAssetBuildFinished(int nSucceeded, int nFailed) {}
+    virtual void OnAssetBuildFinished(unsigned projectIndex,
+                                      int nSucceeded, int nFailed) {}
     virtual void OnAssetFailedToCompile(const AssetCompileFailureInfo& info) {}
 };
 

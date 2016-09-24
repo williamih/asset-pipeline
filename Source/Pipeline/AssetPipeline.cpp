@@ -579,9 +579,11 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
                     std::lock_guard<std::mutex> lock(this_->m_mutex);
                     this_->m_compileInProgress = false;
                 }
+                ASSERT(currProjIdx != -1);
                 this_->PushMessage(std::bind(
                     &AssetPipelineDelegate::OnAssetBuildFinished,
                     std::placeholders::_1,
+                    (unsigned)currProjIdx,
                     compileSucceededCount,
                     compileFailedCount
                 ));
