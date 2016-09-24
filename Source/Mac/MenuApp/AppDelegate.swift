@@ -13,6 +13,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         assetPipeline.pollMessages()
     }
 
+    func onAppSetupFinished() {
+        compile(self)
+    }
+
     // MARK: NSApplicationDelegate methods
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -46,6 +50,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
 
         NSUserNotificationCenter.default.delegate = self
         assetPipeline.delegate = self
+
+        onAppSetupFinished()
     }
 
     // MARK: IPCConnectionDelegate methods
