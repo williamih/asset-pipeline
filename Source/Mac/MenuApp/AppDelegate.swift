@@ -86,7 +86,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
                 format: "Successfully compiled all %d assets.",
                 successCount
             )
-        } else if (successCount == 0) {
+        } else if (failureCount == 0) {
             notification.subtitle = String(
                 format: "All assets were already up to date."
             )
