@@ -8,100 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		7A4DFEB11D6BE51900E858FE /* Asset Pipeline Helper.app in Resources */ = {isa = PBXBuildFile; fileRef = 7A4DFE801D6BE40A00E858FE /* Asset Pipeline Helper.app */; };
-		7A7A46511DA07BA5001429B7 /* Debug_Mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A45EE1DA07BA5001429B7 /* Debug_Mac.mm */; };
-		7A7A46521DA07BA5001429B7 /* Debug_Mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A45EE1DA07BA5001429B7 /* Debug_Mac.mm */; };
 		7A7A46541DA07BA5001429B7 /* COPYRIGHT in Resources */ = {isa = PBXBuildFile; fileRef = 7A7A45F31DA07BA5001429B7 /* COPYRIGHT */; };
 		7A7A46561DA07BA5001429B7 /* HISTORY in Resources */ = {isa = PBXBuildFile; fileRef = 7A7A45F61DA07BA5001429B7 /* HISTORY */; };
 		7A7A46581DA07BA5001429B7 /* INSTALL in Resources */ = {isa = PBXBuildFile; fileRef = 7A7A45F71DA07BA5001429B7 /* INSTALL */; };
 		7A7A465A1DA07BA5001429B7 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 7A7A45F81DA07BA5001429B7 /* README */; };
-		7A7A465B1DA07BA5001429B7 /* bit.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A45FA1DA07BA5001429B7 /* bit.c */; };
-		7A7A465C1DA07BA5001429B7 /* bit.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A45FA1DA07BA5001429B7 /* bit.c */; };
-		7A7A465D1DA07BA5001429B7 /* lapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A45FB1DA07BA5001429B7 /* lapi.c */; };
-		7A7A465E1DA07BA5001429B7 /* lapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A45FB1DA07BA5001429B7 /* lapi.c */; };
-		7A7A465F1DA07BA5001429B7 /* lauxlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A45FD1DA07BA5001429B7 /* lauxlib.c */; };
-		7A7A46601DA07BA5001429B7 /* lauxlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A45FD1DA07BA5001429B7 /* lauxlib.c */; };
-		7A7A46611DA07BA5001429B7 /* lbaselib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A45FF1DA07BA5001429B7 /* lbaselib.c */; };
-		7A7A46621DA07BA5001429B7 /* lbaselib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A45FF1DA07BA5001429B7 /* lbaselib.c */; };
-		7A7A46631DA07BA5001429B7 /* lcode.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46001DA07BA5001429B7 /* lcode.c */; };
-		7A7A46641DA07BA5001429B7 /* lcode.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46001DA07BA5001429B7 /* lcode.c */; };
-		7A7A46651DA07BA5001429B7 /* ldblib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46021DA07BA5001429B7 /* ldblib.c */; };
-		7A7A46661DA07BA5001429B7 /* ldblib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46021DA07BA5001429B7 /* ldblib.c */; };
-		7A7A46671DA07BA5001429B7 /* ldebug.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46031DA07BA5001429B7 /* ldebug.c */; };
-		7A7A46681DA07BA5001429B7 /* ldebug.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46031DA07BA5001429B7 /* ldebug.c */; };
-		7A7A46691DA07BA5001429B7 /* ldo.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46051DA07BA5001429B7 /* ldo.c */; };
-		7A7A466A1DA07BA5001429B7 /* ldo.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46051DA07BA5001429B7 /* ldo.c */; };
-		7A7A466B1DA07BA5001429B7 /* ldump.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46071DA07BA5001429B7 /* ldump.c */; };
-		7A7A466C1DA07BA5001429B7 /* ldump.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46071DA07BA5001429B7 /* ldump.c */; };
-		7A7A466D1DA07BA5001429B7 /* lfunc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46081DA07BA5001429B7 /* lfunc.c */; };
-		7A7A466E1DA07BA5001429B7 /* lfunc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46081DA07BA5001429B7 /* lfunc.c */; };
-		7A7A466F1DA07BA5001429B7 /* lgc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A460A1DA07BA5001429B7 /* lgc.c */; };
-		7A7A46701DA07BA5001429B7 /* lgc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A460A1DA07BA5001429B7 /* lgc.c */; };
-		7A7A46711DA07BA5001429B7 /* linit.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A460C1DA07BA5001429B7 /* linit.c */; };
-		7A7A46721DA07BA5001429B7 /* linit.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A460C1DA07BA5001429B7 /* linit.c */; };
-		7A7A46731DA07BA5001429B7 /* liolib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A460D1DA07BA5001429B7 /* liolib.c */; };
-		7A7A46741DA07BA5001429B7 /* liolib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A460D1DA07BA5001429B7 /* liolib.c */; };
-		7A7A46751DA07BA5001429B7 /* llex.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A460E1DA07BA5001429B7 /* llex.c */; };
-		7A7A46761DA07BA5001429B7 /* llex.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A460E1DA07BA5001429B7 /* llex.c */; };
-		7A7A46771DA07BA5001429B7 /* lmathlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46111DA07BA5001429B7 /* lmathlib.c */; };
-		7A7A46781DA07BA5001429B7 /* lmathlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46111DA07BA5001429B7 /* lmathlib.c */; };
-		7A7A46791DA07BA5001429B7 /* lmem.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46121DA07BA5001429B7 /* lmem.c */; };
-		7A7A467A1DA07BA5001429B7 /* lmem.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46121DA07BA5001429B7 /* lmem.c */; };
-		7A7A467B1DA07BA5001429B7 /* loadlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46141DA07BA5001429B7 /* loadlib.c */; };
-		7A7A467C1DA07BA5001429B7 /* loadlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46141DA07BA5001429B7 /* loadlib.c */; };
-		7A7A467D1DA07BA5001429B7 /* lobject.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46151DA07BA5001429B7 /* lobject.c */; };
-		7A7A467E1DA07BA5001429B7 /* lobject.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46151DA07BA5001429B7 /* lobject.c */; };
-		7A7A467F1DA07BA5001429B7 /* lopcodes.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46171DA07BA5001429B7 /* lopcodes.c */; };
-		7A7A46801DA07BA5001429B7 /* lopcodes.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46171DA07BA5001429B7 /* lopcodes.c */; };
-		7A7A46811DA07BA5001429B7 /* loslib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46191DA07BA5001429B7 /* loslib.c */; };
-		7A7A46821DA07BA5001429B7 /* loslib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46191DA07BA5001429B7 /* loslib.c */; };
-		7A7A46831DA07BA5001429B7 /* lparser.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A461A1DA07BA5001429B7 /* lparser.c */; };
-		7A7A46841DA07BA5001429B7 /* lparser.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A461A1DA07BA5001429B7 /* lparser.c */; };
-		7A7A46851DA07BA5001429B7 /* lstate.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A461C1DA07BA5001429B7 /* lstate.c */; };
-		7A7A46861DA07BA5001429B7 /* lstate.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A461C1DA07BA5001429B7 /* lstate.c */; };
-		7A7A46871DA07BA5001429B7 /* lstring.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A461E1DA07BA5001429B7 /* lstring.c */; };
-		7A7A46881DA07BA5001429B7 /* lstring.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A461E1DA07BA5001429B7 /* lstring.c */; };
-		7A7A46891DA07BA5001429B7 /* lstrlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46201DA07BA5001429B7 /* lstrlib.c */; };
-		7A7A468A1DA07BA5001429B7 /* lstrlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46201DA07BA5001429B7 /* lstrlib.c */; };
-		7A7A468B1DA07BA5001429B7 /* ltable.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46211DA07BA5001429B7 /* ltable.c */; };
-		7A7A468C1DA07BA5001429B7 /* ltable.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46211DA07BA5001429B7 /* ltable.c */; };
-		7A7A468D1DA07BA5001429B7 /* ltablib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46231DA07BA5001429B7 /* ltablib.c */; };
-		7A7A468E1DA07BA5001429B7 /* ltablib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46231DA07BA5001429B7 /* ltablib.c */; };
-		7A7A468F1DA07BA5001429B7 /* ltm.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46241DA07BA5001429B7 /* ltm.c */; };
-		7A7A46901DA07BA5001429B7 /* ltm.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46241DA07BA5001429B7 /* ltm.c */; };
-		7A7A46911DA07BA5001429B7 /* lundump.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46291DA07BA5001429B7 /* lundump.c */; };
-		7A7A46921DA07BA5001429B7 /* lundump.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46291DA07BA5001429B7 /* lundump.c */; };
-		7A7A46931DA07BA5001429B7 /* lvm.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A462B1DA07BA5001429B7 /* lvm.c */; };
-		7A7A46941DA07BA5001429B7 /* lvm.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A462B1DA07BA5001429B7 /* lvm.c */; };
-		7A7A46951DA07BA5001429B7 /* lzio.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A462D1DA07BA5001429B7 /* lzio.c */; };
-		7A7A46961DA07BA5001429B7 /* lzio.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A462D1DA07BA5001429B7 /* lzio.c */; };
-		7A7A46971DA07BA5001429B7 /* print.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A462F1DA07BA5001429B7 /* print.c */; };
-		7A7A46981DA07BA5001429B7 /* print.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A462F1DA07BA5001429B7 /* print.c */; };
-		7A7A46991DA07BA5001429B7 /* AssetPipelineWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46341DA07BA5001429B7 /* AssetPipelineWrapper.mm */; };
-		7A7A469A1DA07BA5001429B7 /* AssetPipelineWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46341DA07BA5001429B7 /* AssetPipelineWrapper.mm */; };
-		7A7A469B1DA07BA5001429B7 /* IPCActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46351DA07BA5001429B7 /* IPCActions.swift */; };
-		7A7A469C1DA07BA5001429B7 /* IPCActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46351DA07BA5001429B7 /* IPCActions.swift */; };
-		7A7A469D1DA07BA5001429B7 /* IPCConnection.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46371DA07BA5001429B7 /* IPCConnection.mm */; };
-		7A7A469E1DA07BA5001429B7 /* IPCConnection.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46371DA07BA5001429B7 /* IPCConnection.mm */; };
-		7A7A469F1DA07BA5001429B7 /* ProjectDBConnWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A463A1DA07BA5001429B7 /* ProjectDBConnWrapper.mm */; };
-		7A7A46A01DA07BA5001429B7 /* ProjectDBConnWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A463A1DA07BA5001429B7 /* ProjectDBConnWrapper.mm */; };
-		7A7A46A11DA07BA5001429B7 /* FileSystemWatcher_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A463D1DA07BA5001429B7 /* FileSystemWatcher_Mac.cpp */; };
-		7A7A46A21DA07BA5001429B7 /* FileSystemWatcher_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A463D1DA07BA5001429B7 /* FileSystemWatcher_Mac.cpp */; };
-		7A7A46A31DA07BA5001429B7 /* TcpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A463E1DA07BA5001429B7 /* TcpSocket.cpp */; };
-		7A7A46A41DA07BA5001429B7 /* TcpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A463E1DA07BA5001429B7 /* TcpSocket.cpp */; };
-		7A7A46A51DA07BA5001429B7 /* AssetEventService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46411DA07BA5001429B7 /* AssetEventService.cpp */; };
-		7A7A46A61DA07BA5001429B7 /* AssetEventService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46411DA07BA5001429B7 /* AssetEventService.cpp */; };
-		7A7A46A71DA07BA5001429B7 /* AssetPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46431DA07BA5001429B7 /* AssetPipeline.cpp */; };
-		7A7A46A81DA07BA5001429B7 /* AssetPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46431DA07BA5001429B7 /* AssetPipeline.cpp */; };
-		7A7A46A91DA07BA5001429B7 /* AssetPipelineOsFuncs_Mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46461DA07BA5001429B7 /* AssetPipelineOsFuncs_Mac.mm */; };
-		7A7A46AA1DA07BA5001429B7 /* AssetPipelineOsFuncs_Mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46461DA07BA5001429B7 /* AssetPipelineOsFuncs_Mac.mm */; };
-		7A7A46AB1DA07BA5001429B7 /* Process_posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46481DA07BA5001429B7 /* Process_posix.cpp */; };
-		7A7A46AC1DA07BA5001429B7 /* Process_posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46481DA07BA5001429B7 /* Process_posix.cpp */; };
-		7A7A46AD1DA07BA5001429B7 /* ProjectDBConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46491DA07BA5001429B7 /* ProjectDBConn.cpp */; };
-		7A7A46AE1DA07BA5001429B7 /* ProjectDBConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46491DA07BA5001429B7 /* ProjectDBConn.cpp */; };
-		7A7A46AF1DA07BA5001429B7 /* StrUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A464B1DA07BA5001429B7 /* StrUtils.cpp */; };
-		7A7A46B01DA07BA5001429B7 /* StrUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A464B1DA07BA5001429B7 /* StrUtils.cpp */; };
-		7A7A46B11DA07BA5001429B7 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A464E1DA07BA5001429B7 /* sqlite3.c */; };
-		7A7A46B21DA07BA5001429B7 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A464E1DA07BA5001429B7 /* sqlite3.c */; };
 		7A7A46BC1DA07BCA001429B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A7A46B51DA07BCA001429B7 /* Assets.xcassets */; };
 		7A7A46BD1DA07BCA001429B7 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7A7A46B61DA07BCA001429B7 /* MainMenu.xib */; };
 		7A7A46BF1DA07BCA001429B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46BB1DA07BCA001429B7 /* AppDelegate.swift */; };
@@ -112,6 +22,52 @@
 		7A7A46CE1DA07BD4001429B7 /* ProjectsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46C91DA07BD4001429B7 /* ProjectsWindowController.swift */; };
 		7A8D8A651D6D154A00886730 /* buildsystem.lua in Resources */ = {isa = PBXBuildFile; fileRef = 7A8D8A631D6D153800886730 /* buildsystem.lua */; };
 		7A8D8A661D6D154A00886730 /* list.lua in Resources */ = {isa = PBXBuildFile; fileRef = 7A8D8A641D6D153800886730 /* list.lua */; };
+		7A9BB2251DA080F600D98A42 /* libCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AAB81491DA07EDE00E6A76F /* libCommon.a */; };
+		7A9BB2261DA080FA00D98A42 /* libCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AAB81491DA07EDE00E6A76F /* libCommon.a */; };
+		7AAB814D1DA07EE500E6A76F /* Debug_Mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A45EE1DA07BA5001429B7 /* Debug_Mac.mm */; };
+		7AAB81841DA07EFC00E6A76F /* bit.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A45FA1DA07BA5001429B7 /* bit.c */; };
+		7AAB81851DA07F0000E6A76F /* lapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A45FB1DA07BA5001429B7 /* lapi.c */; };
+		7AAB81861DA07F0400E6A76F /* lauxlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A45FD1DA07BA5001429B7 /* lauxlib.c */; };
+		7AAB81871DA07F0700E6A76F /* lbaselib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A45FF1DA07BA5001429B7 /* lbaselib.c */; };
+		7AAB81881DA07F0A00E6A76F /* lcode.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46001DA07BA5001429B7 /* lcode.c */; };
+		7AAB81891DA07F0D00E6A76F /* ldblib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46021DA07BA5001429B7 /* ldblib.c */; };
+		7AAB818A1DA07F1000E6A76F /* ldebug.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46031DA07BA5001429B7 /* ldebug.c */; };
+		7AAB818B1DA07F1300E6A76F /* ldo.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46051DA07BA5001429B7 /* ldo.c */; };
+		7AAB818C1DA07F1800E6A76F /* ldump.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46071DA07BA5001429B7 /* ldump.c */; };
+		7AAB818D1DA07F1B00E6A76F /* lfunc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46081DA07BA5001429B7 /* lfunc.c */; };
+		7AAB818E1DA07F2000E6A76F /* lgc.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A460A1DA07BA5001429B7 /* lgc.c */; };
+		7AAB818F1DA07F2300E6A76F /* linit.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A460C1DA07BA5001429B7 /* linit.c */; };
+		7AAB81901DA07F2700E6A76F /* liolib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A460D1DA07BA5001429B7 /* liolib.c */; };
+		7AAB81911DA07F2A00E6A76F /* llex.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A460E1DA07BA5001429B7 /* llex.c */; };
+		7AAB81921DA07F2F00E6A76F /* lmathlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46111DA07BA5001429B7 /* lmathlib.c */; };
+		7AAB81931DA07F3200E6A76F /* lmem.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46121DA07BA5001429B7 /* lmem.c */; };
+		7AAB81941DA07F3500E6A76F /* loadlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46141DA07BA5001429B7 /* loadlib.c */; };
+		7AAB81951DA07F3800E6A76F /* lobject.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46151DA07BA5001429B7 /* lobject.c */; };
+		7AAB81961DA07F3B00E6A76F /* lopcodes.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46171DA07BA5001429B7 /* lopcodes.c */; };
+		7AAB81971DA07F3D00E6A76F /* loslib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46191DA07BA5001429B7 /* loslib.c */; };
+		7AAB81981DA07F4100E6A76F /* lparser.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A461A1DA07BA5001429B7 /* lparser.c */; };
+		7AAB81991DA07F4400E6A76F /* lstate.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A461C1DA07BA5001429B7 /* lstate.c */; };
+		7AAB819A1DA07F4700E6A76F /* lstring.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A461E1DA07BA5001429B7 /* lstring.c */; };
+		7AAB819B1DA07F4A00E6A76F /* lstrlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46201DA07BA5001429B7 /* lstrlib.c */; };
+		7AAB819C1DA07F4D00E6A76F /* ltable.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46211DA07BA5001429B7 /* ltable.c */; };
+		7AAB819D1DA07F5000E6A76F /* ltablib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46231DA07BA5001429B7 /* ltablib.c */; };
+		7AAB819E1DA07F5200E6A76F /* ltm.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46241DA07BA5001429B7 /* ltm.c */; };
+		7AAB819F1DA07F5600E6A76F /* lundump.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46291DA07BA5001429B7 /* lundump.c */; };
+		7AAB81A01DA07F5A00E6A76F /* lvm.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A462B1DA07BA5001429B7 /* lvm.c */; };
+		7AAB81A11DA07F5D00E6A76F /* lzio.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A462D1DA07BA5001429B7 /* lzio.c */; };
+		7AAB81A21DA07F6000E6A76F /* print.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A462F1DA07BA5001429B7 /* print.c */; };
+		7AAB81A31DA07F6700E6A76F /* IPCConnection.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46371DA07BA5001429B7 /* IPCConnection.mm */; };
+		7AAB81A41DA07F6E00E6A76F /* ProjectDBConnWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A463A1DA07BA5001429B7 /* ProjectDBConnWrapper.mm */; };
+		7AAB81A61DA07F7700E6A76F /* AssetPipelineWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46341DA07BA5001429B7 /* AssetPipelineWrapper.mm */; };
+		7AAB81A71DA07F7E00E6A76F /* FileSystemWatcher_Mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A463D1DA07BA5001429B7 /* FileSystemWatcher_Mac.cpp */; };
+		7AAB81A81DA07F8000E6A76F /* TcpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A463E1DA07BA5001429B7 /* TcpSocket.cpp */; };
+		7AAB81A91DA07F8400E6A76F /* ProjectDBConn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46491DA07BA5001429B7 /* ProjectDBConn.cpp */; };
+		7AAB81AA1DA07F8700E6A76F /* AssetEventService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46411DA07BA5001429B7 /* AssetEventService.cpp */; };
+		7AAB81AB1DA07F8A00E6A76F /* AssetPipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46431DA07BA5001429B7 /* AssetPipeline.cpp */; };
+		7AAB81AC1DA07F8D00E6A76F /* AssetPipelineOsFuncs_Mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46461DA07BA5001429B7 /* AssetPipelineOsFuncs_Mac.mm */; };
+		7AAB81AD1DA07F8F00E6A76F /* Process_posix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A46481DA07BA5001429B7 /* Process_posix.cpp */; };
+		7AAB81AE1DA07F9300E6A76F /* StrUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A464B1DA07BA5001429B7 /* StrUtils.cpp */; };
+		7AAB81AF1DA07FA600E6A76F /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A464E1DA07BA5001429B7 /* sqlite3.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,6 +77,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 7A4DFE7F1D6BE40A00E858FE;
 			remoteInfo = "Asset Pipeline Helper";
+		};
+		7AAB81B01DA07FBD00E6A76F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A24848C1D46D83C00C61397 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7AAB81481DA07EDE00E6A76F;
+			remoteInfo = Common;
+		};
+		7AAB81B21DA07FC100E6A76F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A24848C1D46D83C00C61397 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7AAB81481DA07EDE00E6A76F;
+			remoteInfo = Common;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -195,7 +165,6 @@
 		7A7A46321DA07BA5001429B7 /* AssetPipelineMacDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetPipelineMacDelegate.h; sourceTree = "<group>"; };
 		7A7A46331DA07BA5001429B7 /* AssetPipelineWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetPipelineWrapper.h; sourceTree = "<group>"; };
 		7A7A46341DA07BA5001429B7 /* AssetPipelineWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AssetPipelineWrapper.mm; sourceTree = "<group>"; };
-		7A7A46351DA07BA5001429B7 /* IPCActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPCActions.swift; sourceTree = "<group>"; };
 		7A7A46361DA07BA5001429B7 /* IPCConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPCConnection.h; sourceTree = "<group>"; };
 		7A7A46371DA07BA5001429B7 /* IPCConnection.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IPCConnection.mm; sourceTree = "<group>"; };
 		7A7A46381DA07BA5001429B7 /* IPCConnectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPCConnectionDelegate.h; sourceTree = "<group>"; };
@@ -231,6 +200,9 @@
 		7A7A46C91DA07BD4001429B7 /* ProjectsWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectsWindowController.swift; sourceTree = "<group>"; };
 		7A8D8A631D6D153800886730 /* buildsystem.lua */ = {isa = PBXFileReference; lastKnownFileType = text; path = buildsystem.lua; sourceTree = "<group>"; };
 		7A8D8A641D6D153800886730 /* list.lua */ = {isa = PBXFileReference; lastKnownFileType = text; path = list.lua; sourceTree = "<group>"; };
+		7A9BB2231DA0803C00D98A42 /* IPCActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPCActions.h; sourceTree = "<group>"; };
+		7A9BB2281DA0814000D98A42 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		7AAB81491DA07EDE00E6A76F /* libCommon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCommon.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,10 +210,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A9BB2251DA080F600D98A42 /* libCommon.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		7A4DFE7D1D6BE40A00E858FE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A9BB2261DA080FA00D98A42 /* libCommon.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7AAB81461DA07EDE00E6A76F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -259,6 +240,7 @@
 				7A7A46B31DA07BCA001429B7 /* MainApp */,
 				7A8D8A621D6D153800886730 /* Scripts */,
 				7A2484951D46D83C00C61397 /* Products */,
+				7A9BB2271DA0814000D98A42 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -267,6 +249,7 @@
 			children = (
 				7A2484941D46D83C00C61397 /* Asset Pipeline.app */,
 				7A4DFE801D6BE40A00E858FE /* Asset Pipeline Helper.app */,
+				7AAB81491DA07EDE00E6A76F /* libCommon.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -399,7 +382,7 @@
 				7A7A46321DA07BA5001429B7 /* AssetPipelineMacDelegate.h */,
 				7A7A46331DA07BA5001429B7 /* AssetPipelineWrapper.h */,
 				7A7A46341DA07BA5001429B7 /* AssetPipelineWrapper.mm */,
-				7A7A46351DA07BA5001429B7 /* IPCActions.swift */,
+				7A9BB2231DA0803C00D98A42 /* IPCActions.h */,
 			);
 			path = Mac;
 			sourceTree = "<group>";
@@ -527,7 +510,25 @@
 			path = ../Scripts;
 			sourceTree = "<group>";
 		};
+		7A9BB2271DA0814000D98A42 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7A9BB2281DA0814000D98A42 /* Cocoa.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		7AAB81471DA07EDE00E6A76F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		7A2484931D46D83C00C61397 /* Asset Pipeline */ = {
@@ -541,6 +542,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				7AAB81B31DA07FC100E6A76F /* PBXTargetDependency */,
 				7A4DFEB31D6BE51D00E858FE /* PBXTargetDependency */,
 			);
 			name = "Asset Pipeline";
@@ -559,11 +561,29 @@
 			buildRules = (
 			);
 			dependencies = (
+				7AAB81B11DA07FBD00E6A76F /* PBXTargetDependency */,
 			);
 			name = "Asset Pipeline Helper";
 			productName = "Asset Pipeline Helper";
 			productReference = 7A4DFE801D6BE40A00E858FE /* Asset Pipeline Helper.app */;
 			productType = "com.apple.product-type.application";
+		};
+		7AAB81481DA07EDE00E6A76F /* Common */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7AAB814A1DA07EDE00E6A76F /* Build configuration list for PBXNativeTarget "Common" */;
+			buildPhases = (
+				7AAB81451DA07EDE00E6A76F /* Sources */,
+				7AAB81461DA07EDE00E6A76F /* Frameworks */,
+				7AAB81471DA07EDE00E6A76F /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Common;
+			productName = Common;
+			productReference = 7AAB81491DA07EDE00E6A76F /* libCommon.a */;
+			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
 
@@ -583,6 +603,11 @@
 						CreatedOnToolsVersion = 7.3.1;
 						LastSwiftMigration = 0800;
 					};
+					7AAB81481DA07EDE00E6A76F = {
+						CreatedOnToolsVersion = 8.0;
+						LastSwiftMigration = 0800;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 7A24848F1D46D83C00C61397 /* Build configuration list for PBXProject "Asset Pipeline" */;
@@ -600,6 +625,7 @@
 			targets = (
 				7A2484931D46D83C00C61397 /* Asset Pipeline */,
 				7A4DFE7F1D6BE40A00E858FE /* Asset Pipeline Helper */,
+				7AAB81481DA07EDE00E6A76F /* Common */,
 			);
 		};
 /* End PBXProject section */
@@ -638,52 +664,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A7A46A71DA07BA5001429B7 /* AssetPipeline.cpp in Sources */,
-				7A7A46751DA07BA5001429B7 /* llex.c in Sources */,
-				7A7A466F1DA07BA5001429B7 /* lgc.c in Sources */,
-				7A7A469B1DA07BA5001429B7 /* IPCActions.swift in Sources */,
-				7A7A46891DA07BA5001429B7 /* lstrlib.c in Sources */,
-				7A7A466B1DA07BA5001429B7 /* ldump.c in Sources */,
-				7A7A46511DA07BA5001429B7 /* Debug_Mac.mm in Sources */,
-				7A7A46971DA07BA5001429B7 /* print.c in Sources */,
-				7A7A469F1DA07BA5001429B7 /* ProjectDBConnWrapper.mm in Sources */,
-				7A7A46611DA07BA5001429B7 /* lbaselib.c in Sources */,
-				7A7A46A11DA07BA5001429B7 /* FileSystemWatcher_Mac.cpp in Sources */,
-				7A7A46831DA07BA5001429B7 /* lparser.c in Sources */,
-				7A7A465D1DA07BA5001429B7 /* lapi.c in Sources */,
-				7A7A46951DA07BA5001429B7 /* lzio.c in Sources */,
-				7A7A467D1DA07BA5001429B7 /* lobject.c in Sources */,
-				7A7A46631DA07BA5001429B7 /* lcode.c in Sources */,
-				7A7A46671DA07BA5001429B7 /* ldebug.c in Sources */,
-				7A7A46771DA07BA5001429B7 /* lmathlib.c in Sources */,
-				7A7A46711DA07BA5001429B7 /* linit.c in Sources */,
-				7A7A46B11DA07BA5001429B7 /* sqlite3.c in Sources */,
-				7A7A46911DA07BA5001429B7 /* lundump.c in Sources */,
-				7A7A468D1DA07BA5001429B7 /* ltablib.c in Sources */,
 				7A7A46BF1DA07BCA001429B7 /* AppDelegate.swift in Sources */,
-				7A7A468B1DA07BA5001429B7 /* ltable.c in Sources */,
-				7A7A469D1DA07BA5001429B7 /* IPCConnection.mm in Sources */,
-				7A7A46991DA07BA5001429B7 /* AssetPipelineWrapper.mm in Sources */,
-				7A7A468F1DA07BA5001429B7 /* ltm.c in Sources */,
-				7A7A46791DA07BA5001429B7 /* lmem.c in Sources */,
-				7A7A46871DA07BA5001429B7 /* lstring.c in Sources */,
-				7A7A467F1DA07BA5001429B7 /* lopcodes.c in Sources */,
-				7A7A465B1DA07BA5001429B7 /* bit.c in Sources */,
-				7A7A466D1DA07BA5001429B7 /* lfunc.c in Sources */,
-				7A7A46A91DA07BA5001429B7 /* AssetPipelineOsFuncs_Mac.mm in Sources */,
-				7A7A46851DA07BA5001429B7 /* lstate.c in Sources */,
-				7A7A467B1DA07BA5001429B7 /* loadlib.c in Sources */,
-				7A7A46731DA07BA5001429B7 /* liolib.c in Sources */,
-				7A7A46A31DA07BA5001429B7 /* TcpSocket.cpp in Sources */,
-				7A7A46691DA07BA5001429B7 /* ldo.c in Sources */,
-				7A7A46A51DA07BA5001429B7 /* AssetEventService.cpp in Sources */,
-				7A7A46811DA07BA5001429B7 /* loslib.c in Sources */,
-				7A7A46AD1DA07BA5001429B7 /* ProjectDBConn.cpp in Sources */,
-				7A7A46931DA07BA5001429B7 /* lvm.c in Sources */,
-				7A7A465F1DA07BA5001429B7 /* lauxlib.c in Sources */,
-				7A7A46651DA07BA5001429B7 /* ldblib.c in Sources */,
-				7A7A46AB1DA07BA5001429B7 /* Process_posix.cpp in Sources */,
-				7A7A46AF1DA07BA5001429B7 /* StrUtils.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -691,53 +672,59 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A7A46A81DA07BA5001429B7 /* AssetPipeline.cpp in Sources */,
-				7A7A46761DA07BA5001429B7 /* llex.c in Sources */,
-				7A7A46701DA07BA5001429B7 /* lgc.c in Sources */,
-				7A7A469C1DA07BA5001429B7 /* IPCActions.swift in Sources */,
-				7A7A468A1DA07BA5001429B7 /* lstrlib.c in Sources */,
-				7A7A466C1DA07BA5001429B7 /* ldump.c in Sources */,
-				7A7A46521DA07BA5001429B7 /* Debug_Mac.mm in Sources */,
-				7A7A46981DA07BA5001429B7 /* print.c in Sources */,
-				7A7A46A01DA07BA5001429B7 /* ProjectDBConnWrapper.mm in Sources */,
-				7A7A46621DA07BA5001429B7 /* lbaselib.c in Sources */,
-				7A7A46A21DA07BA5001429B7 /* FileSystemWatcher_Mac.cpp in Sources */,
-				7A7A46841DA07BA5001429B7 /* lparser.c in Sources */,
-				7A7A465E1DA07BA5001429B7 /* lapi.c in Sources */,
-				7A7A46961DA07BA5001429B7 /* lzio.c in Sources */,
-				7A7A467E1DA07BA5001429B7 /* lobject.c in Sources */,
-				7A7A46641DA07BA5001429B7 /* lcode.c in Sources */,
-				7A7A46681DA07BA5001429B7 /* ldebug.c in Sources */,
-				7A7A46781DA07BA5001429B7 /* lmathlib.c in Sources */,
-				7A7A46721DA07BA5001429B7 /* linit.c in Sources */,
-				7A7A46B21DA07BA5001429B7 /* sqlite3.c in Sources */,
-				7A7A46921DA07BA5001429B7 /* lundump.c in Sources */,
-				7A7A468E1DA07BA5001429B7 /* ltablib.c in Sources */,
-				7A7A468C1DA07BA5001429B7 /* ltable.c in Sources */,
-				7A7A469E1DA07BA5001429B7 /* IPCConnection.mm in Sources */,
-				7A7A469A1DA07BA5001429B7 /* AssetPipelineWrapper.mm in Sources */,
-				7A7A46901DA07BA5001429B7 /* ltm.c in Sources */,
-				7A7A467A1DA07BA5001429B7 /* lmem.c in Sources */,
-				7A7A46881DA07BA5001429B7 /* lstring.c in Sources */,
-				7A7A46801DA07BA5001429B7 /* lopcodes.c in Sources */,
-				7A7A465C1DA07BA5001429B7 /* bit.c in Sources */,
-				7A7A466E1DA07BA5001429B7 /* lfunc.c in Sources */,
-				7A7A46AA1DA07BA5001429B7 /* AssetPipelineOsFuncs_Mac.mm in Sources */,
-				7A7A46861DA07BA5001429B7 /* lstate.c in Sources */,
-				7A7A467C1DA07BA5001429B7 /* loadlib.c in Sources */,
-				7A7A46741DA07BA5001429B7 /* liolib.c in Sources */,
-				7A7A46A41DA07BA5001429B7 /* TcpSocket.cpp in Sources */,
 				7A7A46CD1DA07BD4001429B7 /* HelperAppDelegate.swift in Sources */,
 				7A7A46CE1DA07BD4001429B7 /* ProjectsWindowController.swift in Sources */,
-				7A7A466A1DA07BA5001429B7 /* ldo.c in Sources */,
-				7A7A46A61DA07BA5001429B7 /* AssetEventService.cpp in Sources */,
-				7A7A46821DA07BA5001429B7 /* loslib.c in Sources */,
-				7A7A46AE1DA07BA5001429B7 /* ProjectDBConn.cpp in Sources */,
-				7A7A46941DA07BA5001429B7 /* lvm.c in Sources */,
-				7A7A46601DA07BA5001429B7 /* lauxlib.c in Sources */,
-				7A7A46661DA07BA5001429B7 /* ldblib.c in Sources */,
-				7A7A46AC1DA07BA5001429B7 /* Process_posix.cpp in Sources */,
-				7A7A46B01DA07BA5001429B7 /* StrUtils.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7AAB81451DA07EDE00E6A76F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7AAB81AD1DA07F8F00E6A76F /* Process_posix.cpp in Sources */,
+				7AAB81911DA07F2A00E6A76F /* llex.c in Sources */,
+				7AAB81AA1DA07F8700E6A76F /* AssetEventService.cpp in Sources */,
+				7AAB818E1DA07F2000E6A76F /* lgc.c in Sources */,
+				7AAB819B1DA07F4A00E6A76F /* lstrlib.c in Sources */,
+				7AAB818C1DA07F1800E6A76F /* ldump.c in Sources */,
+				7AAB81A91DA07F8400E6A76F /* ProjectDBConn.cpp in Sources */,
+				7AAB814D1DA07EE500E6A76F /* Debug_Mac.mm in Sources */,
+				7AAB81A61DA07F7700E6A76F /* AssetPipelineWrapper.mm in Sources */,
+				7AAB81A21DA07F6000E6A76F /* print.c in Sources */,
+				7AAB81871DA07F0700E6A76F /* lbaselib.c in Sources */,
+				7AAB81A71DA07F7E00E6A76F /* FileSystemWatcher_Mac.cpp in Sources */,
+				7AAB81AC1DA07F8D00E6A76F /* AssetPipelineOsFuncs_Mac.mm in Sources */,
+				7AAB81981DA07F4100E6A76F /* lparser.c in Sources */,
+				7AAB81851DA07F0000E6A76F /* lapi.c in Sources */,
+				7AAB81A11DA07F5D00E6A76F /* lzio.c in Sources */,
+				7AAB81951DA07F3800E6A76F /* lobject.c in Sources */,
+				7AAB81881DA07F0A00E6A76F /* lcode.c in Sources */,
+				7AAB81AF1DA07FA600E6A76F /* sqlite3.c in Sources */,
+				7AAB81A31DA07F6700E6A76F /* IPCConnection.mm in Sources */,
+				7AAB818A1DA07F1000E6A76F /* ldebug.c in Sources */,
+				7AAB81921DA07F2F00E6A76F /* lmathlib.c in Sources */,
+				7AAB818F1DA07F2300E6A76F /* linit.c in Sources */,
+				7AAB819F1DA07F5600E6A76F /* lundump.c in Sources */,
+				7AAB819D1DA07F5000E6A76F /* ltablib.c in Sources */,
+				7AAB819C1DA07F4D00E6A76F /* ltable.c in Sources */,
+				7AAB819E1DA07F5200E6A76F /* ltm.c in Sources */,
+				7AAB81931DA07F3200E6A76F /* lmem.c in Sources */,
+				7AAB819A1DA07F4700E6A76F /* lstring.c in Sources */,
+				7AAB81961DA07F3B00E6A76F /* lopcodes.c in Sources */,
+				7AAB81841DA07EFC00E6A76F /* bit.c in Sources */,
+				7AAB818D1DA07F1B00E6A76F /* lfunc.c in Sources */,
+				7AAB81991DA07F4400E6A76F /* lstate.c in Sources */,
+				7AAB81941DA07F3500E6A76F /* loadlib.c in Sources */,
+				7AAB81901DA07F2700E6A76F /* liolib.c in Sources */,
+				7AAB818B1DA07F1300E6A76F /* ldo.c in Sources */,
+				7AAB81A81DA07F8000E6A76F /* TcpSocket.cpp in Sources */,
+				7AAB81971DA07F3D00E6A76F /* loslib.c in Sources */,
+				7AAB81A01DA07F5A00E6A76F /* lvm.c in Sources */,
+				7AAB81861DA07F0400E6A76F /* lauxlib.c in Sources */,
+				7AAB81891DA07F0D00E6A76F /* ldblib.c in Sources */,
+				7AAB81A41DA07F6E00E6A76F /* ProjectDBConnWrapper.mm in Sources */,
+				7AAB81AB1DA07F8A00E6A76F /* AssetPipeline.cpp in Sources */,
+				7AAB81AE1DA07F9300E6A76F /* StrUtils.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -748,6 +735,16 @@
 			isa = PBXTargetDependency;
 			target = 7A4DFE7F1D6BE40A00E858FE /* Asset Pipeline Helper */;
 			targetProxy = 7A4DFEB21D6BE51D00E858FE /* PBXContainerItemProxy */;
+		};
+		7AAB81B11DA07FBD00E6A76F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7AAB81481DA07EDE00E6A76F /* Common */;
+			targetProxy = 7AAB81B01DA07FBD00E6A76F /* PBXContainerItemProxy */;
+		};
+		7AAB81B31DA07FC100E6A76F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7AAB81481DA07EDE00E6A76F /* Common */;
+			targetProxy = 7AAB81B21DA07FC100E6A76F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -878,6 +875,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ../MainApp/Mac/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_BUNDLE_IDENTIFIER = "mycompany.Asset-Pipeline";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
@@ -891,6 +889,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ../MainApp/Mac/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_BUNDLE_IDENTIFIER = "mycompany.Asset-Pipeline";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
@@ -905,6 +904,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ../Helper/Mac/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_BUNDLE_IDENTIFIER = "mycompany.Asset-Pipeline-Helper";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -920,7 +920,32 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = ../Helper/Mac/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_BUNDLE_IDENTIFIER = "mycompany.Asset-Pipeline-Helper";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		7AAB814B1DA07EDE00E6A76F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		7AAB814C1DA07EDE00E6A76F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				EXECUTABLE_PREFIX = lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -952,6 +977,15 @@
 			buildConfigurations = (
 				7A4DFE8E1D6BE40A00E858FE /* Debug */,
 				7A4DFE8F1D6BE40A00E858FE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7AAB814A1DA07EDE00E6A76F /* Build configuration list for PBXNativeTarget "Common" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7AAB814B1DA07EDE00E6A76F /* Debug */,
+				7AAB814C1DA07EDE00E6A76F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
