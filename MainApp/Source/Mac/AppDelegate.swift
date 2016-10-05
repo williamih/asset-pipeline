@@ -31,6 +31,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
 
         if let button = statusItem.button {
             button.image = NSImage(named: "StatusBarButtonImage")
+            var size = button.image!.size
+            size.width *= 0.5
+            size.height *= 0.5
+            button.image!.size = size
         }
 
         let menu = NSMenu()
