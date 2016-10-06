@@ -3,12 +3,13 @@
 @interface ProjectDBConnWrapper : NSObject
 
 - (NSInteger)numProjects;
-- (nonnull NSString *)nameOfProjectAtIndex:(NSInteger)index;
-- (nonnull NSString *)directoryOfProjectAtIndex:(NSInteger)index;
+- (nonnull NSArray<NSNumber *> *)queryAllProjectIDs;
+- (nonnull NSString *)nameOfProjectWithID:(NSInteger)projID;
+- (nonnull NSString *)directoryOfProjectWithID:(NSInteger)projID;
 
 - (void)addProjectWithName:(nonnull NSString *)name directory:(nonnull NSString *)directory;
 
-- (NSInteger)activeProjectIndex;
-- (void)setActiveProjectIndex:(NSInteger)index;
+- (NSInteger)activeProjectID;
+- (void)setActiveProjectID:(NSInteger)projID;
 
 @end

@@ -5,7 +5,7 @@
 
 @interface AssetPipelineWrapper : NSObject
 
-- (void)compileProjectWithIndex:(NSUInteger)index;
+- (void)compileProjectWithID:(NSInteger)projID;
 - (void)pollMessages;
 
 @property (weak, nullable) id<AssetPipelineMacDelegate> delegate;

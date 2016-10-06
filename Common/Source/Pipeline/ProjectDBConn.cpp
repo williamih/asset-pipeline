@@ -82,6 +82,8 @@ static const char STMT_SETUPCONFIG[] =
 
 static const char STMT_NUMPROJECTS[] = "SELECT COUNT(*) FROM Projects";
 
+static const char STMT_QUERYALLPROJECTS[] = "SELECT ProjectID FROM Projects";
+
 static const char STMT_PROJECTNAME[] = "SELECT Name FROM Projects"
                                        " WHERE ProjectID = ?";
 
@@ -114,6 +116,7 @@ ProjectDBConn::ProjectDBConn()
                         true)
     , m_stmtDepsTable(m_dbHandle, STMT_DEPSTABLE, sizeof STMT_DEPSTABLE, true)
     , m_stmtNumProjects(m_dbHandle, STMT_NUMPROJECTS, sizeof STMT_NUMPROJECTS)
+    , m_stmtQueryAllProjects(m_dbHandle, STMT_QUERYALLPROJECTS, sizeof STMT_QUERYALLPROJECTS)
     , m_stmtProjectName(m_dbHandle, STMT_PROJECTNAME, sizeof STMT_PROJECTNAME)
     , m_stmtProjectDirectory(m_dbHandle, STMT_PROJECTDIR, sizeof STMT_PROJECTDIR)
     , m_stmtAddProject(m_dbHandle, STMT_ADDPROJECT, sizeof STMT_ADDPROJECT)
@@ -141,10 +144,28 @@ unsigned ProjectDBConn::NumProjects() const
     return (unsigned)result;
 }
 
-std::string ProjectDBConn::GetProjectName(unsigned index) const
+void ProjectDBConn::QueryAllProjectIDs(std::vector<int>* vec) const
 {
-    int projectID = (int)index + 1;
-    if (sqlite3_bind_int(m_stmtProjectName, 1, projectID) != SQLITE_OK)
+    ASSERT(vec);
+
+    vec->clear();
+
+    int ret;
+    while ((ret = m_stmtQueryAllProjects.Step(m_dbHandle)) == SQLITE_ROW) {
+        int projID = sqlite3_column_int(m_stmtQueryAllProjects, 0);
+        vec->push_back(projID);
+    }
+    if (ret != SQLITE_DONE)
+        FATAL("sqlite3_step: %s", sqlite3_errmsg(m_dbHandle));
+
+    m_stmtQueryAllProjects.Reset(m_dbHandle);
+}
+
+std::string ProjectDBConn::GetProjectName(int projID) const
+{
+    ASSERT(projID >= 0);
+
+    if (sqlite3_bind_int(m_stmtProjectName, 1, projID) != SQLITE_OK)
         FATAL("sqlite3_bind_int");
 
     if (m_stmtProjectName.Step(m_dbHandle) != SQLITE_ROW)
@@ -158,10 +179,11 @@ std::string ProjectDBConn::GetProjectName(unsigned index) const
     return ret;
 }
 
-std::string ProjectDBConn::GetProjectDirectory(unsigned index) const
+std::string ProjectDBConn::GetProjectDirectory(int projID) const
 {
-    int projectID = (int)index + 1;
-    if (sqlite3_bind_int(m_stmtProjectDirectory, 1, projectID) != SQLITE_OK)
+    ASSERT(projID >= 0);
+
+    if (sqlite3_bind_int(m_stmtProjectDirectory, 1, projID) != SQLITE_OK)
         FATAL("sqlite3_bind_int");
 
     if (m_stmtProjectDirectory.Step(m_dbHandle) != SQLITE_ROW)
@@ -190,7 +212,7 @@ void ProjectDBConn::AddProject(const char* name, const char* directory)
     m_stmtAddProject.Reset(m_dbHandle);
 }
 
-int ProjectDBConn::GetActiveProjectIndex() const
+int ProjectDBConn::GetActiveProjectID() const
 {
     if (m_stmtGetActiveProj.Step(m_dbHandle) != SQLITE_ROW)
         FATAL("sqlite3_step: %s", sqlite3_errmsg(m_dbHandle));
@@ -199,8 +221,7 @@ int ProjectDBConn::GetActiveProjectIndex() const
     if (sqlite3_column_type(m_stmtGetActiveProj, 0) == SQLITE_NULL) {
         result = -1;
     } else {
-        int projectID = sqlite3_column_int(m_stmtGetActiveProj, 0);
-        result = projectID - 1;
+        result = sqlite3_column_int(m_stmtGetActiveProj, 0);
     }
 
     m_stmtGetActiveProj.Reset(m_dbHandle);
@@ -208,16 +229,15 @@ int ProjectDBConn::GetActiveProjectIndex() const
     return result;
 }
 
-void ProjectDBConn::SetActiveProjectIndex(int index)
+void ProjectDBConn::SetActiveProjectID(int projID)
 {
-    ASSERT(index >= -1);
+    ASSERT(projID == -1 || projID >= 0);
 
-    if (index == -1) {
+    if (projID == -1) {
         if (sqlite3_bind_null(m_stmtSetActiveProj, 1) != SQLITE_OK)
             FATAL("sqlite3_bind_null");
     } else {
-        int projectID = (int)index + 1;
-        if (sqlite3_bind_int(m_stmtSetActiveProj, 1, projectID) != SQLITE_OK)
+        if (sqlite3_bind_int(m_stmtSetActiveProj, 1, projID) != SQLITE_OK)
             FATAL("sqlite3_bind_int");
     }
 
@@ -227,13 +247,12 @@ void ProjectDBConn::SetActiveProjectIndex(int index)
     m_stmtSetActiveProj.Reset(m_dbHandle);
 }
 
-void ProjectDBConn::ClearDependencies(unsigned projIdx, const char* outputFile)
+void ProjectDBConn::ClearDependencies(int projID, const char* outputFile)
 {
-    ASSERT(projIdx >= 0);
+    ASSERT(projID >= 0);
     ASSERT(outputFile);
 
-    int projectID = (int)projIdx + 1;
-    if (sqlite3_bind_int(m_stmtClearDeps, 1, projectID) != SQLITE_OK)
+    if (sqlite3_bind_int(m_stmtClearDeps, 1, projID) != SQLITE_OK)
         FATAL("sqlite3_bind_int");
 
     if (sqlite3_bind_text(m_stmtClearDeps, 2, strdup(outputFile), -1, free) != SQLITE_OK)
@@ -245,15 +264,14 @@ void ProjectDBConn::ClearDependencies(unsigned projIdx, const char* outputFile)
     m_stmtClearDeps.Reset(m_dbHandle);
 }
 
-void ProjectDBConn::RecordDependency(unsigned projIdx, const char* outputFile,
+void ProjectDBConn::RecordDependency(int projID, const char* outputFile,
                                      const char* inputFile)
 {
-    ASSERT(projIdx >= 0);
+    ASSERT(projID >= 0);
     ASSERT(outputFile);
     ASSERT(inputFile);
 
-    int projectID = (int)projIdx + 1;
-    if (sqlite3_bind_int(m_stmtRecordDep, 1, projectID) != SQLITE_OK)
+    if (sqlite3_bind_int(m_stmtRecordDep, 1, projID) != SQLITE_OK)
         FATAL("sqlite3_bind_int");
 
     if (sqlite3_bind_text(m_stmtRecordDep, 2, strdup(inputFile), -1, free) != SQLITE_OK)
@@ -268,17 +286,16 @@ void ProjectDBConn::RecordDependency(unsigned projIdx, const char* outputFile,
     m_stmtRecordDep.Reset(m_dbHandle);
 }
 
-void ProjectDBConn::GetDependents(unsigned projIdx, const char* inputFile,
+void ProjectDBConn::GetDependents(int projID, const char* inputFile,
                                   std::vector<std::string>* outputFiles)
 {
-    ASSERT(projIdx >= 0);
+    ASSERT(projID >= 0);
     ASSERT(inputFile);
     ASSERT(outputFiles);
 
     outputFiles->clear();
 
-    int projectID = (int)projIdx + 1;
-    if (sqlite3_bind_int(m_stmtGetDeps, 1, projectID) != SQLITE_OK)
+    if (sqlite3_bind_int(m_stmtGetDeps, 1, projID) != SQLITE_OK)
         FATAL("sqlite3_bind_int");
 
     if (sqlite3_bind_text(m_stmtGetDeps, 2, strdup(inputFile), -1, free) != SQLITE_OK)

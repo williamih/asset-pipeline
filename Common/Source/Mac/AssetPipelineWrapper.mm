@@ -7,15 +7,12 @@
 
 class AssetPipelineCppDelegateMac : public AssetPipelineDelegate {
 public:
-    virtual void OnAssetBuildFinished(unsigned projectIndex, int nSucceeded, int nFailed)
+    virtual void OnAssetBuildFinished(int projectID, int nSucceeded, int nFailed)
     {
         ASSERT(objCDelegate);
-        NSUInteger projIndex = (NSUInteger)projectIndex;
-        NSInteger successCount = (NSInteger)nSucceeded;
-        NSInteger failureCount = (NSInteger)nFailed;
-        [objCDelegate assetBuildFinishedWithProjectIndex:projIndex
-                                            successCount:successCount
-                                            failureCount:failureCount];
+        [objCDelegate assetBuildFinishedWithProjectID:(NSInteger)projectID
+                                         successCount:(NSInteger)nSucceeded
+                                         failureCount:(NSInteger)nFailed];
     }
 
     virtual void OnAssetFailedToCompile(const AssetCompileFailureInfo& info)
@@ -61,8 +58,8 @@ public:
     delete _cppDelegate;
 }
 
-- (void)compileProjectWithIndex:(NSUInteger)index {
-    _cppAssetPipeline->CompileProject((unsigned)index);
+- (void)compileProjectWithID:(NSInteger)projID {
+    _cppAssetPipeline->CompileProject((int)projID);
 }
 
 - (void)pollMessages {

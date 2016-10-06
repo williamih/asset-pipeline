@@ -12,19 +12,21 @@ public:
     ProjectDBConn();
 
     unsigned NumProjects() const;
-    std::string GetProjectName(unsigned index) const;
-    std::string GetProjectDirectory(unsigned index) const;
+    void QueryAllProjectIDs(std::vector<int>* vec) const;
+
+    std::string GetProjectName(int projID) const;
+    std::string GetProjectDirectory(int projID) const;
 
     void AddProject(const char* name, const char* directory);
 
     // Returns -1 if the active project is null.
-    int GetActiveProjectIndex() const;
-    void SetActiveProjectIndex(int index);
+    int GetActiveProjectID() const;
+    void SetActiveProjectID(int projID);
 
-    void ClearDependencies(unsigned projIdx, const char* outputFile);
-    void RecordDependency(unsigned projIdx, const char* outputFile,
+    void ClearDependencies(int projID, const char* outputFile);
+    void RecordDependency(int projID, const char* outputFile,
                           const char* inputFile);
-    void GetDependents(unsigned projIdx, const char* inputFile,
+    void GetDependents(int projID, const char* inputFile,
                        std::vector<std::string>* outputFiles);
 
 private:
@@ -66,6 +68,7 @@ private:
     SQLiteStatement m_stmtSetupConfig;
     SQLiteStatement m_stmtDepsTable;
     mutable SQLiteStatement m_stmtNumProjects;
+    mutable SQLiteStatement m_stmtQueryAllProjects;
     mutable SQLiteStatement m_stmtProjectName;
     mutable SQLiteStatement m_stmtProjectDirectory;
     SQLiteStatement m_stmtAddProject;

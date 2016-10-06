@@ -21,15 +21,25 @@
     return (NSInteger)_cppDBConn->NumProjects();
 }
 
-- (nonnull NSString *)nameOfProjectAtIndex:(NSInteger)index {
-    NSAssert(index >= 0, @"Negative index");
-    std::string str(_cppDBConn->GetProjectName((unsigned)index));
+- (nonnull NSArray<NSNumber *> *)queryAllProjectIDs {
+    std::vector<int> vec;
+    _cppDBConn->QueryAllProjectIDs(&vec);
+    NSMutableArray<NSNumber *> *array = [[NSMutableArray alloc] init];
+    for (size_t i = 0; i < vec.size(); ++i) {
+        [array addObject:@(vec[i])];
+    }
+    return array;
+}
+
+- (nonnull NSString *)nameOfProjectWithID:(NSInteger)projID {
+    NSAssert(projID >= 0, @"Negative project ID");
+    std::string str(_cppDBConn->GetProjectName((int)projID));
     return [NSString stringWithUTF8String:str.c_str()];
 }
 
-- (nonnull NSString *)directoryOfProjectAtIndex:(NSInteger)index {
-    NSAssert(index >= 0, @"Negative index");
-    std::string str(_cppDBConn->GetProjectDirectory((unsigned)index));
+- (nonnull NSString *)directoryOfProjectWithID:(NSInteger)projID {
+    NSAssert(index >= 0, @"Negative project ID");
+    std::string str(_cppDBConn->GetProjectDirectory((int)projID));
     return [NSString stringWithUTF8String:str.c_str()];
 }
 
@@ -38,13 +48,13 @@
     _cppDBConn->AddProject([name UTF8String], [directory UTF8String]);
 }
 
-- (NSInteger)activeProjectIndex {
-    return (NSInteger)_cppDBConn->GetActiveProjectIndex();
+- (NSInteger)activeProjectID {
+    return (NSInteger)_cppDBConn->GetActiveProjectID();
 }
 
-- (void)setActiveProjectIndex:(NSInteger)index {
-    NSAssert(index >= -1, @"Invalid index");
-    _cppDBConn->SetActiveProjectIndex((int)index);
+- (void)setActiveProjectID:(NSInteger)projID {
+    NSAssert(projID >= -1, @"Invalid project ID");
+    _cppDBConn->SetActiveProjectID((int)projID);
 }
 
 @end

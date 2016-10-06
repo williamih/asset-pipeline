@@ -21,7 +21,7 @@ class AssetPipelineDelegate {
 public:
     virtual ~AssetPipelineDelegate() {}
 
-    virtual void OnAssetBuildFinished(unsigned projectIndex,
+    virtual void OnAssetBuildFinished(int projectID,
                                       int nSucceeded, int nFailed) {}
     virtual void OnAssetFailedToCompile(const AssetCompileFailureInfo& info) {}
 };
@@ -31,7 +31,7 @@ public:
     explicit AssetPipeline();
     ~AssetPipeline();
 
-    void CompileProject(unsigned projectIndex);
+    void CompileProject(int projectID);
 
     AssetPipelineDelegate* GetDelegate() const;
     void SetDelegate(AssetPipelineDelegate* delegate);
@@ -45,11 +45,11 @@ public: // NOT for use by user code
 private:
 
     struct CompileQueueItem {
-        // If projectIndex is negative, this item represents a single modified
+        // If projectID is negative, this item represents a single modified
         // file, specified by modifiedFilePath.
         // Otherwise, this represents compilation of a project, and
         // modifiedFilePath is ignored.
-        int projectIndex;
+        int projectID;
         std::string modifiedFilePath;
     };
 

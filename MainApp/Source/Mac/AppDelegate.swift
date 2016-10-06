@@ -79,10 +79,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
 
     // MARK: AssetPipelineMacDelegate methods
 
-    func assetBuildFinished(withProjectIndex projIndex: UInt,
+    func assetBuildFinished(withProjectID projID: Int,
                             successCount: Int,
                             failureCount: Int) {
-        let projName = dbConn.nameOfProject(at: Int(projIndex))
+        let projName = dbConn.nameOfProject(withID: projID)
         let notification = NSUserNotification()
         notification.title = "Asset Build Completed (" + projName + ")"
         if (failureCount == 0 && successCount > 0) {
@@ -162,9 +162,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     }
 
     func compile(_ sender: AnyObject) {
-        let projIndex = dbConn.activeProjectIndex()
-        if projIndex >= 0 {
-            assetPipeline.compileProject(with: UInt(projIndex))
+        let projID = dbConn.activeProjectID()
+        if projID >= 0 {
+            assetPipeline.compileProject(withID: projID)
         }
     }
 }

@@ -11,6 +11,11 @@ class ProjectsWindowController: NSObject, NSWindowDelegate,
     @IBOutlet weak var projectDirectoryField : NSTextField!
 
     let dbConn = ProjectDBConnWrapper()
+    var projectIDs : [NSNumber]!
+
+    override func awakeFromNib() {
+        projectIDs = dbConn.queryAllProjectIDs()
+    }
 
     func showWindow() {
         NSApp.activate(ignoringOtherApps: true)
@@ -26,9 +31,11 @@ class ProjectsWindowController: NSObject, NSWindowDelegate,
     @IBAction
     func setAsActiveProject(_ sender: AnyObject) {
         let index = tableView.selectedRow
-        // N.B. >index< may be -1; this is okay and produces the desired
-        // behavior when passed to setActiveProjectIndex().
-        dbConn.setActiveProjectIndex(index)
+        var projID = -1
+        if index != -1 {
+            projID = Int(projectIDs[index])
+        }
+        dbConn.setActiveProjectID(projID)
         tableView.reloadData()
         // Need to re-select as the selection is lost when calling reloadData()
         tableView.selectRowIndexes(IndexSet(integer: index),
@@ -54,6 +61,7 @@ class ProjectsWindowController: NSObject, NSWindowDelegate,
         projectDirectoryField.stringValue = ""
 
         dbConn.addProject(withName: name, directory: dir)
+        projectIDs = dbConn.queryAllProjectIDs()
 
         tableView.reloadData()
     }
@@ -96,9 +104,10 @@ class ProjectsWindowController: NSObject, NSWindowDelegate,
             let row = Int(checkBox.identifier!)!
             let selectedRow = tableView.selectedRow
             if checkBox.state == NSOnState {
-                dbConn.setActiveProjectIndex(row)
+                let projID = Int(projectIDs[row])
+                dbConn.setActiveProjectID(projID)
             } else {
-                dbConn.setActiveProjectIndex(-1)
+                dbConn.setActiveProjectID(-1)
             }
             tableView.reloadData()
             // Have to re-select as reloadData() loses the selection
@@ -115,7 +124,8 @@ class ProjectsWindowController: NSObject, NSWindowDelegate,
                                                            owner: nil)
                 as? NSButton {
 
-                if row == dbConn.activeProjectIndex() {
+                let projID = Int(projectIDs[row])
+                if projID == dbConn.activeProjectID() {
                     cell.state = NSOnState
                 } else {
                     cell.state = NSOffState
@@ -130,7 +140,8 @@ class ProjectsWindowController: NSObject, NSWindowDelegate,
             if let cell = tableView.make(withIdentifier: "ProjectNameID",
                                                            owner: nil)
                 as? NSTableCellView {
-                cell.textField?.stringValue = dbConn.nameOfProject(at: row)
+                let projID = Int(projectIDs[row])
+                cell.textField?.stringValue = dbConn.nameOfProject(withID: projID)
                 return cell
             }
         }

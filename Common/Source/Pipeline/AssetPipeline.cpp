@@ -40,11 +40,11 @@ AssetPipeline::~AssetPipeline()
     m_thread.join();
 }
 
-void AssetPipeline::CompileProject(unsigned projectIndex)
+void AssetPipeline::CompileProject(int projectID)
 {
-    ASSERT(projectIndex <= INT_MAX);
+    ASSERT(projectID >= 0);
     CompileQueueItem item;
-    item.projectIndex = (int)projectIndex;
+    item.projectID = projectID;
 
     PushCompileQueueItem(item);
 }
@@ -474,7 +474,7 @@ void AssetPipeline::FileSystemWatcherCallback(FileSystemWatcher::EventType event
                                               const char* path)
 {
     CompileQueueItem item;
-    item.projectIndex = -1;
+    item.projectID = -1;
     item.modifiedFilePath = path;
     PushCompileQueueItem(item);
 }
@@ -494,7 +494,7 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
     });
 
     std::string currDir;
-    int currProjIdx = -1;
+    int currProjID = -1;
 
     for (;;) {
         CompileQueueItem nextItem;
@@ -510,36 +510,36 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
             }
         }
 
-        if (nextItem.projectIndex < 0) {
+        if (nextItem.projectID < 0) {
             // We are recompiling a modified file.
-            ASSERT(currProjIdx >= 0);
+            ASSERT(currProjID >= 0);
             ASSERT(!currDir.empty());
 
             std::string input = StrUtilsMakeRelativePath(
                 currDir.c_str(), nextItem.modifiedFilePath.c_str()
             );
             std::vector<std::string> outputs;
-            dbConn.GetDependents(currProjIdx, input.c_str(), &outputs);
+            dbConn.GetDependents(currProjID, input.c_str(), &outputs);
 
             SetupBuildSystem(L, &outputs);
         } else {
             // We are compiling a whole project.
-            std::string projectDir = dbConn.GetProjectDirectory(nextItem.projectIndex);
+            std::string projectDir = dbConn.GetProjectDirectory(nextItem.projectID);
 
             // If we're moving to a new project at a different directory, we
             // need to recreate the Lua state using a different configuration
             // script.
-            if (nextItem.projectIndex != currProjIdx || projectDir != currDir) {
+            if (nextItem.projectID != currProjID || projectDir != currDir) {
 
                 currDir = projectDir;
-                currProjIdx = nextItem.projectIndex;
+                currProjID = nextItem.projectID;
 
                 AssetPipelineOsFuncs::SetWorkingDirectory(projectDir.c_str());
 
                 if (L != NULL)
                     lua_close(L);
                 L = SetupLuaState(
-                    (int)nextItem.projectIndex,
+                    (int)nextItem.projectID,
                     projectDir.c_str(),
                     this_,
                     &this_->m_assetEventService,
@@ -579,11 +579,11 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
                     std::lock_guard<std::mutex> lock(this_->m_mutex);
                     this_->m_compileInProgress = false;
                 }
-                ASSERT(currProjIdx != -1);
+                ASSERT(currProjID != -1);
                 this_->PushMessage(std::bind(
                     &AssetPipelineDelegate::OnAssetBuildFinished,
                     std::placeholders::_1,
-                    (unsigned)currProjIdx,
+                    currProjID,
                     compileSucceededCount,
                     compileFailedCount
                 ));
