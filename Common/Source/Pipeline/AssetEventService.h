@@ -30,6 +30,7 @@ private:
     std::thread m_thread;
     std::mutex m_messageQueueMutex;
     std::queue<Message> m_messageQueue;
+    std::atomic<bool> m_shouldExit;
     std::condition_variable m_condVar;
 };
 

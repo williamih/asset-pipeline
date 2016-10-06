@@ -6,8 +6,10 @@
 #include <Core/Endian.h>
 #include <Core/Macros.h>
 #include <Os/TcpSocket.h>
+#include <Os/SocketOsFunctions.h>
 
-// TODO: Properly clean up the message queue and the thread
+// TODO: There is quite possibly a cleaner way to cleanup the thread in the
+// destructor, other than using a timeout for accept().
 
 static u32 Address(u32 a, u32 b, u32 c, u32 d)
 {
@@ -19,10 +21,13 @@ const u32 MSG_ASSET_COMPILED = 1;
 const u32 PORT = 6789;
 const u32 LOCALHOST = Address(127, 0, 0, 1);
 
+const unsigned SOCKET_ACCEPT_TIMEOUT_MS = 20;
+
 AssetEventService::AssetEventService()
     : m_thread()
     , m_messageQueueMutex()
     , m_messageQueue()
+    , m_shouldExit(false)
     , m_condVar()
 {
     m_thread = std::thread(&AssetEventService::ThreadProc, this);
@@ -30,6 +35,9 @@ AssetEventService::AssetEventService()
 
 AssetEventService::~AssetEventService()
 {
+    m_shouldExit = true;
+    m_condVar.notify_all();
+
     m_thread.join();
 }
 
@@ -81,6 +89,25 @@ void AssetEventService::ThreadProc()
         FATAL("Failed to setup socket listening");
 
     for (;;) {
+        fd_set readSet;
+        FD_ZERO(&readSet);
+        FD_SET(serverSocket.GetOsHandle(), &readSet);
+
+        struct timeval tv;
+        tv.tv_sec = 0;
+        tv.tv_usec = SOCKET_ACCEPT_TIMEOUT_MS * 1000;
+
+        int result = select(serverSocket.GetOsHandle() + 1, &readSet,
+                            NULL, NULL, &tv);
+        if (result == -1)
+            FATAL("select");
+        if (result == 0) {
+            if (m_shouldExit)
+                break;
+            else
+                continue;
+        }
+
         TcpSocket socket;
         if (!serverSocket.Accept(&socket))
             FATAL("Failed to accept socket");
@@ -88,11 +115,17 @@ void AssetEventService::ThreadProc()
         for (;;) {
             {
                 std::unique_lock<std::mutex> lock(m_messageQueueMutex);
-                m_condVar.wait(lock, [=] { return !m_messageQueue.empty(); });
+                m_condVar.wait(lock, [=] {
+                    return m_shouldExit || !m_messageQueue.empty();
+                });
             }
+            if (m_shouldExit)
+                break;
             if (!SendQueuedMessages(socket))
                 break;
         }
+        if (m_shouldExit)
+            break;
     }
 }
 

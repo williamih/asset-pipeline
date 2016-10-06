@@ -37,6 +37,15 @@ AssetPipeline::AssetPipeline()
 
 AssetPipeline::~AssetPipeline()
 {
+    // Set up special conditions that let the thread know it's time to exit.
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        while (!m_compileQueue.empty())
+            m_compileQueue.pop();
+        m_compileInProgress = true;
+    }
+    m_condVar.notify_all();
+
     m_thread.join();
 }
 
