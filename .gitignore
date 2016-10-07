@@ -4,3 +4,5 @@
 xcuserdata
 bin/*
 obj/*
+Helper/generated/*
+MainApp/generated/*

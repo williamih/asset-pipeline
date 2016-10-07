@@ -61,9 +61,13 @@ function GetQtMocCommands(projName, files)
 end
 
 HELPER_MOC_INPUT_FILES = {
+    "ProjectsWindow.h",
+    "HelperApp.h",
+    "AddProjectWindow.h"
 }
 
 MAINAPP_MOC_INPUT_FILES = {
+    "SystemTrayApp.h",
 }
 
 QT_LIBS = {
@@ -140,8 +144,8 @@ project("Asset Pipeline Helper")
 
     filter "platforms:OSX"
         files {
-            "Helper/Source/**.m", "Helper/Source/**.mm", "Helper/Source/**.swift",
-            "Helper/Mac/**.xib", "Helper/Mac/**.strings", "Helper/Mac/Info.plist"
+            "Helper/Source/**.m", "Helper/Source/**.mm",
+            "Helper/Mac/**.strings", "Helper/Mac/Info.plist"
         }
         architecture "x64"
         links {
@@ -152,12 +156,10 @@ project("Asset Pipeline Helper")
             ["MACOSX_DEPLOYMENT_TARGET"] = "10.11",
             ["CLANG_ENABLE_OBJC_ARC"] = "YES",
             ["OTHER_CPLUSPLUSFLAGS"] = "-std=c++14",
-            ["SWIFT_OBJC_BRIDGING_HEADER"] = "Common/Source/Mac/AssetPipeline-Bridging-Header.h",
+            ["PRODUCT_BUNDLE_IDENTIFIER"] = "com.williamih.assetpipelinehelper",
         }
         linkoptions { "-lstdc++" }
 
-    filter "files:**.xib"
-        buildaction "Resource"
     filter "files:**.plist"
         buildaction "Resource"
     filter "files:**.strings"
@@ -170,14 +172,14 @@ project("Asset Pipeline")
 
     files {
         "MainApp/Source/**.h", "MainApp/Source/**.c", "MainApp/Source/**.cpp",
---        "MainApp/generated/QtResources.cpp",
+        "MainApp/generated/QtResources.cpp",
     }
     files(GetQtMocOutputFilePaths("MainApp", MAINAPP_MOC_INPUT_FILES))
 
     dependson { "Asset Pipeline Helper" }
     prebuildcommands(GetCommandMkdirRecursive("MainApp/generated/moc"))
     prebuildcommands(GetQtMocCommands("MainApp", MAINAPP_MOC_INPUT_FILES))
---    prebuildcommands(GetQtRccCommand("Resources.qrc", "MainApp/generated/QtResources.cpp"))
+    prebuildcommands(GetQtRccCommand("Resources.qrc", "MainApp/generated/QtResources.cpp"))
 
     links { "Common" }
 
@@ -197,8 +199,8 @@ project("Asset Pipeline")
 
     filter "platforms:OSX"
         files {
-            "MainApp/Source/**.m", "MainApp/Source/**.mm", "MainApp/Source/**.swift",
-            "MainApp/Mac/**.xib", "MainApp/Mac/**.strings", "MainApp/Mac/Info.plist"
+            "MainApp/Source/**.m", "MainApp/Source/**.mm",
+            "MainApp/Mac/**.strings", "MainApp/Mac/Info.plist"
         }
         architecture "x64"
         links {
@@ -209,7 +211,9 @@ project("Asset Pipeline")
             ["MACOSX_DEPLOYMENT_TARGET"] = "10.11",
             ["CLANG_ENABLE_OBJC_ARC"] = "YES",
             ["OTHER_CPLUSPLUSFLAGS"] = "-std=c++14",
-            ["SWIFT_OBJC_BRIDGING_HEADER"] = "Common/Source/Mac/AssetPipeline-Bridging-Header.h",
+            -- N.B. NSUserNotificationCenter popup notifications don't work if
+            -- this isn't set!
+            ["PRODUCT_BUNDLE_IDENTIFIER"] = "com.williamih.assetpipeline",
         }
         for _, lib in ipairs(QT_LIBS) do
             xcodeembeddedframeworks(GetQtLibPath(lib))
@@ -222,7 +226,6 @@ project("Asset Pipeline")
         }
         postbuildcommands {
             'cp -r Scripts/ "bin/%{cfg.buildcfg}/Asset Pipeline.app/Contents/Resources"',
-            'cp -r Images/ "bin/%{cfg.buildcfg}/Asset Pipeline.app/Contents/Resources"',
         }
         for _, lib in ipairs(QT_LIBS) do
             postbuildcommands {
@@ -232,8 +235,6 @@ project("Asset Pipeline")
             }
         end
 
-    filter "files:**.xib"
-        buildaction "Resource"
     filter "files:**.plist"
         buildaction "Resource"
     filter "files:**.strings"
