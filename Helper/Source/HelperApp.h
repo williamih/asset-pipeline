@@ -10,6 +10,7 @@
 #include <Core/Types.h>
 #include <IPCTypes.h>
 #include "ProjectsWindow.h"
+#include "AboutWindow.h"
 
 class HelperApp : public QObject {
     Q_OBJECT
@@ -17,6 +18,9 @@ class HelperApp : public QObject {
 public:
     HelperApp(u16 port, QObject* parent = nullptr);
     ~HelperApp();
+
+private slots:
+    void ShowAboutWindow();
 
 private:
     typedef std::function<void(size_t)> BytesSentFunc;
@@ -31,6 +35,7 @@ private:
     QTcpSocket m_tcpSocket;
     std::vector<u8> m_socketReadData;
     ProjectsWindow m_projectsWindow;
+    AboutWindow m_aboutWindow;
     std::vector<BytesSentFunc> m_callbackQueue;
 };
 

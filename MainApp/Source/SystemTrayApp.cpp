@@ -24,13 +24,19 @@ SystemTrayApp::SystemTrayApp(QObject* parent)
     , m_dbConn()
     , m_assetPipeline()
 {
-    m_systemTrayIcon.setIcon(QIcon(":/Images/SystemTrayIcon.png"));
+    m_systemTrayIcon.setIcon(QIcon(":/Resources/SystemTrayIcon.png"));
     m_systemTrayIcon.setVisible(true);
 
     m_systemTrayIcon.setContextMenu(&m_menu);
 
     connect(&m_tcpServer, &QTcpServer::newConnection,
             this, &SystemTrayApp::OnNewConnection);
+
+    QAction* aboutAction = m_menu.addAction("About Asset Pipeline");
+    connect(aboutAction, &QAction::triggered,
+            this, &SystemTrayApp::ShowAboutWindow);
+
+    m_menu.addSeparator();
 
     QAction* manageProjectsAction = m_menu.addAction("Manage Projects");
     connect(manageProjectsAction, &QAction::triggered,
@@ -95,6 +101,12 @@ void SystemTrayApp::OnAssetFailedToCompile(const AssetCompileFailureInfo& info)
 void SystemTrayApp::PipelineEventTimerTick()
 {
     m_assetPipeline.CallDelegateFunctions();
+}
+
+void SystemTrayApp::ShowAboutWindow()
+{
+    LaunchHelperIfNeeded();
+    SendIPCMessage(IPCAPPTOHELPER_SHOW_ABOUT_WINDOW);
 }
 
 void SystemTrayApp::ManageProjects()

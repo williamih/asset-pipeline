@@ -11,6 +11,7 @@ HelperApp::HelperApp(u16 port, QObject* parent)
     , m_tcpSocket()
     , m_socketReadData()
     , m_projectsWindow()
+    , m_aboutWindow()
     , m_callbackQueue()
 {
     QHostAddress address(QHostAddress::LocalHost);
@@ -19,6 +20,10 @@ HelperApp::HelperApp(u16 port, QObject* parent)
             this, &HelperApp::SocketReadyForRead);
     connect(&m_tcpSocket, &QTcpSocket::bytesWritten,
             this, &HelperApp::OnBytesWritten);
+
+    QAction* aboutAction = m_menu.addAction("About Asset Pipeline");
+    aboutAction->setMenuRole(QAction::AboutRole);
+    connect(aboutAction, &QAction::triggered, this, &HelperApp::ShowAboutWindow);
 
     QAction* quitAction = m_menu.addAction("Quit Asset Pipeline");
     quitAction->setMenuRole(QAction::QuitRole);
@@ -35,6 +40,11 @@ HelperApp::HelperApp(u16 port, QObject* parent)
 
 HelperApp::~HelperApp()
 {}
+
+void HelperApp::ShowAboutWindow()
+{
+    m_aboutWindow.show();
+}
 
 void HelperApp::SocketReadyForRead()
 {
@@ -54,6 +64,9 @@ void HelperApp::ReceiveByte(u8 byte)
     switch (action) {
         case IPCAPPTOHELPER_SHOW_PROJECTS_WINDOW:
             m_projectsWindow.show();
+            break;
+        case IPCAPPTOHELPER_SHOW_ABOUT_WINDOW:
+            ShowAboutWindow();
             break;
         case IPCAPPTOHELPER_QUIT:
             QMetaObject::invokeMethod(qApp, "quit", Qt::QueuedConnection);

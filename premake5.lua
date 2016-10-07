@@ -63,7 +63,8 @@ end
 HELPER_MOC_INPUT_FILES = {
     "ProjectsWindow.h",
     "HelperApp.h",
-    "AddProjectWindow.h"
+    "AddProjectWindow.h",
+    "AboutWindow.h",
 }
 
 MAINAPP_MOC_INPUT_FILES = {
@@ -117,11 +118,15 @@ project("Asset Pipeline Helper")
     language "C++"
     targetdir("bin/%{cfg.buildcfg}")
 
-    files { "Helper/Source/**.h", "Helper/Source/**.c", "Helper/Source/**.cpp" }
+    files {
+        "Helper/Source/**.h", "Helper/Source/**.c", "Helper/Source/**.cpp",
+        "Helper/generated/QtResources.cpp",
+    }
     files(GetQtMocOutputFilePaths("Helper", HELPER_MOC_INPUT_FILES))
 
     prebuildcommands(GetCommandMkdirRecursive("Helper/generated/moc"))
     prebuildcommands(GetQtMocCommands("Helper", HELPER_MOC_INPUT_FILES))
+    prebuildcommands(GetQtRccCommand("Helper/Resources.qrc", "Helper/generated/QtResources.cpp"))
 
     links { "Common" }
     for _, lib in ipairs(QT_LIBS) do
@@ -179,7 +184,7 @@ project("Asset Pipeline")
     dependson { "Asset Pipeline Helper" }
     prebuildcommands(GetCommandMkdirRecursive("MainApp/generated/moc"))
     prebuildcommands(GetQtMocCommands("MainApp", MAINAPP_MOC_INPUT_FILES))
-    prebuildcommands(GetQtRccCommand("Resources.qrc", "MainApp/generated/QtResources.cpp"))
+    prebuildcommands(GetQtRccCommand("MainApp/Resources.qrc", "MainApp/generated/QtResources.cpp"))
 
     links { "Common" }
 

@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>../Resources/Copyright.txt</file>
+    <file>../Resources/ThirdPartySoftware.html</file>
+</qresource>
+</RCC>

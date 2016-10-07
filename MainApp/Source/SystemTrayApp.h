@@ -32,6 +32,7 @@ private:
 
 private slots:
     void PipelineEventTimerTick();
+    void ShowAboutWindow();
     void ManageProjects();
     void Compile();
     void Quit();
