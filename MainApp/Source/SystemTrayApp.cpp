@@ -85,7 +85,7 @@ void SystemTrayApp::OnAssetBuildFinished(
     }
     else {
         message = QString("%1 assets compiled successfully, %2 failed")
-                      .arg(nSucceeded, nFailed);
+                      .arg(nSucceeded).arg(nFailed);
     }
 
     m_systemTrayIcon.showMessage(title, message);
