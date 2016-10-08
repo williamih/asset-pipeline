@@ -33,7 +33,7 @@ long AssetPipelineOsFuncs::GetTimeStamp(const char* path)
     struct stat st;
     if (stat(path, &st) == -1)
         FATAL("stat");
-    return (long)st.st_atime;
+    return (long)st.st_mtime;
 }
 
 void AssetPipelineOsFuncs::SetTimeStamp(const char* path, long timeStamp)
