@@ -29,6 +29,14 @@ public:
     void GetDependents(int projID, const char* inputFile,
                        std::vector<std::string>* outputFiles);
 
+    void ClearError(int projID,
+                    const std::vector<std::string>& inputFiles,
+                    const std::vector<std::string>& outputFiles);
+    void RecordError(int projID,
+                     const std::vector<std::string>& inputFiles,
+                     const std::vector<std::string>& outputFiles,
+                     const std::string& errorMessage);
+
 private:
     struct DBHandle {
         explicit DBHandle(const std::string& path);
@@ -62,21 +70,57 @@ private:
     ProjectDBConn(const ProjectDBConn&);
     ProjectDBConn& operator=(const ProjectDBConn&);
 
+    int FindErrorID(
+        int projID,
+        const std::vector<std::string>& inputFiles,
+        const std::vector<std::string>& outputFiles
+    );
+    bool MatchError(
+        int errorID,
+        const std::vector<std::string>& inputFiles,
+        const std::vector<std::string>& outputFiles
+    );
+    bool MatchInputsOrOutputs(
+        int errorID,
+        const std::vector<std::string>& paths,
+        SQLiteStatement& stmt
+    );
+
     DBHandle m_dbHandle;
+
+    SQLiteStatement m_stmtBeginTransaction;
+    SQLiteStatement m_stmtEndTransaction;
+
     SQLiteStatement m_stmtProjectsTable;
     SQLiteStatement m_stmtConfigTable;
     SQLiteStatement m_stmtSetupConfig;
     SQLiteStatement m_stmtDepsTable;
+    SQLiteStatement m_stmtErrorsTable;
+    SQLiteStatement m_stmtErrorInputsTable;
+    SQLiteStatement m_stmtErrorOutputsTable;
+
     mutable SQLiteStatement m_stmtNumProjects;
     mutable SQLiteStatement m_stmtQueryAllProjects;
     mutable SQLiteStatement m_stmtProjectName;
     mutable SQLiteStatement m_stmtProjectDirectory;
+
     SQLiteStatement m_stmtAddProject;
     mutable SQLiteStatement m_stmtGetActiveProj;
     SQLiteStatement m_stmtSetActiveProj;
+
     SQLiteStatement m_stmtClearDeps;
     SQLiteStatement m_stmtRecordDep;
     SQLiteStatement m_stmtGetDeps;
+
+    SQLiteStatement m_stmtFetchErrors;
+    SQLiteStatement m_stmtErrorGetInputs;
+    SQLiteStatement m_stmtErrorGetOutputs;
+    SQLiteStatement m_stmtErrorDelete1;
+    SQLiteStatement m_stmtErrorDelete2;
+    SQLiteStatement m_stmtErrorDelete3;
+    SQLiteStatement m_stmtNewError;
+    SQLiteStatement m_stmtErrorAddInput;
+    SQLiteStatement m_stmtErrorAddOutput;
 };
 
 #endif // PIPELINE_PROJECTDBCONN_H

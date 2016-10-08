@@ -58,6 +58,7 @@ local function GetArrayIterator(paths)
 end
 
 local function OnSuccess(inputs, outputs)
+    ClearCompileError(inputs, outputs)
     for _, output in ipairs(outputs) do
         NotifyAssetCompile(output)
         ClearDependencies(output)
@@ -65,6 +66,10 @@ local function OnSuccess(inputs, outputs)
             RecordDependency(output, input)
         end
     end
+end
+
+local function OnFailure(inputs, outputs, errorMessage)
+    RecordCompileError(inputs, outputs, errorMessage)
 end
 
 BuildSystem = {}
@@ -114,7 +119,7 @@ function BuildSystem:CompileNext(mapRules)
                     if success then
                         OnSuccess(inputs, outputs)
                     else
-                        RecordCompileError(inputs, outputs, errorMessage)
+                        OnFailure(inputs, outputs, errorMessage)
                     end
                     done = true
                 end
