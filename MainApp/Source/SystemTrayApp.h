@@ -23,11 +23,8 @@ public:
     virtual ~SystemTrayApp();
 
 private:
-    virtual void OnAssetBuildFinished(
-        int projectID,
-        int nSucceeded,
-        int nFailed
-    );
+    virtual void OnAssetBuildFinished(const AssetBuildCompletionInfo& info);
+    virtual void OnAssetRecompileFinished(const AssetRecompileInfo& info);
     virtual void OnAssetFailedToCompile(const AssetCompileFailureInfo& info);
 
 private slots:

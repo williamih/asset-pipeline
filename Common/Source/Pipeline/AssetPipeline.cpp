@@ -519,14 +519,21 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
             }
         }
 
+        std::string singleFilePath;
+        bool recompilingSingleFile = false;
+
         if (nextItem.projectID < 0) {
             // We are recompiling a modified file.
+            recompilingSingleFile = true;
+
             ASSERT(currProjID >= 0);
             ASSERT(!currDir.empty());
 
             std::string input = StrUtilsMakeRelativePath(
                 currDir.c_str(), nextItem.modifiedFilePath.c_str()
             );
+            singleFilePath = input;
+
             std::vector<std::string> outputs;
             dbConn.GetDependents(currProjID, input.c_str(), &outputs);
 
@@ -565,8 +572,8 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
             SetupBuildSystem(L, NULL);
         }
 
-        int compileSucceededCount = 0;
-        int compileFailedCount = 0;
+        int nSucceeded = 0;
+        int nFailed = 0;
 
         for (;;) {
             bool compiling;
@@ -589,20 +596,34 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
                     this_->m_compileInProgress = false;
                 }
                 ASSERT(currProjID != -1);
-                this_->PushMessage(std::bind(
-                    &AssetPipelineDelegate::OnAssetBuildFinished,
-                    std::placeholders::_1,
-                    currProjID,
-                    compileSucceededCount,
-                    compileFailedCount
-                ));
+                if (recompilingSingleFile) {
+                    AssetRecompileInfo info;
+                    info.projectID = currProjID;
+                    info.path = singleFilePath;
+                    info.succeeded = (nSucceeded > 0);
+                    this_->PushMessage(std::bind(
+                        &AssetPipelineDelegate::OnAssetRecompileFinished,
+                        std::placeholders::_1,
+                        info
+                    ));
+                } else {
+                    AssetBuildCompletionInfo info;
+                    info.projectID = currProjID;
+                    info.nSucceeded = nSucceeded;
+                    info.nFailed = nFailed;
+                    this_->PushMessage(std::bind(
+                        &AssetPipelineDelegate::OnAssetBuildFinished,
+                        std::placeholders::_1,
+                        info
+                    ));
+                }
                 break;
             }
 
             if (succeeded) {
-                ++compileSucceededCount;
+                ++nSucceeded;
             } else {
-                ++compileFailedCount;
+                ++nFailed;
             }
         }
     }

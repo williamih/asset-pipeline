@@ -11,6 +11,18 @@
 
 class ProjectDBConn;
 
+struct AssetBuildCompletionInfo {
+    int projectID;
+    int nSucceeded;
+    int nFailed;
+};
+
+struct AssetRecompileInfo {
+    int projectID;
+    std::string path;
+    bool succeeded;
+};
+
 struct AssetCompileFailureInfo {
     std::vector<std::string> inputPaths;
     std::vector<std::string> outputPaths;
@@ -19,11 +31,16 @@ struct AssetCompileFailureInfo {
 
 class AssetPipelineDelegate {
 public:
+    enum BuildType {
+        BUILD_SINGLE_FILE,
+        BUILD_PROJECT,
+    };
+
     virtual ~AssetPipelineDelegate() {}
 
-    virtual void OnAssetBuildFinished(int projectID,
-                                      int nSucceeded, int nFailed) {}
-    virtual void OnAssetFailedToCompile(const AssetCompileFailureInfo& info) {}
+    virtual void OnAssetBuildFinished(const AssetBuildCompletionInfo& info) = 0;
+    virtual void OnAssetRecompileFinished(const AssetRecompileInfo& info) = 0;
+    virtual void OnAssetFailedToCompile(const AssetCompileFailureInfo& info) = 0;
 };
 
 class AssetPipeline {

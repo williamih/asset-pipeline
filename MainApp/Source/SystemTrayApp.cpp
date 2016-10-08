@@ -66,26 +66,42 @@ SystemTrayApp::SystemTrayApp(QObject* parent)
 SystemTrayApp::~SystemTrayApp()
 {}
 
-void SystemTrayApp::OnAssetBuildFinished(
-    int projectID,
-    int nSucceeded,
-    int nFailed
-)
+void SystemTrayApp::OnAssetBuildFinished(const AssetBuildCompletionInfo& info)
 {
-    std::string projName = m_dbConn.GetProjectName(projectID);
+    std::string projName = m_dbConn.GetProjectName(info.projectID);
 
     QString title = QString("Asset Build Completed (%1)").arg(projName.c_str());
 
     QString message;
-    if (nFailed == 0 && nSucceeded > 0) {
-        message = QString("Successfully compiled all %1 assets.").arg(nSucceeded);
+    if (info.nFailed == 0 && info.nSucceeded > 0) {
+        message = QString("Successfully compiled %1%2 asset%3.")
+                      .arg(info.nSucceeded == 1 ? "" : "all ")
+                      .arg(info.nSucceeded)
+                      .arg(info.nSucceeded == 1 ? "" : "s");
     }
-    else if (nFailed == 0) {
+    else if (info.nFailed == 0) {
         message = "All assets were already up to date.";
     }
     else {
-        message = QString("%1 assets compiled successfully, %2 failed")
-                      .arg(nSucceeded).arg(nFailed);
+        message = QString("%1 asset%2 compiled successfully, %3 failed")
+                      .arg(info.nSucceeded)
+                      .arg(info.nSucceeded == 1 ? "" : "s")
+                      .arg(info.nFailed);
+    }
+
+    m_systemTrayIcon.showMessage(title, message);
+}
+
+void SystemTrayApp::OnAssetRecompileFinished(const AssetRecompileInfo& info)
+{
+    std::string projName = m_dbConn.GetProjectName(info.projectID);
+
+    QString title;
+    QString message(info.path.c_str());
+    if (info.succeeded) {
+        title = QString("Recompiled File in Project '%1'").arg(projName.c_str());
+    } else {
+        title = QString("Failed to Compile Asset (Project: %1)").arg(projName.c_str());
     }
 
     m_systemTrayIcon.showMessage(title, message);
@@ -93,9 +109,7 @@ void SystemTrayApp::OnAssetBuildFinished(
 
 void SystemTrayApp::OnAssetFailedToCompile(const AssetCompileFailureInfo& info)
 {
-    QString title = "Failed to Compile Asset";
-    QString message(info.inputPaths[0].c_str());
-    m_systemTrayIcon.showMessage(title, message);
+    // Currently, do nothing.
 }
 
 void SystemTrayApp::PipelineEventTimerTick()
