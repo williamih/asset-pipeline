@@ -23,19 +23,19 @@ ProjectDBConn::DBHandle::~DBHandle()
         FATAL("sqlite3_close");
 }
 
-ProjectDBConn::SQLiteStatement::SQLiteStatement(sqlite3* db, const char* text,
+i64 ProjectDBConn::DBHandle::LastInsertRowID() const
+{
+    return (i64)sqlite3_last_insert_rowid(db);
+}
+
+ProjectDBConn::SQLiteStatement::SQLiteStatement(DBHandle& db, const char* text,
                                                 int nBytes, bool exec)
     : stmt(NULL)
 {
-    if (sqlite3_prepare_v2(db, text, nBytes, &stmt, NULL) != SQLITE_OK) {
-        FATAL("sqlite3_prepare_v2: %s", sqlite3_errmsg(db));
-    }
-    if (exec) {
-        if (sqlite3_step(stmt) != SQLITE_DONE)
-            FATAL("sqlite3_step: %s", sqlite3_errmsg(db));
-        if (sqlite3_reset(stmt) != SQLITE_OK)
-            FATAL("sqlite_reset: %s", sqlite3_errmsg(db));
-    }
+    if (sqlite3_prepare_v2(db.db, text, nBytes, &stmt, NULL) != SQLITE_OK)
+        FATAL("sqlite3_prepare_v2: %s", sqlite3_errmsg(db.db));
+    if (exec)
+        Exec(db);
 }
 
 ProjectDBConn::SQLiteStatement::~SQLiteStatement()
@@ -44,18 +44,73 @@ ProjectDBConn::SQLiteStatement::~SQLiteStatement()
         FATAL("sqlite3_finalize");
 }
 
-int ProjectDBConn::SQLiteStatement::Step(sqlite3* db)
+void ProjectDBConn::SQLiteStatement::Exec(const DBHandle& db)
 {
-    int ret = sqlite3_step(stmt);
-    if (ret != SQLITE_DONE && ret != SQLITE_BUSY && ret != SQLITE_ROW)
-        FATAL("sqlite3_step: %s", sqlite3_errmsg(db));
-    return ret;
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+        FATAL("sqlite3_step: %s", sqlite3_errmsg(db.db));
+    Reset(db);
 }
 
-void ProjectDBConn::SQLiteStatement::Reset(sqlite3* db)
+bool ProjectDBConn::SQLiteStatement::GetNextRow(const DBHandle& db)
+{
+    int ret = sqlite3_step(stmt);
+    if (ret == SQLITE_ROW)
+        return true;
+    if (ret == SQLITE_DONE) {
+        Reset(db);
+        return false;
+    }
+    FATAL("sqlite3_step: %s", sqlite3_errmsg(db.db));
+    return false;
+}
+
+void ProjectDBConn::SQLiteStatement::Reset(const DBHandle& db)
 {
     if (sqlite3_reset(stmt) != SQLITE_OK)
-        FATAL("sqlite3_reset: %s", sqlite3_errmsg(db));
+        FATAL("sqlite3_reset: %s", sqlite3_errmsg(db.db));
+}
+
+void ProjectDBConn::SQLiteStatement::BindNull(int pos)
+{
+    if (sqlite3_bind_null(stmt, 1) != SQLITE_OK)
+        FATAL("sqlite3_bind_null");
+}
+
+void ProjectDBConn::SQLiteStatement::BindInt(int pos, int value)
+{
+    if (sqlite3_bind_int(stmt, pos, value) != SQLITE_OK)
+        FATAL("sqlite3_bind_int");
+}
+
+void ProjectDBConn::SQLiteStatement::BindInt64(int pos, i64 value)
+{
+    if (sqlite3_bind_int64(stmt, pos, (sqlite3_int64)value) != SQLITE_OK)
+        FATAL("sqlite3_bind_int64");
+}
+
+void ProjectDBConn::SQLiteStatement::BindText(int pos, const char* str)
+{
+    if (sqlite3_bind_text(stmt, pos, strdup(str), -1, free) != SQLITE_OK)
+        FATAL("sqlite3_bind_text");
+}
+
+int ProjectDBConn::SQLiteStatement::ColumnInt(int index)
+{
+    if (sqlite3_column_type(stmt, index) != SQLITE_INTEGER)
+        FATAL("Wrong column type");
+    return sqlite3_column_int(stmt, index);
+}
+
+const char* ProjectDBConn::SQLiteStatement::ColumnText(int index)
+{
+    if (sqlite3_column_type(stmt, index) != SQLITE_TEXT)
+        FATAL("Wrong column type");
+    return (const char*)sqlite3_column_text(stmt, index);
+}
+
+bool ProjectDBConn::SQLiteStatement::IsColumnNull(int index)
+{
+    return sqlite3_column_type(stmt, index) == SQLITE_NULL;
 }
 
 static const char STMT_BEGINTRANSAC[] = "BEGIN";
@@ -203,22 +258,14 @@ ProjectDBConn::ProjectDBConn()
     , m_stmtNewError(m_dbHandle, STMT_ERROR_NEW, sizeof STMT_ERROR_NEW)
     , m_stmtErrorAddInput(m_dbHandle, STMT_ERROR_ADD_INPUT, sizeof STMT_ERROR_ADD_INPUT)
     , m_stmtErrorAddOutput(m_dbHandle, STMT_ERROR_ADD_OUTPUT, sizeof STMT_ERROR_ADD_OUTPUT)
-{
-    m_stmtProjectsTable.Reset(m_dbHandle);
-    m_stmtConfigTable.Reset(m_dbHandle);
-    m_stmtSetupConfig.Reset(m_dbHandle);
-    m_stmtDepsTable.Reset(m_dbHandle);
-    m_stmtErrorsTable.Reset(m_dbHandle);
-    m_stmtErrorInputsTable.Reset(m_dbHandle);
-    m_stmtErrorOutputsTable.Reset(m_dbHandle);
-}
+{}
 
 unsigned ProjectDBConn::NumProjects() const
 {
-    if (m_stmtNumProjects.Step(m_dbHandle) != SQLITE_ROW)
-        FATAL("sqlite3_step: %s", sqlite3_errmsg(m_dbHandle));
+    if (!m_stmtNumProjects.GetNextRow(m_dbHandle))
+        FATAL("No data found");
 
-    int result = sqlite3_column_int(m_stmtNumProjects, 0);
+    int result = m_stmtNumProjects.ColumnInt(0);
 
     m_stmtNumProjects.Reset(m_dbHandle);
 
@@ -231,29 +278,20 @@ void ProjectDBConn::QueryAllProjectIDs(std::vector<int>* vec) const
 
     vec->clear();
 
-    int ret;
-    while ((ret = m_stmtQueryAllProjects.Step(m_dbHandle)) == SQLITE_ROW) {
-        int projID = sqlite3_column_int(m_stmtQueryAllProjects, 0);
-        vec->push_back(projID);
-    }
-    if (ret != SQLITE_DONE)
-        FATAL("sqlite3_step: %s", sqlite3_errmsg(m_dbHandle));
-
-    m_stmtQueryAllProjects.Reset(m_dbHandle);
+    while (m_stmtQueryAllProjects.GetNextRow(m_dbHandle))
+        vec->push_back(m_stmtQueryAllProjects.ColumnInt(0));
 }
 
 std::string ProjectDBConn::GetProjectName(int projID) const
 {
     ASSERT(projID >= 0);
 
-    if (sqlite3_bind_int(m_stmtProjectName, 1, projID) != SQLITE_OK)
-        FATAL("sqlite3_bind_int");
+    m_stmtProjectName.BindInt(1, projID);
 
-    if (m_stmtProjectName.Step(m_dbHandle) != SQLITE_ROW)
-        FATAL("sqlite3_step: %s", sqlite3_errmsg(m_dbHandle));
+    if (!m_stmtProjectName.GetNextRow(m_dbHandle))
+        FATAL("No data found");
 
-    const unsigned char* result = sqlite3_column_text(m_stmtProjectName, 0);
-    std::string ret((const char*)result);
+    std::string ret(m_stmtProjectName.ColumnText(0));
 
     m_stmtProjectName.Reset(m_dbHandle);
 
@@ -264,14 +302,12 @@ std::string ProjectDBConn::GetProjectDirectory(int projID) const
 {
     ASSERT(projID >= 0);
 
-    if (sqlite3_bind_int(m_stmtProjectDirectory, 1, projID) != SQLITE_OK)
-        FATAL("sqlite3_bind_int");
+    m_stmtProjectDirectory.BindInt(1, projID);
 
-    if (m_stmtProjectDirectory.Step(m_dbHandle) != SQLITE_ROW)
-        FATAL("sqlite3_step: %s", sqlite3_errmsg(m_dbHandle));
+    if (!m_stmtProjectDirectory.GetNextRow(m_dbHandle))
+        FATAL("No data found");
 
-    const unsigned char* result = sqlite3_column_text(m_stmtProjectDirectory, 0);
-    std::string ret((const char*)result);
+    std::string ret(m_stmtProjectDirectory.ColumnText(0));
 
     m_stmtProjectDirectory.Reset(m_dbHandle);
 
@@ -280,29 +316,22 @@ std::string ProjectDBConn::GetProjectDirectory(int projID) const
 
 void ProjectDBConn::AddProject(const char* name, const char* directory)
 {
-    char* nameCopy = strdup(name);
-    char* dirCopy = strdup(directory);
+    m_stmtAddProject.BindText(1, name);
+    m_stmtAddProject.BindText(2, directory);
 
-    if (sqlite3_bind_text(m_stmtAddProject, 1, nameCopy, -1, free) != SQLITE_OK)
-        FATAL("sqlite3_bind_text");
-
-    if (sqlite3_bind_text(m_stmtAddProject, 2, dirCopy, -1, free) != SQLITE_OK)
-        FATAL("sqlite3_bind_text");
-
-    m_stmtAddProject.Step(m_dbHandle);
-    m_stmtAddProject.Reset(m_dbHandle);
+    m_stmtAddProject.Exec(m_dbHandle);
 }
 
 int ProjectDBConn::GetActiveProjectID() const
 {
-    if (m_stmtGetActiveProj.Step(m_dbHandle) != SQLITE_ROW)
-        FATAL("sqlite3_step: %s", sqlite3_errmsg(m_dbHandle));
+    if (!m_stmtGetActiveProj.GetNextRow(m_dbHandle))
+        FATAL("No data found");
 
     int result;
-    if (sqlite3_column_type(m_stmtGetActiveProj, 0) == SQLITE_NULL) {
+    if (m_stmtGetActiveProj.IsColumnNull(0)) {
         result = -1;
     } else {
-        result = sqlite3_column_int(m_stmtGetActiveProj, 0);
+        result = m_stmtGetActiveProj.ColumnInt(0);
     }
 
     m_stmtGetActiveProj.Reset(m_dbHandle);
@@ -315,17 +344,12 @@ void ProjectDBConn::SetActiveProjectID(int projID)
     ASSERT(projID == -1 || projID >= 0);
 
     if (projID == -1) {
-        if (sqlite3_bind_null(m_stmtSetActiveProj, 1) != SQLITE_OK)
-            FATAL("sqlite3_bind_null");
+        m_stmtSetActiveProj.BindNull(1);
     } else {
-        if (sqlite3_bind_int(m_stmtSetActiveProj, 1, projID) != SQLITE_OK)
-            FATAL("sqlite3_bind_int");
+        m_stmtSetActiveProj.BindInt(1, projID);
     }
 
-    if (m_stmtSetActiveProj.Step(m_dbHandle) != SQLITE_DONE)
-        FATAL("sqlite3_step: %s", sqlite3_errmsg(m_dbHandle));
-
-    m_stmtSetActiveProj.Reset(m_dbHandle);
+    m_stmtSetActiveProj.Exec(m_dbHandle);
 }
 
 void ProjectDBConn::ClearDependencies(int projID, const char* outputFile)
@@ -333,16 +357,10 @@ void ProjectDBConn::ClearDependencies(int projID, const char* outputFile)
     ASSERT(projID >= 0);
     ASSERT(outputFile);
 
-    if (sqlite3_bind_int(m_stmtClearDeps, 1, projID) != SQLITE_OK)
-        FATAL("sqlite3_bind_int");
+    m_stmtClearDeps.BindInt(1, projID);
+    m_stmtClearDeps.BindText(2, outputFile);
 
-    if (sqlite3_bind_text(m_stmtClearDeps, 2, strdup(outputFile), -1, free) != SQLITE_OK)
-        FATAL("sqlite3_bind_text");
-
-    if (m_stmtClearDeps.Step(m_dbHandle) != SQLITE_DONE)
-        FATAL("sqlite3_step: %s", sqlite3_errmsg(m_dbHandle));
-
-    m_stmtClearDeps.Reset(m_dbHandle);
+    m_stmtClearDeps.Exec(m_dbHandle);
 }
 
 void ProjectDBConn::RecordDependency(int projID, const char* outputFile,
@@ -352,19 +370,11 @@ void ProjectDBConn::RecordDependency(int projID, const char* outputFile,
     ASSERT(outputFile);
     ASSERT(inputFile);
 
-    if (sqlite3_bind_int(m_stmtRecordDep, 1, projID) != SQLITE_OK)
-        FATAL("sqlite3_bind_int");
+    m_stmtRecordDep.BindInt(1, projID);
+    m_stmtRecordDep.BindText(2, inputFile);
+    m_stmtRecordDep.BindText(3, outputFile);
 
-    if (sqlite3_bind_text(m_stmtRecordDep, 2, strdup(inputFile), -1, free) != SQLITE_OK)
-        FATAL("sqlite3_bind_text");
-
-    if (sqlite3_bind_text(m_stmtRecordDep, 3, strdup(outputFile), -1, free) != SQLITE_OK)
-        FATAL("sqlite3_bind_text");
-
-    if (m_stmtRecordDep.Step(m_dbHandle) != SQLITE_DONE)
-        FATAL("sqlite3_step: %s", sqlite3_errmsg(m_dbHandle));
-
-    m_stmtRecordDep.Reset(m_dbHandle);
+    m_stmtRecordDep.Exec(m_dbHandle);
 }
 
 void ProjectDBConn::GetDependents(int projID, const char* inputFile,
@@ -376,21 +386,11 @@ void ProjectDBConn::GetDependents(int projID, const char* inputFile,
 
     outputFiles->clear();
 
-    if (sqlite3_bind_int(m_stmtGetDeps, 1, projID) != SQLITE_OK)
-        FATAL("sqlite3_bind_int");
+    m_stmtGetDeps.BindInt(1, projID);
+    m_stmtGetDeps.BindText(2, inputFile);
 
-    if (sqlite3_bind_text(m_stmtGetDeps, 2, strdup(inputFile), -1, free) != SQLITE_OK)
-        FATAL("sqlite3_bind_text");
-
-    int ret;
-    while ((ret = m_stmtGetDeps.Step(m_dbHandle)) == SQLITE_ROW) {
-        const char* str = (const char*)sqlite3_column_text(m_stmtGetDeps, 0);
-        outputFiles->push_back(str);
-    }
-    if (ret != SQLITE_DONE)
-        FATAL("sqlite3_step: %s", sqlite3_errmsg(m_dbHandle));
-
-    m_stmtGetDeps.Reset(m_dbHandle);
+    while (m_stmtGetDeps.GetNextRow(m_dbHandle))
+        outputFiles->push_back(m_stmtGetDeps.ColumnText(0));
 }
 
 void ProjectDBConn::ClearError(int projID,
@@ -402,24 +402,15 @@ void ProjectDBConn::ClearError(int projID,
     if (errorID == -1)
         return; // Error not in database; don't need to do anything.
 
-    if (sqlite3_bind_int(m_stmtErrorDelete1, 1, errorID) != SQLITE_OK)
-        FATAL("sqlite3_bind_int");
-    if (sqlite3_bind_int(m_stmtErrorDelete2, 1, errorID) != SQLITE_OK)
-        FATAL("sqlite3_bind_int");
-    if (sqlite3_bind_int(m_stmtErrorDelete3, 1, errorID) != SQLITE_OK)
-        FATAL("sqlite3_bind_int");
+    m_stmtErrorDelete1.BindInt(1, errorID);
+    m_stmtErrorDelete2.BindInt(1, errorID);
+    m_stmtErrorDelete3.BindInt(1, errorID);
 
-    if (m_stmtBeginTransaction.Step(m_dbHandle) != SQLITE_DONE) FATAL("sqlite3_step");
-    if (m_stmtErrorDelete1.Step(m_dbHandle) != SQLITE_DONE) FATAL("sqlite3_step");
-    if (m_stmtErrorDelete2.Step(m_dbHandle) != SQLITE_DONE) FATAL("sqlite3_step");
-    if (m_stmtErrorDelete3.Step(m_dbHandle) != SQLITE_DONE) FATAL("sqlite3_step");
-    if (m_stmtEndTransaction.Step(m_dbHandle) != SQLITE_DONE) FATAL("sqlite3_step");
-
-    m_stmtBeginTransaction.Reset(m_dbHandle);
-    m_stmtErrorDelete1.Reset(m_dbHandle);
-    m_stmtErrorDelete2.Reset(m_dbHandle);
-    m_stmtErrorDelete3.Reset(m_dbHandle);
-    m_stmtEndTransaction.Reset(m_dbHandle);
+    m_stmtBeginTransaction.Exec(m_dbHandle);
+    m_stmtErrorDelete1.Exec(m_dbHandle);
+    m_stmtErrorDelete2.Exec(m_dbHandle);
+    m_stmtErrorDelete3.Exec(m_dbHandle);
+    m_stmtEndTransaction.Exec(m_dbHandle);
 }
 
 // TODO: This is case sensitive. Is that what we want?
@@ -456,44 +447,27 @@ void ProjectDBConn::RecordError(int projID,
 
     u64 hash = Hash(inputFiles, outputFiles);
 
-    if (sqlite3_bind_int(m_stmtNewError, 1, projID) != SQLITE_OK)
-        FATAL("sqlite3_bind_int");
+    m_stmtNewError.BindInt(1, projID);
+    m_stmtNewError.BindInt64(2, hash);
+    m_stmtNewError.BindText(3, errorMessage.c_str());
 
-    if (sqlite3_bind_int64(m_stmtNewError, 2, hash) != SQLITE_OK)
-        FATAL("sqlite3_bind_int64");
+    m_stmtNewError.Exec(m_dbHandle);
 
-    if (sqlite3_bind_text(m_stmtNewError, 3, strdup(errorMessage.c_str()),
-                          -1, free) != SQLITE_OK)
-        FATAL("sqlite_bind_text");
-
-    if (m_stmtNewError.Step(m_dbHandle) != SQLITE_DONE)
-        FATAL("sqlite3_step");
-
-    m_stmtNewError.Reset(m_dbHandle);
-
-    sqlite3_int64 errorID = sqlite3_last_insert_rowid(m_dbHandle);
+    i64 errorID = m_dbHandle.LastInsertRowID();
     if (errorID > INT_MAX)
         FATAL("Error ID too large");
 
     for (size_t i = 0; i < inputFiles.size(); ++i) {
-        if (sqlite3_bind_int(m_stmtErrorAddInput, 1, (int)errorID))
-            FATAL("sqlite3_bind_int");
-        if (sqlite3_bind_text(m_stmtErrorAddInput, 2, strdup(inputFiles[i].c_str()),
-                              -1, free) != SQLITE_OK)
-            FATAL("sqlite_bind_text");
-        if (m_stmtErrorAddInput.Step(m_dbHandle) != SQLITE_DONE)
-            FATAL("sqlite3_step");
-        m_stmtErrorAddInput.Reset(m_dbHandle);
+        m_stmtErrorAddInput.BindInt(1, (int)errorID);
+        m_stmtErrorAddInput.BindText(2, inputFiles[i].c_str());
+
+        m_stmtErrorAddInput.Exec(m_dbHandle);
     }
     for (size_t i = 0; i < outputFiles.size(); ++i) {
-        if (sqlite3_bind_int(m_stmtErrorAddOutput, 1, (int)errorID))
-            FATAL("sqlite3_bind_int");
-        if (sqlite3_bind_text(m_stmtErrorAddOutput, 2, strdup(outputFiles[i].c_str()),
-                              -1, free) != SQLITE_OK)
-            FATAL("sqlite_bind_text");
-        if (m_stmtErrorAddOutput.Step(m_dbHandle) != SQLITE_DONE)
-            FATAL("sqlite3_step");
-        m_stmtErrorAddOutput.Reset(m_dbHandle);
+        m_stmtErrorAddOutput.BindInt(1, (int)errorID);
+        m_stmtErrorAddOutput.BindText(2, outputFiles[i].c_str());
+
+        m_stmtErrorAddOutput.Exec(m_dbHandle);
     }
 }
 
@@ -506,26 +480,20 @@ int ProjectDBConn::FindErrorID(
 {
     u64 hash = Hash(inputFiles, outputFiles);
 
-    if (sqlite3_bind_int(m_stmtFetchErrors, 1, projID) != SQLITE_OK)
-        FATAL("sqlite3_bind_int");
-
-    if (sqlite3_bind_int64(m_stmtFetchErrors, 2, hash) != SQLITE_OK)
-        FATAL("sqlite3_bind_int64");
+    m_stmtFetchErrors.BindInt(1, projID);
+    m_stmtFetchErrors.BindInt64(2, hash);
 
     int trueErrorID = -1;
 
-    int ret;
-    while ((ret = m_stmtFetchErrors.Step(m_dbHandle)) == SQLITE_ROW) {
-        int errorID = sqlite3_column_int(m_stmtFetchErrors, 0);
+    while (m_stmtFetchErrors.GetNextRow(m_dbHandle)) {
+        int errorID = m_stmtFetchErrors.ColumnInt(0);
 
         if (MatchError(errorID, inputFiles, outputFiles)) {
+            m_stmtFetchErrors.Reset(m_dbHandle);
             trueErrorID = errorID;
             break;
         }
     }
-    if (ret != SQLITE_DONE && ret != SQLITE_ROW)
-        FATAL("sqlite3_step: %s", sqlite3_errmsg(m_dbHandle));
-    m_stmtFetchErrors.Reset(m_dbHandle);
 
     return trueErrorID;
 }
@@ -545,23 +513,19 @@ bool ProjectDBConn::MatchInputsOrOutputs(
     SQLiteStatement& stmt
 )
 {
-    if (sqlite3_bind_int(stmt, 1, errorID) != SQLITE_OK)
-        FATAL("sqlite3_bind_int");
+    stmt.BindInt(1, errorID);
 
     bool matched = true;
 
     int i = 0;
-    int ret;
-    for (; (ret = stmt.Step(m_dbHandle)) == SQLITE_ROW; ++i) {
-        const char* path = (const char*)sqlite3_column_text(stmt, 0);
+    for (; stmt.GetNextRow(m_dbHandle); ++i) {
+        const char* path = stmt.ColumnText(0);
         if (strcmp(path, paths[i].c_str()) != 0) {
+            stmt.Reset(m_dbHandle);
             matched = false;
             break;
         }
     }
-    if (ret != SQLITE_DONE && ret != SQLITE_ROW)
-        FATAL("sqlite3_step: %s", sqlite3_errmsg(m_dbHandle));
-    stmt.Reset(m_dbHandle);
 
     return matched;
 }

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <Core/Types.h>
 
 struct sqlite3;
 struct sqlite3_stmt;
@@ -38,33 +39,45 @@ public:
                      const std::string& errorMessage);
 
 private:
+    class SQLiteStatement;
+
     struct DBHandle {
         explicit DBHandle(const std::string& path);
         ~DBHandle();
 
-        operator sqlite3*() const { return db; }
-
-        sqlite3* db;
+        i64 LastInsertRowID() const;
 
     private:
         DBHandle(const DBHandle&);
         DBHandle& operator=(const DBHandle&);
+
+        friend class SQLiteStatement;
+
+        sqlite3* db;
     };
 
-    struct SQLiteStatement {
-        SQLiteStatement(sqlite3* db, const char* text, int nBytes, bool exec = false);
+    class SQLiteStatement {
+    public:
+        SQLiteStatement(DBHandle& db, const char* text, int nBytes,
+                        bool exec = false);
         ~SQLiteStatement();
 
-        operator sqlite3_stmt*() const { return stmt; }
-
-        int Step(sqlite3* db);
-        void Reset(sqlite3* db);
-
-        sqlite3_stmt* stmt;
+        void Exec(const DBHandle& db);
+        bool GetNextRow(const DBHandle& db);
+        void Reset(const DBHandle& db);
+        void BindNull(int pos);
+        void BindInt(int pos, int value);
+        void BindInt64(int pos, i64 value);
+        void BindText(int pos, const char* str);
+        int ColumnInt(int index);
+        const char* ColumnText(int index);
+        bool IsColumnNull(int index);
 
     private:
         SQLiteStatement(const SQLiteStatement&);
         SQLiteStatement& operator=(const SQLiteStatement&);
+
+        sqlite3_stmt* stmt;
     };
 
     ProjectDBConn(const ProjectDBConn&);
