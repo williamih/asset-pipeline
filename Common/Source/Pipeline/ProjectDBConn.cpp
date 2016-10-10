@@ -216,6 +216,12 @@ static const char STMT_ERROR_ADD_OUTPUT[] =
     "INSERT INTO ErrorOutputs (ErrorID, OutputPath)"
     " VALUES (?, ?)";
 
+static const char STMT_ERROR_QUERY_ALL[] =
+    "SELECT ErrorID FROM Errors WHERE ProjectID = ?";
+
+static const char STMT_ERROR_GET_MESSAGE[] =
+    "SELECT Message FROM Errors WHERE ErrorID = ?";
+
 ProjectDBConn::ProjectDBConn()
     : m_dbHandle(AssetPipelineOsFuncs::GetPathToProjectDB())
 
@@ -258,6 +264,8 @@ ProjectDBConn::ProjectDBConn()
     , m_stmtNewError(m_dbHandle, STMT_ERROR_NEW, sizeof STMT_ERROR_NEW)
     , m_stmtErrorAddInput(m_dbHandle, STMT_ERROR_ADD_INPUT, sizeof STMT_ERROR_ADD_INPUT)
     , m_stmtErrorAddOutput(m_dbHandle, STMT_ERROR_ADD_OUTPUT, sizeof STMT_ERROR_ADD_OUTPUT)
+    , m_stmtQueryAllErrors(m_dbHandle, STMT_ERROR_QUERY_ALL, sizeof STMT_ERROR_QUERY_ALL)
+    , m_stmtErrorGetMessage(m_dbHandle, STMT_ERROR_GET_MESSAGE, sizeof STMT_ERROR_GET_MESSAGE)
 {}
 
 unsigned ProjectDBConn::NumProjects() const
@@ -528,4 +536,57 @@ bool ProjectDBConn::MatchInputsOrOutputs(
     }
 
     return matched;
+}
+
+void ProjectDBConn::QueryAllErrorIDs(int projID, std::vector<int>* vec) const
+{
+    ASSERT(vec);
+    ASSERT(projID >= 0);
+
+    vec->clear();
+
+    m_stmtQueryAllErrors.BindInt(1, projID);
+    while (m_stmtQueryAllErrors.GetNextRow(m_dbHandle))
+        vec->push_back(m_stmtQueryAllErrors.ColumnInt(0));
+}
+
+std::string ProjectDBConn::GetErrorMessage(int errorID) const
+{
+    ASSERT(errorID >= 0);
+
+    m_stmtErrorGetMessage.BindInt(1, errorID);
+    if (!m_stmtErrorGetMessage.GetNextRow(m_dbHandle))
+        FATAL("No data found");
+
+    std::string ret(m_stmtErrorGetMessage.ColumnText(0));
+
+    m_stmtErrorGetMessage.Reset(m_dbHandle);
+
+    return ret;
+}
+
+void ProjectDBConn::GetErrorInputPaths(int errorID,
+                                       std::vector<std::string>* inputFiles) const
+{
+    ASSERT(inputFiles);
+    ASSERT(errorID >= 0);
+
+    inputFiles->clear();
+
+    m_stmtErrorGetInputs.BindInt(1, errorID);
+    while (m_stmtErrorGetInputs.GetNextRow(m_dbHandle))
+        inputFiles->push_back(m_stmtErrorGetInputs.ColumnText(0));
+}
+
+void ProjectDBConn::GetErrorOutputPaths(int errorID,
+                                        std::vector<std::string>* outputFiles) const
+{
+    ASSERT(outputFiles);
+    ASSERT(errorID >= 0);
+
+    outputFiles->clear();
+
+    m_stmtErrorGetOutputs.BindInt(1, errorID);
+    while (m_stmtErrorGetOutputs.GetNextRow(m_dbHandle))
+        outputFiles->push_back(m_stmtErrorGetOutputs.ColumnText(0));
 }

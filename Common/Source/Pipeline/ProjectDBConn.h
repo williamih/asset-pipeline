@@ -37,6 +37,10 @@ public:
                      const std::vector<std::string>& inputFiles,
                      const std::vector<std::string>& outputFiles,
                      const std::string& errorMessage);
+    void QueryAllErrorIDs(int projID, std::vector<int>* vec) const;
+    std::string GetErrorMessage(int errorID) const;
+    void GetErrorInputPaths(int errorID, std::vector<std::string>* inputFiles) const;
+    void GetErrorOutputPaths(int errorID, std::vector<std::string>* outputFiles) const;
 
 private:
     class SQLiteStatement;
@@ -126,14 +130,16 @@ private:
     SQLiteStatement m_stmtGetDeps;
 
     SQLiteStatement m_stmtFetchErrors;
-    SQLiteStatement m_stmtErrorGetInputs;
-    SQLiteStatement m_stmtErrorGetOutputs;
+    mutable SQLiteStatement m_stmtErrorGetInputs;
+    mutable SQLiteStatement m_stmtErrorGetOutputs;
     SQLiteStatement m_stmtErrorDelete1;
     SQLiteStatement m_stmtErrorDelete2;
     SQLiteStatement m_stmtErrorDelete3;
     SQLiteStatement m_stmtNewError;
     SQLiteStatement m_stmtErrorAddInput;
     SQLiteStatement m_stmtErrorAddOutput;
+    mutable SQLiteStatement m_stmtQueryAllErrors;
+    mutable SQLiteStatement m_stmtErrorGetMessage;
 };
 
 #endif // PIPELINE_PROJECTDBCONN_H
