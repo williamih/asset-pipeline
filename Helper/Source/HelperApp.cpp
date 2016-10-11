@@ -10,7 +10,9 @@ HelperApp::HelperApp(u16 port, QObject* parent)
     , m_menu()
     , m_tcpSocket()
     , m_socketReadData()
-    , m_projectsWindow()
+    , m_dbConn()
+    , m_projectsWindow(m_dbConn)
+    , m_errorsWindow(m_dbConn)
     , m_aboutWindow()
     , m_callbackQueue()
 {
@@ -65,8 +67,18 @@ void HelperApp::ReceiveByte(u8 byte)
         case IPCAPPTOHELPER_SHOW_PROJECTS_WINDOW:
             m_projectsWindow.show();
             break;
+        case IPCAPPTOHELPER_SHOW_ERRORS_WINDOW:
+            m_errorsWindow.show();
+            break;
         case IPCAPPTOHELPER_SHOW_ABOUT_WINDOW:
             ShowAboutWindow();
+            break;
+        case IPCAPPTOHELPER_REFRESH_ERRORS:
+            // Only actually reload if the window is visible (this is a
+            // performance optimization). If the window becomes visible after
+            // this, it will reload the data anyway.
+            if (m_errorsWindow.isVisible())
+                m_errorsWindow.ReloadErrors();
             break;
         case IPCAPPTOHELPER_QUIT:
             QMetaObject::invokeMethod(qApp, "quit", Qt::QueuedConnection);

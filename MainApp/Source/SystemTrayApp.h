@@ -25,12 +25,16 @@ public:
 private:
     virtual void OnAssetBuildFinished(const AssetBuildCompletionInfo& info);
     virtual void OnAssetRecompileFinished(const AssetRecompileInfo& info);
+    virtual void OnAssetCompileSucceeded();
     virtual void OnAssetFailedToCompile(const AssetCompileFailureInfo& info);
 
 private slots:
     void PipelineEventTimerTick();
+
     void ShowAboutWindow();
     void ManageProjects();
+    void ViewErrorList();
+
     void Compile();
     void Quit();
 
@@ -45,6 +49,7 @@ private:
     void RegisterOnBytesSent(const BytesSentFunc& func);
     void OnBytesWritten(qint64 bytes);
 
+    bool IsConnectedToHelper() const;
     void LaunchHelperIfNeeded();
     void OnNewConnection();
 

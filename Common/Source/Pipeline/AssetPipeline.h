@@ -40,6 +40,7 @@ public:
 
     virtual void OnAssetBuildFinished(const AssetBuildCompletionInfo& info) = 0;
     virtual void OnAssetRecompileFinished(const AssetRecompileInfo& info) = 0;
+    virtual void OnAssetCompileSucceeded() = 0;
     virtual void OnAssetFailedToCompile(const AssetCompileFailureInfo& info) = 0;
 };
 

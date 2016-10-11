@@ -1,16 +1,20 @@
 #include "ProjectsWindow.h"
+
 #include <QBoxLayout>
 #include <QPushButton>
 #include <QTableWidget>
 #include <QHeaderView>
 #include <QCheckBox>
+
 #include <Core/Macros.h>
+#include <Pipeline/ProjectDBConn.h>
+
 #include "AddProjectWindow.h"
 
-ProjectsWindow::ProjectsWindow(QWidget* parent)
+ProjectsWindow::ProjectsWindow(ProjectDBConn& dbConn, QWidget* parent)
     : QWidget(parent)
 
-    , m_dbConn()
+    , m_dbConn(dbConn)
     , m_projectIDs()
     , m_tableWidget(nullptr)
 {

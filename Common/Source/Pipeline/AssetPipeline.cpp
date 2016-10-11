@@ -674,6 +674,9 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
 
             if (succeeded) {
                 ++nSucceeded;
+                this_->PushMessage(
+                    &AssetPipelineDelegate::OnAssetCompileSucceeded
+                );
             } else {
                 ++nFailed;
             }
