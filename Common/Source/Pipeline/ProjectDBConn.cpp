@@ -149,6 +149,7 @@ static const char STMT_ERRORSTABLE[] =
 static const char STMT_ERRORINPUTSTABLE[] =
     "CREATE TABLE IF NOT EXISTS ErrorInputs ("
     "    ErrorID INTEGER NOT NULL,"
+    "    PathIndex INTEGER NOT NULL,"
     "    InputPath TEXT NOT NULL,"
     "    FOREIGN KEY(ErrorID) REFERENCES Errors(ErrorID)"
     ")";
@@ -156,6 +157,7 @@ static const char STMT_ERRORINPUTSTABLE[] =
 static const char STMT_ERROROUTPUTSTABLE[] =
     "CREATE TABLE IF NOT EXISTS ErrorOutputs ("
     "    ErrorID INTEGER NOT NULL,"
+    "    PathIndex INTEGER NOT NULL,"
     "    OutputPath TEXT NOT NULL,"
     "    FOREIGN KEY(ErrorID) REFERENCES Errors(ErrorID)"
     ")";
@@ -194,11 +196,15 @@ static const char STMT_GETDEPS[] = "SELECT OutputPath FROM Dependencies"
 static const char STMT_FETCHERRORS[] = "SELECT ErrorID FROM Errors"
                                        " WHERE ProjectID = ? AND Hash = ?";
 
-static const char STMT_ERRORGETINPUTS[] = "SELECT InputPath FROM ErrorInputs"
-                                          " WHERE ErrorID = ?";
+static const char STMT_ERRORGETINPUTS[] =
+    "SELECT InputPath FROM ErrorInputs"
+    " WHERE ErrorID = ?"
+    " ORDER BY PathIndex ASC";
 
-static const char STMT_ERRORGETOUTPUTS[] = "SELECT OutputPath FROM ErrorOutputs"
-                                           " WHERE ErrorID = ?";
+static const char STMT_ERRORGETOUTPUTS[] =
+    "SELECT OutputPath FROM ErrorOutputs"
+    " WHERE ErrorID = ?"
+    " ORDER BY PathIndex ASC";
 
 static const char STMT_ERROR_DELETE1[] = "DELETE FROM ErrorInputs WHERE ErrorID = ?";
 static const char STMT_ERROR_DELETE2[] = "DELETE FROM ErrorOutputs WHERE ErrorID = ?";
@@ -209,12 +215,12 @@ static const char STMT_ERROR_NEW[] =
     " VALUES (?, ?, ?)";
 
 static const char STMT_ERROR_ADD_INPUT[] =
-    "INSERT INTO ErrorInputs (ErrorID, InputPath)"
-    " VALUES (?, ?)";
+    "INSERT INTO ErrorInputs (ErrorID, PathIndex, InputPath)"
+    " VALUES (?, ?, ?)";
 
 static const char STMT_ERROR_ADD_OUTPUT[] =
-    "INSERT INTO ErrorOutputs (ErrorID, OutputPath)"
-    " VALUES (?, ?)";
+    "INSERT INTO ErrorOutputs (ErrorID, PathIndex, OutputPath)"
+    " VALUES (?, ?, ?)";
 
 static const char STMT_ERROR_QUERY_ALL[] =
     "SELECT ErrorID FROM Errors WHERE ProjectID = ?";
@@ -467,13 +473,15 @@ void ProjectDBConn::RecordError(int projID,
 
     for (size_t i = 0; i < inputFiles.size(); ++i) {
         m_stmtErrorAddInput.BindInt(1, (int)errorID);
-        m_stmtErrorAddInput.BindText(2, inputFiles[i].c_str());
+        m_stmtErrorAddInput.BindInt(2, (int)i);
+        m_stmtErrorAddInput.BindText(3, inputFiles[i].c_str());
 
         m_stmtErrorAddInput.Exec(m_dbHandle);
     }
     for (size_t i = 0; i < outputFiles.size(); ++i) {
         m_stmtErrorAddOutput.BindInt(1, (int)errorID);
-        m_stmtErrorAddOutput.BindText(2, outputFiles[i].c_str());
+        m_stmtErrorAddOutput.BindInt(2, (int)i);
+        m_stmtErrorAddOutput.BindText(3, outputFiles[i].c_str());
 
         m_stmtErrorAddOutput.Exec(m_dbHandle);
     }
