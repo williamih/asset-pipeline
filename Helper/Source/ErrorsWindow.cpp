@@ -130,6 +130,18 @@ void ErrorsWindow::OnErrorListRowChanged(int currentRow)
         return;
 
     int errorID = m_errorIDs[currentRow];
+    // HACK (again): In certain cases we end up with an error ID that no longer
+    // exists in the database. In some cases, this is just because
+    // ReloadErrors() hasn't been called yet to bring everything up to date.
+    //
+    // However, this situation seems to be able to happen even immediately after
+    // reloading the errors. E.g., this method can be called from deeper in the
+    // call stack within ReloadData(), and error IDs are still produced that
+    // don't actually exist in the database. I'm not quite sure why this is.
+    //
+    // TODO: Find out what causes the issue discussed above.
+    if (!m_dbConn.ErrorExists(errorID))
+        return;
 
     std::string errorMessage = m_dbConn.GetErrorMessage(errorID);
     m_textEditErrorMessage->setText(errorMessage.c_str());

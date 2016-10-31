@@ -10,11 +10,20 @@
 
 #include "AssetPipelineOsFuncs.h"
 
+const unsigned BUSY_TIMEOUT_MS = 1000;
+
 ProjectDBConn::DBHandle::DBHandle(const std::string& path)
     : db(NULL)
 {
     if (sqlite3_open(path.c_str(), &db) != SQLITE_OK)
         FATAL("sqlite3_open");
+    // Setup SQLite3's "busy handler". This relates to the case when two
+    // processes are attempting to concurrently access the database (with at
+    // least one write). A write will result in the DB being temporarily locked.
+    // This call specifies the maximum time SQLite3 API calls will wait for the
+    // DB to be unlocked before returning an error code.
+    if (sqlite3_busy_timeout(db, (int)BUSY_TIMEOUT_MS) != SQLITE_OK)
+        FATAL("sqlite3_busy_timeout");
 }
 
 ProjectDBConn::DBHandle::~DBHandle()
@@ -34,8 +43,16 @@ ProjectDBConn::SQLiteStatement::SQLiteStatement(DBHandle& db, const char* text,
 {
     if (sqlite3_prepare_v2(db.db, text, nBytes, &stmt, NULL) != SQLITE_OK)
         FATAL("sqlite3_prepare_v2: %s", sqlite3_errmsg(db.db));
-    if (exec)
-        Exec(db);
+    if (exec) {
+        // HACK: Rather than calling Exec(), we manually execute the statement
+        // here, because we want to allow executing statements that return data.
+        // Exec() generates an error if the return value is SQLITE_ROW (i.e.
+        // the statement returned a result).
+        int ret = sqlite3_step(stmt);
+        if (ret != SQLITE_DONE && ret != SQLITE_ROW)
+            FATAL("sqlite3_step: %s", sqlite3_errmsg(db.db));
+        Reset(db);
+    }
 }
 
 ProjectDBConn::SQLiteStatement::~SQLiteStatement()
@@ -112,6 +129,8 @@ bool ProjectDBConn::SQLiteStatement::IsColumnNull(int index)
 {
     return sqlite3_column_type(stmt, index) == SQLITE_NULL;
 }
+
+static const char STMT_SETUPWAL[] = "PRAGMA journal_mode=WAL";
 
 static const char STMT_BEGINTRANSAC[] = "BEGIN";
 static const char STMT_ENDTRANSAC[] = "COMMIT";
@@ -197,6 +216,9 @@ static const char STMT_GETDEPS[] = "SELECT OutputPath FROM Dependencies"
 static const char STMT_FETCHERRORS[] = "SELECT ErrorID FROM Errors"
                                        " WHERE ProjectID = ? AND Hash = ?";
 
+static const char STMT_ERROREXISTS[] = "SELECT COUNT(*) FROM Errors"
+                                       " WHERE ErrorID = ?";
+
 static const char STMT_ERRORGETINPUTS[] =
     "SELECT InputPath FROM ErrorInputs"
     " WHERE ErrorID = ?"
@@ -237,6 +259,8 @@ static const char STMT_ERROR_GET_MESSAGE[] =
 ProjectDBConn::ProjectDBConn()
     : m_dbHandle(AssetPipelineOsFuncs::GetPathToProjectDB())
 
+    , m_stmtSetupWAL(m_dbHandle, STMT_SETUPWAL, sizeof STMT_SETUPWAL,
+                     true)
     , m_stmtBeginTransaction(m_dbHandle, STMT_BEGINTRANSAC, sizeof STMT_BEGINTRANSAC)
     , m_stmtEndTransaction(m_dbHandle, STMT_ENDTRANSAC, sizeof STMT_ENDTRANSAC)
 
@@ -267,6 +291,7 @@ ProjectDBConn::ProjectDBConn()
     , m_stmtGetDeps(m_dbHandle, STMT_GETDEPS, sizeof STMT_GETDEPS)
 
     , m_stmtFetchErrors(m_dbHandle, STMT_FETCHERRORS, sizeof STMT_FETCHERRORS)
+    , m_stmtErrorExists(m_dbHandle, STMT_ERROREXISTS, sizeof STMT_ERROREXISTS)
     , m_stmtErrorGetInputs(m_dbHandle, STMT_ERRORGETINPUTS, sizeof STMT_ERRORGETINPUTS)
     , m_stmtErrorGetCoreInputs(m_dbHandle, STMT_ERRORGETCOREINPUTS, sizeof STMT_ERRORGETCOREINPUTS)
     , m_stmtErrorGetOutputs(m_dbHandle, STMT_ERRORGETOUTPUTS, sizeof STMT_ERRORGETOUTPUTS)
@@ -579,6 +604,16 @@ void ProjectDBConn::QueryAllErrorIDs(int projID, std::vector<int>* vec) const
     m_stmtQueryAllErrors.BindInt(1, projID);
     while (m_stmtQueryAllErrors.GetNextRow(m_dbHandle))
         vec->push_back(m_stmtQueryAllErrors.ColumnInt(0));
+}
+
+bool ProjectDBConn::ErrorExists(int errorID) const
+{
+    m_stmtErrorExists.BindInt(1, errorID);
+    if (!m_stmtErrorExists.GetNextRow(m_dbHandle))
+        FATAL("No data found");
+    int count = m_stmtErrorExists.ColumnInt(0);
+    m_stmtErrorExists.Reset(m_dbHandle);
+    return count > 0;
 }
 
 std::string ProjectDBConn::GetErrorMessage(int errorID) const

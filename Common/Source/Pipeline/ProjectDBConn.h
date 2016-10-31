@@ -44,6 +44,7 @@ public:
         const std::string& errorMessage
     );
     void QueryAllErrorIDs(int projID, std::vector<int>* vec) const;
+    bool ErrorExists(int errorID) const;
     std::string GetErrorMessage(int errorID) const;
     void GetErrorInputPaths(int errorID, std::vector<std::string>* inputFiles) const;
     void GetErrorOutputPaths(int errorID, std::vector<std::string>* outputFiles) const;
@@ -111,6 +112,7 @@ private:
 
     DBHandle m_dbHandle;
 
+    SQLiteStatement m_stmtSetupWAL;
     SQLiteStatement m_stmtBeginTransaction;
     SQLiteStatement m_stmtEndTransaction;
 
@@ -136,6 +138,7 @@ private:
     SQLiteStatement m_stmtGetDeps;
 
     SQLiteStatement m_stmtFetchErrors;
+    mutable SQLiteStatement m_stmtErrorExists;
     mutable SQLiteStatement m_stmtErrorGetInputs;
     mutable SQLiteStatement m_stmtErrorGetCoreInputs;
     mutable SQLiteStatement m_stmtErrorGetOutputs;
