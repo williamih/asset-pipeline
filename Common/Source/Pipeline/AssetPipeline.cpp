@@ -242,16 +242,20 @@ static void StringTableToVector(lua_State* L, int tableIndex,
 
 static int lua_RecordCompileError(lua_State* L)
 {
-    if (lua_gettop(L) != 3 || !lua_istable(L, 1) || !lua_istable(L, 2) ||
-        !lua_isstring(L, 3))
+    if (lua_gettop(L) != 4 || !lua_istable(L, 1) ||
+        (!lua_istable(L, 2) && !lua_isnil(L, 2)) ||
+        !lua_istable(L, 3) || !lua_isstring(L, 4))
         return luaL_error(
-            L, "Usage: RecordCompileError(inputsTable, outputsTable, errorMsg)"
+            L, "Usage: RecordCompileError(inputsTable, additionalInputsTable or nil, "
+               "outputsTable, errorMsg)"
         );
 
     AssetCompileFailureInfo info;
     StringTableToVector(L, 1, &info.inputPaths);
-    StringTableToVector(L, 2, &info.outputPaths);
-    info.errorMessage = lua_tostring(L, 3);
+    if (!lua_isnil(L, 2))
+        StringTableToVector(L, 2, &info.additionalInputPaths);
+    StringTableToVector(L, 3, &info.outputPaths);
+    info.errorMessage = lua_tostring(L, 4);
 
     AssetPipeline* this_ = GetFromRegistry<AssetPipeline*>(L, &KEY_THIS);
 
@@ -264,27 +268,39 @@ static int lua_RecordCompileError(lua_State* L)
     ProjectDBConn* conn = GetFromRegistry<ProjectDBConn*>(L, &KEY_PROJECTDBCONN);
     int projID = GetFromRegistry<int>(L, &KEY_PROJECTID);
 
-    conn->RecordError(projID, info.inputPaths, info.outputPaths, info.errorMessage);
+    conn->RecordError(
+        projID,
+        info.inputPaths,
+        info.additionalInputPaths,
+        info.outputPaths,
+        info.errorMessage
+    );
 
     return 0;
 }
 
 static int lua_ClearCompileError(lua_State* L)
 {
-    if (lua_gettop(L) != 2 || !lua_istable(L, 1) || !lua_istable(L, 2))
+    if (lua_gettop(L) != 3 || !lua_istable(L, 1)
+        || (!lua_istable(L, 2) && !lua_isnil(L, 2)) ||
+        !lua_istable(L, 3))
         return luaL_error(
-            L, "Usage: ClearCompileError(inputsTable, outputsTable)"
+            L, "Usage: ClearCompileError(inputsTable, additionalInputsTable or nil, "
+               "outputsTable)"
         );
 
     std::vector<std::string> inputPaths;
+    std::vector<std::string> additionalInputPaths;
     std::vector<std::string> outputPaths;
     StringTableToVector(L, 1, &inputPaths);
-    StringTableToVector(L, 2, &outputPaths);
+    if (!lua_isnil(L, 2))
+        StringTableToVector(L, 2, &additionalInputPaths);
+    StringTableToVector(L, 3, &outputPaths);
 
     ProjectDBConn* conn = GetFromRegistry<ProjectDBConn*>(L, &KEY_PROJECTDBCONN);
     int projID = GetFromRegistry<int>(L, &KEY_PROJECTID);
 
-    conn->ClearError(projID, inputPaths, outputPaths);
+    conn->ClearError(projID, inputPaths, additionalInputPaths, outputPaths);
 
     return 0;
 }

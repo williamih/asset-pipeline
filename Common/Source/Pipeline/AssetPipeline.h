@@ -25,6 +25,7 @@ struct AssetRecompileInfo {
 
 struct AssetCompileFailureInfo {
     std::vector<std::string> inputPaths;
+    std::vector<std::string> additionalInputPaths;
     std::vector<std::string> outputPaths;
     std::string errorMessage;
 };

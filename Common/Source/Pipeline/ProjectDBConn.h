@@ -30,13 +30,19 @@ public:
     void GetDependents(int projID, const char* inputFile,
                        std::vector<std::string>* outputFiles);
 
-    void ClearError(int projID,
-                    const std::vector<std::string>& inputFiles,
-                    const std::vector<std::string>& outputFiles);
-    void RecordError(int projID,
-                     const std::vector<std::string>& inputFiles,
-                     const std::vector<std::string>& outputFiles,
-                     const std::string& errorMessage);
+    void ClearError(
+        int projID,
+        const std::vector<std::string>& inputFiles,
+        const std::vector<std::string>& additionalInputFiles,
+        const std::vector<std::string>& outputFiles
+    );
+    void RecordError(
+        int projID,
+        const std::vector<std::string>& inputFiles,
+        const std::vector<std::string>& additionalInputFiles,
+        const std::vector<std::string>& outputFiles,
+        const std::string& errorMessage
+    );
     void QueryAllErrorIDs(int projID, std::vector<int>* vec) const;
     std::string GetErrorMessage(int errorID) const;
     void GetErrorInputPaths(int errorID, std::vector<std::string>* inputFiles) const;
@@ -131,6 +137,7 @@ private:
 
     SQLiteStatement m_stmtFetchErrors;
     mutable SQLiteStatement m_stmtErrorGetInputs;
+    mutable SQLiteStatement m_stmtErrorGetCoreInputs;
     mutable SQLiteStatement m_stmtErrorGetOutputs;
     SQLiteStatement m_stmtErrorDelete1;
     SQLiteStatement m_stmtErrorDelete2;

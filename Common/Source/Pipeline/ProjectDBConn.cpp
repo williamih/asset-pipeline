@@ -150,6 +150,7 @@ static const char STMT_ERRORINPUTSTABLE[] =
     "CREATE TABLE IF NOT EXISTS ErrorInputs ("
     "    ErrorID INTEGER NOT NULL,"
     "    PathIndex INTEGER NOT NULL,"
+    "    IsAdditionalPath INTEGER NOT NULL,"
     "    InputPath TEXT NOT NULL,"
     "    FOREIGN KEY(ErrorID) REFERENCES Errors(ErrorID)"
     ")";
@@ -201,6 +202,11 @@ static const char STMT_ERRORGETINPUTS[] =
     " WHERE ErrorID = ?"
     " ORDER BY PathIndex ASC";
 
+static const char STMT_ERRORGETCOREINPUTS[] =
+    "SELECT InputPath FROM ErrorInputs"
+    " WHERE ErrorID = ? AND IsAdditionalPath = 0"
+    " ORDER BY PathIndex ASC";
+
 static const char STMT_ERRORGETOUTPUTS[] =
     "SELECT OutputPath FROM ErrorOutputs"
     " WHERE ErrorID = ?"
@@ -215,8 +221,8 @@ static const char STMT_ERROR_NEW[] =
     " VALUES (?, ?, ?)";
 
 static const char STMT_ERROR_ADD_INPUT[] =
-    "INSERT INTO ErrorInputs (ErrorID, PathIndex, InputPath)"
-    " VALUES (?, ?, ?)";
+    "INSERT INTO ErrorInputs (ErrorID, PathIndex, IsAdditionalPath, InputPath)"
+    " VALUES (?, ?, ?, ?)";
 
 static const char STMT_ERROR_ADD_OUTPUT[] =
     "INSERT INTO ErrorOutputs (ErrorID, PathIndex, OutputPath)"
@@ -262,6 +268,7 @@ ProjectDBConn::ProjectDBConn()
 
     , m_stmtFetchErrors(m_dbHandle, STMT_FETCHERRORS, sizeof STMT_FETCHERRORS)
     , m_stmtErrorGetInputs(m_dbHandle, STMT_ERRORGETINPUTS, sizeof STMT_ERRORGETINPUTS)
+    , m_stmtErrorGetCoreInputs(m_dbHandle, STMT_ERRORGETCOREINPUTS, sizeof STMT_ERRORGETCOREINPUTS)
     , m_stmtErrorGetOutputs(m_dbHandle, STMT_ERRORGETOUTPUTS, sizeof STMT_ERRORGETOUTPUTS)
     , m_stmtErrorDelete1(m_dbHandle, STMT_ERROR_DELETE1, sizeof STMT_ERROR_DELETE1)
     , m_stmtErrorDelete2(m_dbHandle, STMT_ERROR_DELETE2, sizeof STMT_ERROR_DELETE2)
@@ -407,9 +414,12 @@ void ProjectDBConn::GetDependents(int projID, const char* inputFile,
         outputFiles->push_back(m_stmtGetDeps.ColumnText(0));
 }
 
-void ProjectDBConn::ClearError(int projID,
-                               const std::vector<std::string>& inputFiles,
-                               const std::vector<std::string>& outputFiles)
+void ProjectDBConn::ClearError(
+    int projID,
+    const std::vector<std::string>& inputFiles,
+    const std::vector<std::string>& additionalInputFiles,
+    const std::vector<std::string>& outputFiles
+)
 {
     int errorID = FindErrorID(projID, inputFiles, outputFiles);
 
@@ -451,13 +461,16 @@ static u64 Hash(const std::vector<std::string>& inputFiles,
     return ret;
 }
 
-void ProjectDBConn::RecordError(int projID,
-                                const std::vector<std::string>& inputFiles,
-                                const std::vector<std::string>& outputFiles,
-                                const std::string& errorMessage)
+void ProjectDBConn::RecordError(
+    int projID,
+    const std::vector<std::string>& inputFiles,
+    const std::vector<std::string>& additionalInputFiles,
+    const std::vector<std::string>& outputFiles,
+    const std::string& errorMessage
+)
 {
     // TODO: Don't necessarily need to clear the error every time.
-    ClearError(projID, inputFiles, outputFiles);
+    ClearError(projID, inputFiles, additionalInputFiles, outputFiles);
 
     u64 hash = Hash(inputFiles, outputFiles);
 
@@ -474,7 +487,17 @@ void ProjectDBConn::RecordError(int projID,
     for (size_t i = 0; i < inputFiles.size(); ++i) {
         m_stmtErrorAddInput.BindInt(1, (int)errorID);
         m_stmtErrorAddInput.BindInt(2, (int)i);
-        m_stmtErrorAddInput.BindText(3, inputFiles[i].c_str());
+        m_stmtErrorAddInput.BindInt(3, 0); // IsAdditionalPath = false
+        m_stmtErrorAddInput.BindText(4, inputFiles[i].c_str());
+
+        m_stmtErrorAddInput.Exec(m_dbHandle);
+    }
+    for (size_t i = 0; i < additionalInputFiles.size(); ++i) {
+        m_stmtErrorAddInput.BindInt(1, (int)errorID);
+        // Additional inputs are in no order; order them after the core inputs.
+        m_stmtErrorAddInput.BindInt(2, INT_MAX);
+        m_stmtErrorAddInput.BindInt(3, 1); // IsAdditionalPath = true
+        m_stmtErrorAddInput.BindText(4, additionalInputFiles[i].c_str());
 
         m_stmtErrorAddInput.Exec(m_dbHandle);
     }
@@ -519,7 +542,7 @@ bool ProjectDBConn::MatchError(
     const std::vector<std::string>& inputFiles,
     const std::vector<std::string>& outputFiles)
 {
-    return MatchInputsOrOutputs(errorID, inputFiles, m_stmtErrorGetInputs) &&
+    return MatchInputsOrOutputs(errorID, inputFiles, m_stmtErrorGetCoreInputs) &&
            MatchInputsOrOutputs(errorID, outputFiles, m_stmtErrorGetOutputs);
 }
 
