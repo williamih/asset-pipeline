@@ -4,6 +4,11 @@ local QT_MAC_BASE_PATH = "/Applications/Qt5.7.0/5.7/clang_64"
 local QT_MAC_LIB_BASE_PATH = QT_MAC_BASE_PATH.."/lib"
 local MAC_EMBEDDED_HELPER_PATH = "bin/%{cfg.buildcfg}/Asset Pipeline.app/Contents/Resources/Asset Pipeline Helper.app"
 
+function EscapeSpacesInPath(path)
+    -- TODO: Make sure that this function works on Windows.
+    return path:gsub(" ", "\\ ")
+end
+
 function GetCommandMkdirRecursive(path)
     if OS_ID == "macosx" then
         return string.format('mkdir -p "%s"', path)
@@ -32,7 +37,16 @@ end
 function GetQtMocCommand(input, output)
     if OS_ID == "macosx" then
         local mocPath = QT_MAC_BASE_PATH.."/bin/moc"
-        return string.format('%s "%s" -o "%s"', mocPath, input, output)
+        local escapedInput = EscapeSpacesInPath(input)
+        local escapedOutput = EscapeSpacesInPath(output)
+        -- This checks file modification timestamps, before running the moc
+        -- (and so only runs the moc when the header has actually changed).
+        return string.format(
+            'if ["$(stat -f \\"%%m\\" %s)" -ne "$(stat -f \\"%%m\\" %s)"]; then '..
+                '%s %s -o %s; '..
+            'fi',
+            escapedInput, escapedOutput, mocPath, escapedInput, escapedOutput
+        )
     end
 end
 
