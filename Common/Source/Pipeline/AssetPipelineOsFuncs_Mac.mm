@@ -28,8 +28,13 @@ std::string AssetPipelineOsFuncs::GetScriptsDirectory()
 u64 AssetPipelineOsFuncs::GetTimeStamp(const char* path)
 {
     struct stat st;
-    if (stat(path, &st) == -1)
+    if (stat(path, &st) == -1) {
+        // Returning 0 ensures that a file that exists is considered to be
+        // "newer" (i.e. it has a greater timestamp) than a non-existent file.
+        if (errno == ENOENT)
+            return 0;
         FATAL("stat");
+    }
     // Millisecond accuracy.
     u64 result = 0;
     result += (u64)st.st_mtimespec.tv_sec * 1000;
