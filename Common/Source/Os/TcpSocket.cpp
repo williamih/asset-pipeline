@@ -287,7 +287,7 @@ bool TcpSocket::Accept(TcpSocket* socket)
 
     int fd = accept(m_handle, NULL, NULL);
     if (fd == -1) {
-        ProcessSocketError(m_handle);
+        ProcessSocketError(errno);
         Disconnect();
         return false;
     }
