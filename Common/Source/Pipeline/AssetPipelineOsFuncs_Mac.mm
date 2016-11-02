@@ -36,15 +36,6 @@ long AssetPipelineOsFuncs::GetTimeStamp(const char* path)
     return (long)st.st_mtime;
 }
 
-void AssetPipelineOsFuncs::SetTimeStamp(const char* path, long timeStamp)
-{
-    struct utimbuf t;
-    t.actime = (time_t)timeStamp;
-    t.modtime = (time_t)timeStamp;
-    if (utime(path, &t) == -1)
-        FATAL("utime");
-}
-
 void AssetPipelineOsFuncs::SetWorkingDirectory(const char* path)
 {
     chdir(path);

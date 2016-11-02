@@ -8,7 +8,6 @@ namespace AssetPipelineOsFuncs {
     std::string GetScriptsDirectory();
 
     long GetTimeStamp(const char* path);
-    void SetTimeStamp(const char* path, long timeStamp);
 
     void SetWorkingDirectory(const char* path);
 }
