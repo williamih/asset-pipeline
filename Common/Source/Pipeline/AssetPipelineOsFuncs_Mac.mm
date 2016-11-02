@@ -25,15 +25,16 @@ std::string AssetPipelineOsFuncs::GetScriptsDirectory()
     return [[[NSBundle mainBundle] resourcePath] UTF8String];
 }
 
-long AssetPipelineOsFuncs::GetTimeStamp(const char* path)
+u64 AssetPipelineOsFuncs::GetTimeStamp(const char* path)
 {
-    static_assert(sizeof(long) == sizeof(time_t),
-                  "Expected sizeof(long) == sizeof(time_t)");
-
     struct stat st;
     if (stat(path, &st) == -1)
         FATAL("stat");
-    return (long)st.st_mtime;
+    // Millisecond accuracy.
+    u64 result = 0;
+    result += (u64)st.st_mtimespec.tv_sec * 1000;
+    result += (u64)st.st_mtimespec.tv_nsec / 1000000;
+    return result;
 }
 
 void AssetPipelineOsFuncs::SetWorkingDirectory(const char* path)
