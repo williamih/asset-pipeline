@@ -101,7 +101,62 @@ static const char KEY_MANIFEST = 0;
 static const char KEY_THIS = 0;
 static const char KEY_ASSETEVENTSERVICE = 0;
 static const char KEY_PROJECTDBCONN = 0;
-static const char KEY_PROJECTINDEX = 0;
+static const char KEY_PROJECTID = 0;
+
+namespace {
+    template<class T>
+    struct RegistryAccessor;
+
+    template<class U>
+    struct RegistryAccessor<U*> {
+        static U* Get(lua_State* L, const char* key)
+        {
+            lua_pushlightuserdata(L, (void*)key);
+            lua_gettable(L, LUA_REGISTRYINDEX);
+            void* ptr = lua_touserdata(L, -1);
+            lua_pop(L, 1);
+            return (U*)ptr;
+        }
+
+        static void Set(lua_State* L, const char* key, U* value)
+        {
+            lua_pushlightuserdata(L, (void*)key);
+            lua_pushlightuserdata(L, (void*)value);
+            lua_settable(L, LUA_REGISTRYINDEX);
+        }
+    };
+
+    template<>
+    struct RegistryAccessor<int> {
+        static int Get(lua_State* L, const char* key)
+        {
+            lua_pushlightuserdata(L, (void*)key);
+            lua_gettable(L, LUA_REGISTRYINDEX);
+            int n = (int)lua_tointeger(L, -1);
+            lua_pop(L, 1);
+            return n;
+        }
+
+        static void Set(lua_State* L, const char* key, int value)
+        {
+            lua_pushlightuserdata(L, (void*)key);
+            lua_pushinteger(L, (lua_Integer)value);
+            lua_settable(L, LUA_REGISTRYINDEX);
+        }
+    };
+
+    template<class T>
+    T GetFromRegistry(lua_State* L, const char* key)
+    {
+        return RegistryAccessor<T>::Get(L, key);
+    }
+
+    template<class T>
+    void SetInRegistry(lua_State* L, const char* key, T value)
+    {
+        RegistryAccessor<T>::Set(L, key, value);
+    }
+}
 
 static int lua_Rule(lua_State* L)
 {
@@ -187,27 +242,65 @@ static void StringTableToVector(lua_State* L, int tableIndex,
 
 static int lua_RecordCompileError(lua_State* L)
 {
-    if (lua_gettop(L) != 3 || !lua_istable(L, 1) || !lua_istable(L, 2) ||
-        !lua_isstring(L, 3))
+    if (lua_gettop(L) != 4 || !lua_istable(L, 1) ||
+        (!lua_istable(L, 2) && !lua_isnil(L, 2)) ||
+        !lua_istable(L, 3) || !lua_isstring(L, 4))
         return luaL_error(
-            L, "Usage: RecordCompileError(inputsTable, outputsTable, errorMsg)"
+            L, "Usage: RecordCompileError(inputsTable, additionalInputsTable or nil, "
+               "outputsTable, errorMsg)"
         );
 
     AssetCompileFailureInfo info;
     StringTableToVector(L, 1, &info.inputPaths);
-    StringTableToVector(L, 2, &info.outputPaths);
-    info.errorMessage = lua_tostring(L, 3);
+    if (!lua_isnil(L, 2))
+        StringTableToVector(L, 2, &info.additionalInputPaths);
+    StringTableToVector(L, 3, &info.outputPaths);
+    info.errorMessage = lua_tostring(L, 4);
 
-    lua_pushlightuserdata(L, (void*)&KEY_THIS);
-    lua_gettable(L, LUA_REGISTRYINDEX);
-    AssetPipeline* this_ = (AssetPipeline*)lua_touserdata(L, -1);
-    lua_pop(L, 1);
+    AssetPipeline* this_ = GetFromRegistry<AssetPipeline*>(L, &KEY_THIS);
 
     this_->PushMessage(std::bind(
         &AssetPipelineDelegate::OnAssetFailedToCompile,
         std::placeholders::_1,
         info
     ));
+
+    ProjectDBConn* conn = GetFromRegistry<ProjectDBConn*>(L, &KEY_PROJECTDBCONN);
+    int projID = GetFromRegistry<int>(L, &KEY_PROJECTID);
+
+    conn->RecordError(
+        projID,
+        info.inputPaths,
+        info.additionalInputPaths,
+        info.outputPaths,
+        info.errorMessage
+    );
+
+    return 0;
+}
+
+static int lua_ClearCompileError(lua_State* L)
+{
+    if (lua_gettop(L) != 3 || !lua_istable(L, 1)
+        || (!lua_istable(L, 2) && !lua_isnil(L, 2)) ||
+        !lua_istable(L, 3))
+        return luaL_error(
+            L, "Usage: ClearCompileError(inputsTable, additionalInputsTable or nil, "
+               "outputsTable)"
+        );
+
+    std::vector<std::string> inputPaths;
+    std::vector<std::string> additionalInputPaths;
+    std::vector<std::string> outputPaths;
+    StringTableToVector(L, 1, &inputPaths);
+    if (!lua_isnil(L, 2))
+        StringTableToVector(L, 2, &additionalInputPaths);
+    StringTableToVector(L, 3, &outputPaths);
+
+    ProjectDBConn* conn = GetFromRegistry<ProjectDBConn*>(L, &KEY_PROJECTDBCONN);
+    int projID = GetFromRegistry<int>(L, &KEY_PROJECTID);
+
+    conn->ClearError(projID, inputPaths, additionalInputPaths, outputPaths);
 
     return 0;
 }
@@ -219,10 +312,7 @@ static int lua_NotifyAssetCompile(lua_State* L)
 
     const char* path = lua_tostring(L, 1);
 
-    lua_pushlightuserdata(L, (void*)&KEY_ASSETEVENTSERVICE);
-    lua_gettable(L, LUA_REGISTRYINDEX);
-    AssetEventService* service = (AssetEventService*)lua_touserdata(L, -1);
-    lua_pop(L, 1);
+    AssetEventService* service = GetFromRegistry<AssetEventService*>(L, &KEY_ASSETEVENTSERVICE);
 
     lua_pushlightuserdata(L, (void*)&KEY_DATADIR);
     lua_gettable(L, LUA_REGISTRYINDEX);
@@ -253,15 +343,9 @@ static int lua_ClearDependencies(lua_State* L)
 
     const char* outputPath = lua_tostring(L, 1);
 
-    lua_pushlightuserdata(L, (void*)&KEY_PROJECTDBCONN);
-    lua_gettable(L, LUA_REGISTRYINDEX);
-    ProjectDBConn* conn = (ProjectDBConn*)lua_touserdata(L, -1);
-    lua_pop(L, 1);
+    ProjectDBConn* conn = GetFromRegistry<ProjectDBConn*>(L, &KEY_PROJECTDBCONN);
 
-    lua_pushlightuserdata(L, (void*)&KEY_PROJECTINDEX);
-    lua_gettable(L, LUA_REGISTRYINDEX);
-    unsigned projIdx = (unsigned)lua_tointeger(L, -1);
-    lua_pop(L, 1);
+    int projIdx = GetFromRegistry<int>(L, &KEY_PROJECTID);
 
     conn->ClearDependencies(projIdx, outputPath);
 
@@ -276,15 +360,9 @@ static int lua_RecordDependency(lua_State* L)
     const char* outputPath = lua_tostring(L, 1);
     const char* inputPath = lua_tostring(L, 2);
 
-    lua_pushlightuserdata(L, (void*)&KEY_PROJECTDBCONN);
-    lua_gettable(L, LUA_REGISTRYINDEX);
-    ProjectDBConn* conn = (ProjectDBConn*)lua_touserdata(L, -1);
-    lua_pop(L, 1);
+    ProjectDBConn* conn = GetFromRegistry<ProjectDBConn*>(L, &KEY_PROJECTDBCONN);
 
-    lua_pushlightuserdata(L, (void*)&KEY_PROJECTINDEX);
-    lua_gettable(L, LUA_REGISTRYINDEX);
-    unsigned projIdx = (unsigned)lua_tointeger(L, -1);
-    lua_pop(L, 1);
+    int projIdx = GetFromRegistry<int>(L, &KEY_PROJECTID);
 
     conn->RecordDependency(projIdx, outputPath, inputPath);
 
@@ -334,7 +412,7 @@ static int lua_GetFileTimestamp(lua_State* L)
     return 1;
 }
 
-static lua_State* SetupLuaState(unsigned projectIndex,
+static lua_State* SetupLuaState(int projectID,
                                 const char* projectPath,
                                 AssetPipeline* pipeline,
                                 AssetEventService* assetEventService,
@@ -352,21 +430,10 @@ static lua_State* SetupLuaState(unsigned projectIndex,
     lua_newtable(L);
     lua_settable(L, LUA_REGISTRYINDEX);
 
-    lua_pushlightuserdata(L, (void*)&KEY_THIS);
-    lua_pushlightuserdata(L, (void*)pipeline);
-    lua_settable(L, LUA_REGISTRYINDEX);
-
-    lua_pushlightuserdata(L, (void*)&KEY_ASSETEVENTSERVICE);
-    lua_pushlightuserdata(L, (void*)assetEventService);
-    lua_settable(L, LUA_REGISTRYINDEX);
-
-    lua_pushlightuserdata(L, (void*)&KEY_PROJECTDBCONN);
-    lua_pushlightuserdata(L, (void*)projectDBConn);
-    lua_settable(L, LUA_REGISTRYINDEX);
-
-    lua_pushlightuserdata(L, (void*)&KEY_PROJECTINDEX);
-    lua_pushinteger(L, (lua_Integer)projectIndex);
-    lua_settable(L, LUA_REGISTRYINDEX);
+    SetInRegistry(L, &KEY_THIS, pipeline);
+    SetInRegistry(L, &KEY_ASSETEVENTSERVICE, assetEventService);
+    SetInRegistry(L, &KEY_PROJECTDBCONN, projectDBConn);
+    SetInRegistry(L, &KEY_PROJECTID, projectID);
 
     lua_register(L, "Rule", lua_Rule);
     lua_register(L, "ContentDir", lua_ContentDir);
@@ -374,6 +441,7 @@ static lua_State* SetupLuaState(unsigned projectIndex,
     lua_register(L, "Manifest", lua_Manifest);
     lua_register(L, "GetManifestPath", lua_GetManifestPath);
     lua_register(L, "RecordCompileError", lua_RecordCompileError);
+    lua_register(L, "ClearCompileError", lua_ClearCompileError);
     lua_register(L, "RunProcess", lua_RunProcess);
     lua_register(L, "GetFileTimestamp", lua_GetFileTimestamp);
     lua_register(L, "NotifyAssetCompile", lua_NotifyAssetCompile);
@@ -555,7 +623,7 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
                 if (L != NULL)
                     lua_close(L);
                 L = SetupLuaState(
-                    (int)nextItem.projectID,
+                    nextItem.projectID,
                     projectDir.c_str(),
                     this_,
                     &this_->m_assetEventService,
@@ -622,6 +690,9 @@ void AssetPipeline::CompileProc(AssetPipeline* this_)
 
             if (succeeded) {
                 ++nSucceeded;
+                this_->PushMessage(
+                    &AssetPipelineDelegate::OnAssetCompileSucceeded
+                );
             } else {
                 ++nFailed;
             }

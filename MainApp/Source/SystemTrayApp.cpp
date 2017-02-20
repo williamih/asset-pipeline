@@ -42,6 +42,10 @@ SystemTrayApp::SystemTrayApp(QObject* parent)
     connect(manageProjectsAction, &QAction::triggered,
             this, &SystemTrayApp::ManageProjects);
 
+    QAction* viewErrorsAction = m_menu.addAction("View Error List");
+    connect(viewErrorsAction, &QAction::triggered,
+            this, &SystemTrayApp::ViewErrorList);
+
     QAction* compileAction = m_menu.addAction("Compile");
     connect(compileAction, &QAction::triggered, this, &SystemTrayApp::Compile);
 
@@ -107,9 +111,16 @@ void SystemTrayApp::OnAssetRecompileFinished(const AssetRecompileInfo& info)
     m_systemTrayIcon.showMessage(title, message);
 }
 
+void SystemTrayApp::OnAssetCompileSucceeded()
+{
+    if (IsConnectedToHelper())
+        SendIPCMessage(IPCAPPTOHELPER_REFRESH_ERRORS);
+}
+
 void SystemTrayApp::OnAssetFailedToCompile(const AssetCompileFailureInfo& info)
 {
-    // Currently, do nothing.
+    if (IsConnectedToHelper())
+        SendIPCMessage(IPCAPPTOHELPER_REFRESH_ERRORS);
 }
 
 void SystemTrayApp::PipelineEventTimerTick()
@@ -127,6 +138,12 @@ void SystemTrayApp::ManageProjects()
 {
     LaunchHelperIfNeeded();
     SendIPCMessage(IPCAPPTOHELPER_SHOW_PROJECTS_WINDOW);
+}
+
+void SystemTrayApp::ViewErrorList()
+{
+    LaunchHelperIfNeeded();
+    SendIPCMessage(IPCAPPTOHELPER_SHOW_ERRORS_WINDOW);
 }
 
 void SystemTrayApp::Compile()
@@ -178,6 +195,8 @@ void SystemTrayApp::ReceiveByte(u8 byte)
 
 void SystemTrayApp::SendIPCMessage(IPCAppToHelperAction action)
 {
+    ASSERT(IsConnectedToHelper());
+
     if ((u32)action > 0xFF)
         FATAL("Size of message exceeded one byte");
     u8 byte = (u8)action;
@@ -201,9 +220,14 @@ void SystemTrayApp::OnBytesWritten(qint64 bytes)
     m_callbackQueue.clear();
 }
 
+bool SystemTrayApp::IsConnectedToHelper() const
+{
+    return (m_socket || m_tcpServer.isListening());
+}
+
 void SystemTrayApp::LaunchHelperIfNeeded()
 {
-    if (m_socket || m_tcpServer.isListening())
+    if (IsConnectedToHelper())
         return;
 
     ASSERT(!m_tcpServer.isListening());

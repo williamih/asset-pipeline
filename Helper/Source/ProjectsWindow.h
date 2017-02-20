@@ -2,16 +2,17 @@
 #define PROJECTSWINDOW_H
 
 #include <QWidget>
-#include <Pipeline/ProjectDBConn.h>
 
 class QTableWidget;
 class QCheckBox;
+
+class ProjectDBConn;
 
 class ProjectsWindow : public QWidget {
     Q_OBJECT
 
 public:
-    ProjectsWindow(QWidget* parent = nullptr);
+    ProjectsWindow(ProjectDBConn& dbConn, QWidget* parent = nullptr);
     ~ProjectsWindow();
 
 private slots:
@@ -23,7 +24,7 @@ private:
     void AddProjectInternal(const char* projName, const char* projDir);
     void OnCheckBoxClicked(int row);
 
-    ProjectDBConn m_dbConn;
+    ProjectDBConn& m_dbConn;
     std::vector<int> m_projectIDs;
     QTableWidget* m_tableWidget;
 };

@@ -79,6 +79,7 @@ HELPER_MOC_INPUT_FILES = {
     "HelperApp.h",
     "AddProjectWindow.h",
     "AboutWindow.h",
+    "ErrorsWindow.h",
 }
 
 MAINAPP_MOC_INPUT_FILES = {
